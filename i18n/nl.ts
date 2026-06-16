@@ -10,7 +10,7 @@ export const nl = {
   meta: {
     title: "Tegelhandel Nelissen | Tegelzettersbedrijf & showroom in Berghem",
     description:
-      "Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem (Noord-Brabant). Al 25+ jaar vakkundig tegels zetten bij woningen en bedrijfspanden, plus een eigen showroom. Vraag vrijblijvend een offerte aan.",
+      "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 25+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Vraag vrijblijvend een offerte aan.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
   },
 

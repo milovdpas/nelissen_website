@@ -11,6 +11,10 @@ import "./globals.css";
 
 const dict = getDictionary(defaultLocale);
 
+// Set NEXT_PUBLIC_NOINDEX=true on staging (e.g. the Vercel acceptance site) to
+// keep it out of search results so it doesn't compete with the production domain.
+const noindex = process.env.NEXT_PUBLIC_NOINDEX === "true";
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
@@ -48,8 +52,8 @@ export const metadata: Metadata = {
     images: ["/images/showroom.jpeg"],
   },
   robots: {
-    index: true,
-    follow: true,
+    index: !noindex,
+    follow: !noindex,
   },
 };
 
