@@ -39,13 +39,13 @@ export const site = {
     countryCode: "NL",
   },
   geo: {
-    latitude: 51.749012,
-    longitude: 5.565831,
+    latitude: 51.7740555,
+    longitude: 5.5664992,
   },
   foundingYearsExperience: 25,
-  // Google Maps embed for the contact section.
+  // Google Maps embed for the contact section (src URL only, no iframe markup).
   mapsEmbedUrl:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2467.5232874793063!2d5.565831!3d51.749012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c70e1a9c1a6f35%3A0x0!2sSt.%20Willibrordusstraat%202a%2C%205351%20EH%20Berghem!5e0!3m2!1snl!2snl!4v1700000000000!5m2!1snl!2snl",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2468.7566663829966!2d5.5664992!3d51.774055499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c6fdbad727391f%3A0x7f30b532443b3a26!2sNelissen%20Tegelhandel%20%26%20Tegelzettersbedrijf!5e0!3m2!1snl!2snl!4v1781645071522!5m2!1snl!2snl",
   // External profiles for schema.org `sameAs` (fill in as they become available).
   sameAs: [] as string[],
   /**

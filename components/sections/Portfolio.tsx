@@ -35,7 +35,7 @@ export function Portfolio({ dict }: { dict: Dictionary["portfolio"] }) {
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div
-                className="absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute inset-0 flex items-end p-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: "linear-gradient(to top, rgba(44,48,56,0.85) 0%, transparent 60%)" }}
               >
                 <span className="text-xs font-semibold tracking-wide text-white" style={{ fontFamily: FONT.body }}>

@@ -81,20 +81,21 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
                 </div>
               ))}
             </div>
-
-            <div className="overflow-hidden" style={{ borderRadius: 2, height: 210 }}>
-              <iframe
-                title={dict.mapTitle}
-                src={site.mapsEmbedUrl}
-                width="100%"
-                height="210"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
           </div>
+        </div>
+
+        {/* Full-width map below both columns */}
+        <div className="mt-12 overflow-hidden" style={{ borderRadius: 2, height: 360 }}>
+          <iframe
+            title={dict.mapTitle}
+            src={site.mapsEmbedUrl}
+            width="100%"
+            height="360"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </section>
