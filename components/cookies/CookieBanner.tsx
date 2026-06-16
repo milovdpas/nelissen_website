@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { useConsent, type ConsentCategories } from "./ConsentProvider";
@@ -22,6 +23,11 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
   if (!ready || (decided && !settingsOpen)) return null;
 
   const prefsOpen = showPrefs || settingsOpen;
+
+  // Closing: if a choice was already made (reopened via footer) just close;
+  // on a first visit, treat closing as "necessary only" so no non-essential
+  // cookies load and the banner doesn't get stuck.
+  const handleClose = () => (decided ? closeSettings() : rejectAll());
 
   const labelStyle = { fontFamily: FONT.body } as const;
 
@@ -65,10 +71,20 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6" role="dialog" aria-modal="false" aria-label={dict.banner.title}>
       <div
-        className="max-w-3xl mx-auto p-6 shadow-2xl"
+        className="relative max-w-3xl mx-auto p-6 shadow-2xl"
         style={{ background: BRAND.anthracite, border: "1px solid rgba(255,255,255,0.14)", borderRadius: 4 }}
       >
-        <h2 className="text-lg font-semibold" style={{ fontFamily: FONT.heading, color: "#fff", letterSpacing: "0.02em", textTransform: "uppercase" }}>
+        <button
+          type="button"
+          onClick={handleClose}
+          aria-label="Sluiten"
+          className="absolute top-3 right-3 p-1.5 focus:outline-none transition-colors"
+          style={{ color: "rgba(255,255,255,0.6)" }}
+        >
+          <X size={20} />
+        </button>
+
+        <h2 className="text-lg font-semibold pr-8" style={{ fontFamily: FONT.heading, color: "#fff", letterSpacing: "0.02em", textTransform: "uppercase" }}>
           {dict.banner.title}
         </h2>
         <p className="mt-2 text-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.78)" }}>
