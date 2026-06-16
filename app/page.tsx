@@ -23,7 +23,7 @@ export default function Home() {
         <Portfolio dict={dict.portfolio} />
         <Assortiment dict={dict.assortiment} />
         <Openingstijden dict={dict.openingstijden} />
-        <Contact dict={dict.contact} />
+        <Contact dict={dict.contact} mapDict={dict.cookies.map} />
       </main>
       <Footer dict={dict.footer} nav={dict.nav} />
     </>

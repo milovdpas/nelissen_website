@@ -2,9 +2,10 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { BRAND, FONT, site } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import { ContactForm } from "@/components/ContactForm";
+import { MapEmbed } from "@/components/cookies/MapEmbed";
 import type { Dictionary } from "@/i18n/dictionaries";
 
-export function Contact({ dict }: { dict: Dictionary["contact"] }) {
+export function Contact({ dict, mapDict }: { dict: Dictionary["contact"]; mapDict: Dictionary["cookies"]["map"] }) {
   const details = [
     {
       icon: <MapPin size={17} style={{ color: BRAND.yellow }} />,
@@ -81,18 +82,9 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
           }
         />
 
-        {/* Full-width map below both columns */}
-        <div className="mt-12 overflow-hidden" style={{ borderRadius: 2, height: 360 }}>
-          <iframe
-            title={dict.mapTitle}
-            src={site.mapsEmbedUrl}
-            width="100%"
-            height="360"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+        {/* Full-width map below both columns (consent-gated) */}
+        <div className="mt-12">
+          <MapEmbed title={dict.mapTitle} dict={mapDict} />
         </div>
       </div>
     </section>
