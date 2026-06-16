@@ -8,12 +8,12 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
   const details = [
     {
       icon: <MapPin size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.adres,
+      label: dict.details.address,
       value: `${site.address.street}\n${site.address.postalCode} ${site.address.city}\n${site.address.region}, ${site.address.country}`,
     },
     {
       icon: <Phone size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.telefoon,
+      label: dict.details.phone,
       value: site.phone,
       href: site.phoneHref,
     },

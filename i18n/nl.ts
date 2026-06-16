@@ -111,9 +111,9 @@ export const nl = {
     label: "Contact",
     title: "Neem contact op.",
     fields: {
-      naam: { label: "Naam", placeholder: "Uw volledige naam" },
+      name: { label: "Naam", placeholder: "Uw volledige naam" },
       email: { label: "E-mailadres", placeholder: "uw@emailadres.nl" },
-      bericht: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
+      message: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
     },
     submit: "Verstuur bericht",
     sending: "Versturen...",
@@ -124,8 +124,8 @@ export const nl = {
     error:
       "Er ging iets mis bij het versturen. Probeer het later opnieuw of bel ons direct.",
     details: {
-      adres: "Adres",
-      telefoon: "Telefoon",
+      address: "Adres",
+      phone: "Telefoon",
       email: "E-mail",
       showroom: "Showroom",
       showroomValue: "Dinsdag 15:00 – 19:00\nOverige dagen op afspraak",

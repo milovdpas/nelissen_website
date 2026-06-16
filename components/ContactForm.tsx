@@ -26,7 +26,7 @@ const labelStyle: React.CSSProperties = {
  * button sits below that row.
  */
 export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; aside: React.ReactNode }) {
-  const [form, setForm] = useState({ naam: "", email: "", bericht: "", website: "" });
+  const [form, setForm] = useState({ name: "", email: "", message: "", website: "" });
   const [status, setStatus] = useState<Status>("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,16 +78,16 @@ export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; asid
             </div>
 
             <div>
-              <label htmlFor="naam" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
-                {dict.fields.naam.label}
+              <label htmlFor="name" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
+                {dict.fields.name.label}
               </label>
               <input
-                id="naam"
+                id="name"
                 type="text"
                 required
-                placeholder={dict.fields.naam.placeholder}
-                value={form.naam}
-                onChange={(e) => setForm({ ...form, naam: e.target.value })}
+                placeholder={dict.fields.name.placeholder}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full px-4 py-3 text-sm outline-none"
                 style={inputStyle}
               />
@@ -110,16 +110,16 @@ export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; asid
             </div>
 
             <div className="flex-1 flex flex-col">
-              <label htmlFor="bericht" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
-                {dict.fields.bericht.label}
+              <label htmlFor="message" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
+                {dict.fields.message.label}
               </label>
               <textarea
-                id="bericht"
+                id="message"
                 required
                 rows={5}
-                placeholder={dict.fields.bericht.placeholder}
-                value={form.bericht}
-                onChange={(e) => setForm({ ...form, bericht: e.target.value })}
+                placeholder={dict.fields.message.placeholder}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="w-full flex-1 min-h-[140px] px-4 py-3 text-sm outline-none resize-none"
                 style={inputStyle}
               />
