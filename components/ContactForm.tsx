@@ -20,7 +20,12 @@ const labelStyle: React.CSSProperties = {
   color: "rgba(255,255,255,0.5)",
 };
 
-export function ContactForm({ dict }: { dict: Dictionary["contact"] }) {
+/**
+ * The form fields and the contact-details card (`aside`) share one equal-height
+ * row, so the card bottom aligns with the message textarea bottom. The submit
+ * button sits below that row.
+ */
+export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; aside: React.ReactNode }) {
   const [form, setForm] = useState({ naam: "", email: "", bericht: "", website: "" });
   const [status, setStatus] = useState<Status>("idle");
 
@@ -40,82 +45,90 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"] }) {
     }
   };
 
-  if (status === "sent") {
-    return (
-      <div className="p-8 flex flex-col items-start gap-4" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
-        <CheckCircle size={34} style={{ color: BRAND.yellow }} />
-        <h3 style={{ fontFamily: FONT.heading, fontWeight: 700, fontSize: "1.4rem", color: "#fff", textTransform: "uppercase" }}>
-          {dict.success.title}
-        </h3>
-        <p className="text-sm" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.65)" }}>
-          {dict.success.body}
-        </p>
-      </div>
-    );
-  }
+  const sent = status === "sent";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-      {/* Honeypot — hidden from humans, bots tend to fill it. */}
-      <div aria-hidden className="hidden">
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          name="website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.website}
-          onChange={(e) => setForm({ ...form, website: e.target.value })}
-        />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+        {/* Left: fields (or success message after submit) */}
+        {sent ? (
+          <div className="p-8 flex flex-col items-start gap-4" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
+            <CheckCircle size={34} style={{ color: BRAND.yellow }} />
+            <h3 style={{ fontFamily: FONT.heading, fontWeight: 700, fontSize: "1.4rem", color: "#fff", textTransform: "uppercase" }}>
+              {dict.success.title}
+            </h3>
+            <p className="text-sm" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.65)" }}>
+              {dict.success.body}
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+            {/* Honeypot — hidden from humans, bots tend to fill it. */}
+            <div aria-hidden className="hidden">
+              <label htmlFor="website">Website</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.website}
+                onChange={(e) => setForm({ ...form, website: e.target.value })}
+              />
+            </div>
 
-      <div>
-        <label htmlFor="naam" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
-          {dict.fields.naam.label}
-        </label>
-        <input
-          id="naam"
-          type="text"
-          required
-          placeholder={dict.fields.naam.placeholder}
-          value={form.naam}
-          onChange={(e) => setForm({ ...form, naam: e.target.value })}
-          className="w-full px-4 py-3 text-sm outline-none"
-          style={inputStyle}
-        />
-      </div>
+            <div>
+              <label htmlFor="naam" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
+                {dict.fields.naam.label}
+              </label>
+              <input
+                id="naam"
+                type="text"
+                required
+                placeholder={dict.fields.naam.placeholder}
+                value={form.naam}
+                onChange={(e) => setForm({ ...form, naam: e.target.value })}
+                className="w-full px-4 py-3 text-sm outline-none"
+                style={inputStyle}
+              />
+            </div>
 
-      <div>
-        <label htmlFor="email" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
-          {dict.fields.email.label}
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          placeholder={dict.fields.email.placeholder}
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full px-4 py-3 text-sm outline-none"
-          style={inputStyle}
-        />
-      </div>
+            <div>
+              <label htmlFor="email" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
+                {dict.fields.email.label}
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                placeholder={dict.fields.email.placeholder}
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-4 py-3 text-sm outline-none"
+                style={inputStyle}
+              />
+            </div>
 
-      <div>
-        <label htmlFor="bericht" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
-          {dict.fields.bericht.label}
-        </label>
-        <textarea
-          id="bericht"
-          required
-          rows={5}
-          placeholder={dict.fields.bericht.placeholder}
-          value={form.bericht}
-          onChange={(e) => setForm({ ...form, bericht: e.target.value })}
-          className="w-full px-4 py-3 text-sm outline-none resize-none"
-          style={inputStyle}
-        />
+            <div className="flex-1 flex flex-col">
+              <label htmlFor="bericht" className="block text-xs font-semibold mb-2 tracking-wide uppercase" style={labelStyle}>
+                {dict.fields.bericht.label}
+              </label>
+              <textarea
+                id="bericht"
+                required
+                rows={5}
+                placeholder={dict.fields.bericht.placeholder}
+                value={form.bericht}
+                onChange={(e) => setForm({ ...form, bericht: e.target.value })}
+                className="w-full flex-1 min-h-[140px] px-4 py-3 text-sm outline-none resize-none"
+                style={inputStyle}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Right: contact-details card, stretches to match the fields' height */}
+        {aside}
       </div>
 
       {status === "error" && (
@@ -124,15 +137,17 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"] }) {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 self-start focus:outline-none disabled:opacity-60"
-        style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
-      >
-        {status === "sending" ? dict.sending : dict.submit}
-        {status !== "sending" && <ArrowRight size={15} />}
-      </button>
+      {!sent && (
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 self-start focus:outline-none disabled:opacity-60"
+          style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
+        >
+          {status === "sending" ? dict.sending : dict.submit}
+          {status !== "sending" && <ArrowRight size={15} />}
+        </button>
+      )}
     </form>
   );
 }

@@ -50,12 +50,9 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <ContactForm dict={dict} />
-          </div>
-
-          <div className="flex flex-col gap-5">
+        <ContactForm
+          dict={dict}
+          aside={
             <div className="p-6 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
               {details.map((item) => (
                 <div key={item.label} className="flex gap-4 items-start">
@@ -81,8 +78,8 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Full-width map below both columns */}
         <div className="mt-12 overflow-hidden" style={{ borderRadius: 2, height: 360 }}>
