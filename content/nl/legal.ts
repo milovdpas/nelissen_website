@@ -20,7 +20,7 @@ export type LegalDoc = {
 
 export const privacyPolicy: LegalDoc = {
   title: "Privacybeleid",
-  updated: "[datum invullen, bijv. 1 juli 2026]",
+  updated: "17 juni 2026",
   intro: [
     "V.O.F. Nelissen Tegelhandel & Tegelzettersbedrijf (“wij”, “ons”) hecht veel waarde aan de bescherming van uw persoonsgegevens. In dit privacybeleid leggen wij uit welke gegevens wij verzamelen, waarom, en welke rechten u heeft.",
     "Wij verwerken persoonsgegevens in overeenstemming met de Algemene Verordening Gegevensbescherming (AVG).",
@@ -105,7 +105,7 @@ export const privacyPolicy: LegalDoc = {
 
 export const cookiePolicy: LegalDoc = {
   title: "Cookiebeleid",
-  updated: "[datum invullen, bijv. 1 juli 2026]",
+  updated: "17 juni 2026",
   intro: [
     "Op deze pagina leggen wij uit welke cookies wij gebruiken en waarvoor. Een cookie is een klein tekstbestand dat bij een bezoek aan de website op uw apparaat wordt opgeslagen.",
   ],
