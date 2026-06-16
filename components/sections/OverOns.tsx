@@ -57,6 +57,7 @@ export function OverOns({ dict }: { dict: Dictionary["overOns"] }) {
                 alt={dict.imageAlt}
                 width={760}
                 height={420}
+                quality={60}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="w-full h-[420px] object-cover"
               />

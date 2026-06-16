@@ -17,7 +17,7 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontFamily: FONT.body,
-  color: "rgba(255,255,255,0.5)",
+  color: "rgba(255,255,255,0.7)",
 };
 
 /**
@@ -49,10 +49,16 @@ export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; asid
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+      {/*
+        Mobile: plain flex column → fields, button, then details card.
+        Desktop (lg): 2-col grid with explicit placement → fields (r1c1) and
+        card (r1c2) share an equal-height row so the card aligns to the textarea
+        bottom, and the button sits in r2c1 below the row.
+      */}
+      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-6 lg:items-stretch">
         {/* Left: fields (or success message after submit) */}
         {sent ? (
-          <div className="p-8 flex flex-col items-start gap-4" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
+          <div className="p-8 flex flex-col items-start gap-4 lg:col-start-1 lg:row-start-1" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
             <CheckCircle size={34} style={{ color: BRAND.yellow }} />
             <h3 style={{ fontFamily: FONT.heading, fontWeight: 700, fontSize: "1.4rem", color: "#fff", textTransform: "uppercase" }}>
               {dict.success.title}
@@ -62,7 +68,7 @@ export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; asid
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 lg:col-start-1 lg:row-start-1">
             {/* Honeypot — hidden from humans, bots tend to fill it. */}
             <div aria-hidden className="hidden">
               <label htmlFor="website">Website</label>
@@ -127,26 +133,27 @@ export function ContactForm({ dict, aside }: { dict: Dictionary["contact"]; asid
           </div>
         )}
 
-        {/* Right: contact-details card, stretches to match the fields' height */}
-        {aside}
+        {/* Submit — directly under the fields on mobile, below the row on desktop */}
+        {!sent && (
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 self-start focus:outline-none disabled:opacity-60 lg:col-start-1 lg:row-start-2"
+            style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
+          >
+            {status === "sending" ? dict.sending : dict.submit}
+            {status !== "sending" && <ArrowRight size={15} />}
+          </button>
+        )}
+
+        {/* Right: contact-details card; stretches to match the fields' height on desktop */}
+        <div className="lg:col-start-2 lg:row-start-1">{aside}</div>
       </div>
 
       {status === "error" && (
         <p className="text-sm" style={{ fontFamily: FONT.body, color: "#ffb4b4" }}>
           {dict.error}
         </p>
-      )}
-
-      {!sent && (
-        <button
-          type="submit"
-          disabled={status === "sending"}
-          className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 self-start focus:outline-none disabled:opacity-60"
-          style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
-        >
-          {status === "sending" ? dict.sending : dict.submit}
-          {status !== "sending" && <ArrowRight size={15} />}
-        </button>
       )}
     </form>
   );

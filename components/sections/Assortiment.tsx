@@ -61,7 +61,7 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
           ))}
         </div>
 
-        <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#7a7873" }}>
+        <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
           {dict.footnotePrefix}
           <strong>{dict.footnoteStrong}</strong>
         </p>

@@ -15,7 +15,7 @@ export function SectionLabel({
       />
       <p
         className="text-xs font-semibold tracking-[0.18em] uppercase"
-        style={{ color: light ? "rgba(255,255,255,0.55)" : BRAND.anthracite, fontFamily: FONT.body }}
+        style={{ color: light ? "rgba(255,255,255,0.72)" : BRAND.anthracite, fontFamily: FONT.body }}
       >
         {children}
       </p>
