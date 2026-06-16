@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* ─── Brand theme tokens (ported from the Figma export) ───────────────────── */
+:root {
+  --font-size: 16px;
+  --background: #f7f6f4; /* light beige */
+  --foreground: #2c3038; /* anthracite */
+  --card: #ffffff;
+  --card-foreground: #2c3038;
+  --primary: #2c3038;
+  --primary-foreground: #ffffff;
+  --secondary: #eeecea;
+  --muted: #eeeceb;
+  --muted-foreground: #7a7873;
+  --accent: #f2c200; /* yellow */
+  --accent-foreground: #2c3038;
+  --destructive: #cc2626; /* red */
+  --border: rgba(44, 48, 56, 0.12);
+  --radius: 0.25rem;
+
+  /* Brand accents (also mirrored in content/site.ts for inline styles) */
+  --brand-anthracite: #2c3038;
+  --brand-yellow: #f2c200;
+  --brand-red: #cc2626;
+  --brand-blue: #1b62c8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --radius-lg: var(--radius);
+
+  /* Self-hosted fonts (configured via next/font in lib/fonts.ts) */
+  --font-heading: var(--font-barlow), "Barlow Condensed", sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", sans-serif;
+}
+
+html {
+  font-size: var(--font-size);
+  /* Smooth in-page anchor navigation; offset for the fixed 64px nav bar. */
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
