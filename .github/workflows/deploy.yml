@@ -1,0 +1,77 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on push to the main branch
+
+# Avoid overlapping deploys clobbering each other.
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
+env:
+  # Path to the app on the VPS and the systemd unit that runs it.
+  APP_DIR: /var/www/nelissen-website
+  SERVICE: nelissen-website.service
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node and install dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 3: Build the Next.js app (standalone output).
+      # NEXT_PUBLIC_SITE_URL is inlined at build time, so it must be set here.
+      # SMTP_* are read at runtime on the server, not here.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.tegelhandelnelissen.nl' }}
+
+      # Step 4: Setup SSH with passphrase-protected key
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Step 5: Transfer the standalone build to the VPS.
+      # The standalone server needs three pieces side by side:
+      #   <APP_DIR>/server.js + minimal node_modules  (from .next/standalone)
+      #   <APP_DIR>/.next/static                       (static assets)
+      #   <APP_DIR>/public                             (public assets)
+      - name: Transfer files via rsync
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+        run: |
+          SSH_OPTS="-o StrictHostKeyChecking=no"
+          ssh $SSH_OPTS "$USER@$HOST" "mkdir -p $APP_DIR/.next/static $APP_DIR/public"
+
+          # Server + traced node_modules (no --delete: it would wipe static/public)
+          rsync -avz -e "ssh $SSH_OPTS" ./.next/standalone/ "$USER@$HOST:$APP_DIR/"
+          # Static + public are self-contained, safe to mirror with --delete
+          rsync -avz --delete -e "ssh $SSH_OPTS" ./.next/static/ "$USER@$HOST:$APP_DIR/.next/static/"
+          rsync -avz --delete -e "ssh $SSH_OPTS" ./public/ "$USER@$HOST:$APP_DIR/public/"
+
+      # Step 6: Restart the Next.js service via systemd
+      - name: Restart Next.js app
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no "$USER@$HOST" \
+            "sudo systemctl daemon-reload && sudo systemctl restart $SERVICE"
