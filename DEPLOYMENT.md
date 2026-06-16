@@ -2,41 +2,30 @@
 
 Two branches, two environments:
 
-| Branch       | Target           | Workflow                                                                       |
-| ------------ | ---------------- | ------------------------------------------------------------------------------ |
-| `acceptance` | Vercel (staging) | [`deploy-acceptance.yml`](.github/workflows/deploy-acceptance.yml)             |
-| `main`       | VPS (production)  | [`deploy.yml`](.github/workflows/deploy.yml)                                   |
+| Branch       | Target            | How                                                        |
+| ------------ | ----------------- | ---------------------------------------------------------- |
+| `acceptance` | Vercel (staging)  | Vercel Git integration (no workflow in this repo)          |
+| `main`       | VPS (production)  | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml) |
 
 ---
 
 # Acceptance (Vercel)
 
-Push to `acceptance` → GitHub Actions builds with the Vercel CLI and deploys to
-the Vercel project that represents the acceptance environment.
+Handled by **Vercel's native Git integration** — no GitHub Actions workflow.
+The Vercel project is configured with Branch Tracking on `acceptance`, so every
+push to `acceptance` creates a Production Deployment (currently
+<https://nelissen-website.vercel.app>).
 
-## Secrets
+Setup lives in the Vercel dashboard, not this repo:
 
-Settings → Secrets and variables → Actions.
-
-| Name                | Description                                                              |
-| ------------------- | ------------------------------------------------------------------------ |
-| `VERCEL_TOKEN`      | Vercel access token (Account Settings → Tokens).                         |
-| `VERCEL_ORG_ID`     | From `.vercel/project.json` after `vercel link`, or the team settings.   |
-| `VERCEL_PROJECT_ID` | From `.vercel/project.json` after `vercel link`.                         |
-
-## One-time setup
-
-1. Create a Vercel project for acceptance and run `vercel link` locally to get
-   the org/project IDs (`.vercel/project.json`).
-2. In the Vercel project's **Environment Variables**, set the runtime config —
-   these are *not* in this repo: `NEXT_PUBLIC_SITE_URL` (the acceptance URL),
+1. Project → Settings → Git → **Production Branch = `acceptance`**.
+2. Project → Settings → **Environment Variables** — set the runtime config
+   (these are *not* in this repo): `NEXT_PUBLIC_SITE_URL` (the acceptance URL),
    `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
    `CONTACT_TO`, `CONTACT_FROM`.
-3. Disable Vercel's own Git auto-deploy for this project (Project → Settings →
-   Git) so deploys happen only through this workflow and you don't get double
-   builds.
 
-> `output: "standalone"` in `next.config.ts` is compatible with Vercel — Vercel
+> Do **not** add a Vercel deploy workflow on top of this — it would double-deploy.
+> `output: "standalone"` in `next.config.ts` is compatible with Vercel; Vercel
 > uses its own build adapter and ignores it.
 
 ---
