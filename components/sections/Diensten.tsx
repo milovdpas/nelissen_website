@@ -43,14 +43,14 @@ export function Diensten({ dict }: { dict: Dictionary["diensten"] }) {
               >
                 {d.title}
               </h3>
-              <p className="text-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.62)" }}>
+              <p className="text-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.75)" }}>
                 {d.desc}
               </p>
               <ul className="flex flex-col gap-2 mt-auto">
                 {d.points.map((p) => (
                   <li key={p} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: d.accent }} />
-                    <span className="text-xs" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.5)" }}>
+                    <span className="text-xs" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
                       {p}
                     </span>
                   </li>

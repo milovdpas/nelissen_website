@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sendMail } from "@/lib/mailer";
-import { site } from "@/content/site";
+import { contactNotificationEmail } from "@/lib/email-template";
 
 // Node runtime required for nodemailer (not Edge).
 export const runtime = "nodejs";
 
 const schema = z.object({
-  naam: z.string().trim().min(2).max(100),
+  name: z.string().trim().min(2).max(100),
   email: z.string().trim().email().max(150),
-  bericht: z.string().trim().min(5).max(5000),
+  message: z.string().trim().min(5).max(5000),
   // Honeypot: accepted by the schema, then checked explicitly below so a
   // tripped honeypot returns a silent success instead of a validation error.
   website: z.string().max(200).optional(),
@@ -38,13 +38,6 @@ function clientIp(req: Request): string {
   return req.headers.get("x-real-ip") ?? "unknown";
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
 export async function POST(req: Request) {
   if (rateLimited(clientIp(req))) {
     return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
@@ -67,21 +60,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const { naam, email, bericht } = parsed.data;
+  const { name, email, message } = parsed.data;
 
   try {
-    await sendMail({
-      subject: `Nieuw bericht via ${site.shortName}: ${naam}`,
-      replyTo: email,
-      text: `Naam: ${naam}\nE-mail: ${email}\n\nBericht:\n${bericht}`,
-      html: `
-        <h2>Nieuw contactformulier-bericht</h2>
-        <p><strong>Naam:</strong> ${escapeHtml(naam)}</p>
-        <p><strong>E-mail:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Bericht:</strong></p>
-        <p style="white-space:pre-wrap">${escapeHtml(bericht)}</p>
-      `,
-    });
+    const { subject, html, text } = contactNotificationEmail({ name, email, message });
+    await sendMail({ subject, html, text, replyTo: email });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Contact mail failed:", err);

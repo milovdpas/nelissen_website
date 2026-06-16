@@ -80,7 +80,7 @@ export function Hero({ dict }: { dict: Dictionary["hero"] & { imageAlt: string }
               <p style={{ fontFamily: FONT.heading, fontWeight: 800, fontSize: "1.8rem", color: BRAND.yellow, lineHeight: 1 }}>
                 {s.num}
               </p>
-              <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.5)" }}>
+              <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
                 {s.label}
               </p>
             </div>

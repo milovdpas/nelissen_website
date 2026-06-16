@@ -8,12 +8,12 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
   const details = [
     {
       icon: <MapPin size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.adres,
+      label: dict.details.address,
       value: `${site.address.street}\n${site.address.postalCode} ${site.address.city}\n${site.address.region}, ${site.address.country}`,
     },
     {
       icon: <Phone size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.telefoon,
+      label: dict.details.phone,
       value: site.phone,
       href: site.phoneHref,
     },
@@ -53,12 +53,12 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
         <ContactForm
           dict={dict}
           aside={
-            <div className="p-6 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
+            <div className="p-6 flex flex-col gap-5 h-full" style={{ background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
               {details.map((item) => (
                 <div key={item.label} className="flex gap-4 items-start">
                   <div className="mt-0.5 shrink-0">{item.icon}</div>
                   <div>
-                    <p className="text-xs font-semibold tracking-wide uppercase mb-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.38)" }}>
+                    <p className="text-xs font-semibold tracking-wide uppercase mb-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.6)" }}>
                       {item.label}
                     </p>
                     {item.href ? (
