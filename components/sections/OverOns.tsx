@@ -51,15 +51,14 @@ export function OverOns({ dict }: { dict: Dictionary["overOns"] }) {
 
           <div className="relative">
             <div className="absolute -top-4 -left-4 w-full h-full" style={{ background: BRAND.yellow, zIndex: 0, borderRadius: 2 }} />
-            <div className="relative z-10 overflow-hidden" style={{ borderRadius: 2 }}>
+            <div className="relative z-10 overflow-hidden h-[420px]" style={{ borderRadius: 2 }}>
               <Image
                 src="/images/bedrijfsbus.jpeg"
                 alt={dict.imageAlt}
-                width={760}
-                height={420}
+                fill
                 quality={60}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="w-full h-[420px] object-cover"
+                className="object-cover"
               />
             </div>
           </div>

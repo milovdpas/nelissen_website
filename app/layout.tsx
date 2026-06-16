@@ -4,6 +4,9 @@ import { site } from "@/content/site";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localBusinessJsonLd, websiteJsonLd } from "@/lib/seo";
+import { ConsentProvider } from "@/components/cookies/ConsentProvider";
+import { CookieBanner } from "@/components/cookies/CookieBanner";
+import { Analytics } from "@/components/cookies/Analytics";
 import "./globals.css";
 
 const dict = getDictionary(defaultLocale);
@@ -54,9 +57,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const jsonLd = [localBusinessJsonLd(), websiteJsonLd()];
 
   return (
-    <html lang={defaultLocale} className={`${barlow.variable} ${dmSans.variable} antialiased`}>
+    <html lang={defaultLocale} data-scroll-behavior="smooth" className={`${barlow.variable} ${dmSans.variable} antialiased`}>
       <body>
-        {children}
+        <ConsentProvider>
+          {children}
+          <CookieBanner dict={dict.cookies} />
+          <Analytics />
+        </ConsentProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -140,6 +140,43 @@ export const nl = {
     tegelzetterValue: "Maandag t/m zaterdag, op afspraak",
     showroomTitle: "Showroom tegelverkoop",
     rightsReserved: "Alle rechten voorbehouden.",
+    legal: {
+      privacy: "Privacybeleid",
+      cookies: "Cookiebeleid",
+      preferences: "Cookievoorkeuren",
+    },
+  },
+
+  cookies: {
+    banner: {
+      title: "Cookievoorkeuren",
+      body: "Wij gebruiken noodzakelijke cookies voor de werking van de website. Met uw toestemming gebruiken wij ook cookies voor statistieken (Google Analytics) en het tonen van externe media zoals Google Maps.",
+      privacyLink: "Lees ons cookiebeleid",
+      acceptAll: "Alles accepteren",
+      rejectAll: "Alleen noodzakelijk",
+      preferences: "Voorkeuren",
+      save: "Voorkeuren opslaan",
+    },
+    always: "Altijd actief",
+    categories: {
+      necessary: {
+        title: "Noodzakelijk",
+        desc: "Vereist voor de basisfunctionaliteit van de website, waaronder het onthouden van uw cookievoorkeuren.",
+      },
+      analytics: {
+        title: "Statistieken",
+        desc: "Google Analytics, om het gebruik van de website anoniem te meten en te verbeteren.",
+      },
+      media: {
+        title: "Externe media",
+        desc: "Ingesloten content van derden, zoals de Google Maps-kaart.",
+      },
+    },
+    map: {
+      title: "Kaart niet geladen",
+      body: "Om de Google Maps-kaart te tonen plaatsen wij cookies van Google. Accepteer externe media om de kaart te laden.",
+      button: "Kaart laden",
+    },
   },
 } as const;
 

@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { Phone, Mail } from "lucide-react";
 import { BRAND, FONT, site } from "@/content/site";
 import { LogoSquares } from "@/components/brand/LogoSquares";
+import { ManageCookiesButton } from "@/components/cookies/ManageCookiesButton";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Dictionary["nav"] }) {
@@ -41,7 +43,7 @@ export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Diction
             <ul className="flex flex-col gap-2.5">
               {nav.links.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="text-xs text-left" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
+                  <a href={`/${l.href}`} className="text-xs text-left" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
                     {l.label}
                   </a>
                 </li>
@@ -74,12 +76,24 @@ export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Diction
           </div>
         </div>
 
-        <div
-          className="mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 border-t text-xs"
-          style={{ borderColor: "rgba(255,255,255,0.08)", fontFamily: FONT.body, color: "rgba(255,255,255,0.55)" }}
-        >
-          <span>© {year} {site.legalName}. {dict.rightsReserved}</span>
-          <span>{site.address.city}, {site.address.region}</span>
+        <div className="mt-12 pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs" style={{ fontFamily: FONT.body }}>
+            <Link href="/privacybeleid" style={{ color: "rgba(255,255,255,0.72)" }}>
+              {dict.legal.privacy}
+            </Link>
+            <Link href="/cookiebeleid" style={{ color: "rgba(255,255,255,0.72)" }}>
+              {dict.legal.cookies}
+            </Link>
+            <ManageCookiesButton label={dict.legal.preferences} style={{ color: "rgba(255,255,255,0.72)" }} />
+          </div>
+
+          <div
+            className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
+            style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.55)" }}
+          >
+            <span>© {year} {site.legalName}. {dict.rightsReserved}</span>
+            <span>{site.address.city}, {site.address.region}</span>
+          </div>
         </div>
       </div>
     </footer>

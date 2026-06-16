@@ -59,6 +59,14 @@ body {
   font-family: var(--font-body);
 }
 
+/* Tailwind v4's preflight no longer sets a pointer cursor on buttons. Restore
+   it for interactive controls (enabled buttons, checkboxes, role=button). */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+input[type="checkbox"]:not(:disabled) {
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
