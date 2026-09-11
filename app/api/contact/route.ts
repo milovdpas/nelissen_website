@@ -19,10 +19,37 @@ const schema = z.object({
 // enough as a first line of defence on a single VPS instance.
 const WINDOW_MS = 60_000;
 const MAX_PER_WINDOW = 5;
+// Hard ceiling on tracked addresses. Without it the map is an unbounded
+// allocation the caller controls: one request per distinct address is enough to
+// grow it forever in a long-lived container.
+const MAX_TRACKED_IPS = 10_000;
+
 const hits = new Map<string, { count: number; resetAt: number }>();
+let lastSweep = 0;
+
+/**
+ * Drop windows that have expired, then — if that wasn't enough — the
+ * oldest-inserted entries. Map iterates in insertion order, so the head of the
+ * map is the least recently created bucket.
+ */
+function sweep(now: number) {
+  lastSweep = now;
+  for (const [ip, entry] of hits) {
+    if (now > entry.resetAt) hits.delete(ip);
+  }
+  if (hits.size > MAX_TRACKED_IPS) {
+    let excess = hits.size - MAX_TRACKED_IPS;
+    for (const ip of hits.keys()) {
+      if (excess-- <= 0) break;
+      hits.delete(ip);
+    }
+  }
+}
 
 function rateLimited(ip: string): boolean {
   const now = Date.now();
+  if (now - lastSweep > WINDOW_MS || hits.size > MAX_TRACKED_IPS) sweep(now);
+
   const entry = hits.get(ip);
   if (!entry || now > entry.resetAt) {
     hits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
@@ -32,10 +59,27 @@ function rateLimited(ip: string): boolean {
   return entry.count > MAX_PER_WINDOW;
 }
 
+// Exactly one reverse proxy (the nginx container, see DEPLOYMENT.md) sits in
+// front of this app. nginx appends the real peer address to X-Forwarded-For, so
+// only the RIGHTMOST entry is written by infrastructure we control — everything
+// to its left is whatever the client chose to send. Reading the leftmost entry
+// lets anyone reset their own bucket with a spoofed header, which defeats the
+// limit entirely; count hops from the right instead.
+const TRUSTED_PROXY_HOPS = 1;
+
 function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
+  if (fwd) {
+    const chain = fwd
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    const ip = chain[chain.length - TRUSTED_PROXY_HOPS];
+    if (ip) return ip;
+  }
+  // Only reached when the proxy sets neither header (e.g. direct access on the
+  // container network). Everything then shares one bucket, which fails closed.
+  return req.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 export async function POST(req: Request) {

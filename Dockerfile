@@ -29,11 +29,27 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=80 \
     HOSTNAME=0.0.0.0
+
+# Run the server as an unprivileged user rather than root. Binding :80 as
+# non-root still works because docker-compose.prod.yml sets
+# net.ipv4.ip_unprivileged_port_start=0 inside this container's network
+# namespace — keeping the port means the hand-maintained nginx conf on the VPS
+# needs no change. The image's stock `node` user (uid 1000) is deliberately not
+# reused: a dedicated uid makes the ownership below unambiguous.
+RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
+
 # Standalone ships server.js plus a traced node_modules, but excludes static and
 # public — without these two COPYs every asset 404s.
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/public ./public
+COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/public ./public
+
+# next/image writes optimized variants here at runtime. As root this directory
+# was created on demand; an unprivileged server needs it to exist and be owned
+# up front, or image optimization fails on the first request.
+RUN mkdir -p .next/cache/images && chown -R nextjs:nodejs .next
+
+USER nextjs
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/health || exit 1
