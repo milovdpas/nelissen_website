@@ -32,9 +32,22 @@ Setup lives in the Vercel dashboard, not this repo:
 
 # Production (VPS via GitHub Actions)
 
-The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
-builds the Next.js app on push to `main`, ships the **standalone** output to the
-VPS over SSH/rsync, and restarts a systemd service. No build runs on the VPS.
+The VPS runs **everything in Docker** — no Node, no PM2 and no app systemd units
+on the host. One nginx container (`proxy`) terminates TLS for every domain and
+forwards to app containers by container name over the shared `web` network.
+
+So the pipeline in [`deploy.yml`](.github/workflows/deploy.yml) is:
+
+> build image → push to Docker Hub → ssh to the VPS → `docker compose pull && up -d`
+
+The server holds no source code: only `/opt/apps/nelissen-website/docker-compose.yml`
+and an `.env`, both written by the workflow on every deploy.
+
+| Piece | File |
+| ----- | ---- |
+| Image definition | [`Dockerfile`](Dockerfile) (multi-stage, standalone output, alpine) |
+| Runtime service | [`docker-compose.prod.yml`](docker-compose.prod.yml) |
+| Pipeline | [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) |
 
 ## 1. GitHub repository secrets / variables
 
@@ -42,103 +55,84 @@ Settings → Secrets and variables → Actions.
 
 **Secrets**
 
-| Name              | Description                                                        |
-| ----------------- | ------------------------------------------------------------------ |
-| `SSH_PRIVATE_KEY` | Private key (with passphrase if any) for an account on the VPS.    |
-| `VPS_HOST`        | VPS IP or hostname, e.g. `191.101.80.235`.                         |
-| `VPS_USER`        | SSH user, e.g. `root` or a deploy user with sudo for systemctl.    |
+| Name                   | Value                                                  |
+| ---------------------- | ------------------------------------------------------ |
+| `DOCKERHUB_USERNAME`   | `milovdpas8`                                           |
+| `DOCKERHUB_TOKEN`      | Docker Hub access token                                |
+| `VPS_HOST`             | `159.195.28.227`                                       |
+| `VPS_USER`             | `deploy`                                               |
+| `VPS_SSH_PRIVATE_KEY`  | CI deploy private key                                  |
+| `SMTP_HOST`            | mail host for the contact form                         |
+| `SMTP_PORT`            | `465`                                                  |
+| `SMTP_SECURE`          | `true`                                                 |
+| `SMTP_USER`            | `website@tegelhandelnelissen.nl`                       |
+| `SMTP_PASS`            | mailbox password — a literal `$` must be written `$$`  |
+| `CONTACT_TO`           | `info@tegelhandelnelissen.nl`                          |
+| `CONTACT_FROM`         | `website@tegelhandelnelissen.nl`                       |
 
 **Variables** (optional)
 
-| Name                  | Default                                | Notes                                |
-| --------------------- | -------------------------------------- | ------------------------------------ |
-| `NEXT_PUBLIC_SITE_URL`| `https://www.tegelhandelnelissen.nl`   | Inlined at build (canonical/OG/etc). |
+| Name                   | Default                               | Notes                          |
+| ---------------------- | ------------------------------------- | ------------------------------ |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.tegelhandelnelissen.nl`  | Inlined at build.              |
+| `NEXT_PUBLIC_GA_ID`    | unset (analytics disabled)            | Inlined at build.              |
 
-The deploy path (`/var/www/nelissen-website`) and service name
-(`nelissen-website.service`) are set in the workflow `env:` block — change them
-there if needed.
+⚠️ **`NEXT_PUBLIC_*` are compile-time constants.** They are baked into the image
+as build args — canonical URLs, `sitemap.xml`, `robots.txt`, OG tags and JSON-LD
+are prerendered. Changing one means a rebuild, not an `.env` edit. `SMTP_*` and
+`CONTACT_*` are the opposite: read at runtime from the `.env` on the server, so
+changing them is a redeploy (or `docker compose up -d`) with no rebuild.
+
+`SMTP_PASS` needs the `$$` escape because Compose reads the same `.env` for
+`${DOCKERHUB_USERNAME}` substitution in `docker-compose.yml`.
 
 ## 2. One-time VPS setup
 
-```bash
-# Node 22 (matches CI). Example via nodesource:
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt-get install -y nodejs
+Nothing to install — the box already runs Docker, the `web` network and the
+proxy. Only the reverse proxy needs a per-domain config, done by hand once:
 
-sudo mkdir -p /var/www/nelissen-website
-sudo chown -R "$USER":"$USER" /var/www/nelissen-website
-```
-
-### Runtime environment (SMTP etc.)
-
-`SMTP_*` and `CONTACT_*` are read **at runtime**, so they live on the server, not
-in the build. Create an env file (root-only readable):
+1. DNS: `A tegelhandelnelissen.nl` and `A www.tegelhandelnelissen.nl` → `159.195.28.227`.
+2. `/opt/apps/proxy/conf.d/nelissen-website.conf` — canonical is **www**, the
+   apex 301s to it (the reverse of the other apps on this server, which redirect
+   www → apex, because `NEXT_PUBLIC_SITE_URL` is the www form here).
+3. Certificate covering both names, www first (it names the `live/` directory):
 
 ```bash
-sudo tee /etc/nelissen-website.env >/dev/null <<'EOF'
-NODE_ENV=production
-PORT=3000
-NEXT_PUBLIC_SITE_URL=https://www.tegelhandelnelissen.nl
-SMTP_HOST=mail.example.nl
-SMTP_PORT=465
-SMTP_SECURE=true
-SMTP_USER=website@tegelhandelnelissen.nl
-SMTP_PASS=__your_password__
-CONTACT_TO=info@tegelhandelnelissen.nl
-CONTACT_FROM=website@tegelhandelnelissen.nl
-EOF
-sudo chmod 600 /etc/nelissen-website.env
+cd /opt/apps/proxy
+docker compose run --rm --entrypoint certbot certbot certonly --webroot -w /var/www/certbot \
+  -d www.tegelhandelnelissen.nl -d tegelhandelnelissen.nl \
+  --email vanderpasmilo@gmail.com --agree-tos --no-eff-email
+docker exec proxy nginx -t && docker exec proxy nginx -s reload
 ```
 
-### systemd service
+nginx refuses to start while a conf references a certificate that doesn't exist
+yet, so keep the file named `.conf.disabled` until the cert is issued.
 
-```ini
-# /etc/systemd/system/nelissen-website.service
-[Unit]
-Description=Nelissen website (Next.js)
-After=network.target
-
-[Service]
-Type=simple
-WorkingDirectory=/var/www/nelissen-website
-EnvironmentFile=/etc/nelissen-website.env
-ExecStart=/usr/bin/node server.js
-Restart=on-failure
-User=www-data
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now nelissen-website.service
-```
-
-> If `VPS_USER` is not root, give it passwordless sudo for just the restart:
-> `deploy ALL=(ALL) NOPASSWD: /bin/systemctl restart nelissen-website.service, /bin/systemctl daemon-reload`
-
-### nginx reverse proxy + HTTPS
-
-```nginx
-server {
-    server_name www.tegelhandelnelissen.nl tegelhandelnelissen.nl;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-The `X-Forwarded-For` header above is what the contact API rate limiter reads to
-identify clients. Add TLS with `sudo certbot --nginx`.
+Full detail lives in the VPS docs repo (`02-reverse-proxy-and-tls.md`).
 
 ## 3. Deploy
 
-Push to `main` — the workflow builds, transfers, and restarts. First push will
-populate `/var/www/nelissen-website`; subsequent pushes update it in place.
+Push to `main`, or *Actions → Deploy to VPS → Run workflow*. Verify on the VPS:
+
+```bash
+docker ps | grep nelissen-website          # Up (healthy)
+curl -I https://www.tegelhandelnelissen.nl # 200
+curl -I https://tegelhandelnelissen.nl     # 301 → www
+```
+
+Then submit the contact form once. Outbound SMTP is the one thing a host move
+can break silently — nothing else exercises it.
+
+## Notes that cost time to rediscover
+
+- The container's healthcheck probes **`http://127.0.0.1/health`**, not
+  `localhost`: Node binds IPv4-only and BusyBox `wget` tries `::1` first, so a
+  healthy container reports `unhealthy` with the usual template.
+- Both Docker stages are **alpine**. `sharp` is traced into the standalone
+  output together with its platform binary, so build and runtime libc must match
+  (musl) or image optimization breaks at runtime.
+- `package-lock.json` must be regenerated **on Linux**, not Windows. The
+  optional `wasm32` packages (`@tailwindcss/oxide-wasm32-wasi`,
+  `@img/sharp-wasm32`) carry floating `^` ranges on `@emnapi/*`, and a
+  Windows-generated lock can fail `npm ci` inside the image build:
+  `docker run --rm -v "$PWD":/app -w /app node:22-alpine npm install --package-lock-only`

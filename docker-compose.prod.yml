@@ -1,0 +1,24 @@
+# Deployed to /opt/apps/nelissen-website/docker-compose.yml by .github/workflows/deploy.yml.
+# The nginx "proxy" container reaches this app by container_name over the shared
+# "web" network; nothing here publishes a host port.
+services:
+  app:
+    image: ${DOCKERHUB_USERNAME}/nelissen-website:latest
+    container_name: nelissen-website
+    restart: unless-stopped
+    # SMTP_* / CONTACT_* are runtime config, written by the deploy workflow.
+    env_file:
+      - .env
+    expose:
+      - "80"
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  web:
+    external: true
