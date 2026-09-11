@@ -1,45 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { useConsent, type ConsentCategories } from "./ConsentProvider";
 
-export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
-  const { ready, decided, settingsOpen, categories, save, acceptAll, rejectAll, closeSettings } = useConsent();
-  const [showPrefs, setShowPrefs] = useState(false);
-  const [draft, setDraft] = useState<ConsentCategories>(categories);
+const BTN =
+  "inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold focus:outline-none transition-colors duration-150 w-full sm:w-auto";
 
-  // Keep the preference toggles in sync with the actual consent — after the
-  // cookie is read, after Accept/Reject all, and when settings are reopened.
-  useEffect(() => {
-    setDraft(categories);
-  }, [categories, settingsOpen]);
+const PRIMARY_BTN: React.CSSProperties = {
+  fontFamily: FONT.body,
+  background: BRAND.yellow,
+  color: BRAND.anthracite,
+  borderRadius: 2,
+};
 
-  // Render only after the cookie is read, and only when a choice is needed
-  // or the visitor reopened the settings.
-  if (!ready || (decided && !settingsOpen)) return null;
+const OUTLINE_BTN: React.CSSProperties = {
+  fontFamily: FONT.body,
+  background: "transparent",
+  color: "#fff",
+  border: "1.5px solid rgba(255,255,255,0.35)",
+  borderRadius: 2,
+};
 
-  const prefsOpen = showPrefs || settingsOpen;
+const ACTIONS_ROW = "mt-5 flex flex-col sm:flex-row gap-3 sm:justify-end";
 
-  // Closing: if a choice was already made (reopened via footer) just close;
-  // on a first visit, treat closing as "necessary only" so no non-essential
-  // cookies load and the banner doesn't get stuck.
-  const handleClose = () => (decided ? closeSettings() : rejectAll());
-
+function ToggleRow({
+  title,
+  desc,
+  checked,
+  disabled = false,
+  alwaysLabel,
+  onChange,
+}: {
+  title: string;
+  desc: string;
+  checked: boolean;
+  disabled?: boolean;
+  alwaysLabel?: string;
+  onChange?: (v: boolean) => void;
+}) {
   const labelStyle = { fontFamily: FONT.body } as const;
 
-  const toggleRow = (
-    key: "necessary" | "analytics" | "media",
-    title: string,
-    desc: string,
-    checked: boolean,
-    disabled = false,
-    onChange?: (v: boolean) => void,
-  ) => (
-    <div key={key} className="flex items-start gap-3 py-3 border-t" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+  return (
+    <div className="flex items-start gap-3 py-3 border-t" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
       <input
         type="checkbox"
         checked={checked}
@@ -52,9 +58,9 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
       <div>
         <p className="text-sm font-semibold" style={{ ...labelStyle, color: "#fff" }}>
           {title}
-          {disabled && (
+          {disabled && alwaysLabel && (
             <span className="ml-2 text-xs font-normal" style={{ color: BRAND.yellow }}>
-              ({dict.always})
+              ({alwaysLabel})
             </span>
           )}
         </p>
@@ -64,9 +70,88 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
       </div>
     </div>
   );
+}
 
-  const btnBase =
-    "inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold focus:outline-none transition-colors duration-150";
+/**
+ * The toggles plus the actions row they share.
+ *
+ * This only ever mounts while the panel is open, so `draft` initialises from the
+ * stored consent every time it opens — that remount *is* the reset. Syncing the
+ * two with an effect instead would re-render the banner on every consent change.
+ * `actions` is passed in so Reject/Accept keep sitting in the same flex row.
+ */
+function Preferences({
+  dict,
+  categories,
+  onSave,
+  actions,
+}: {
+  dict: Dictionary["cookies"];
+  categories: ConsentCategories;
+  onSave: (categories: ConsentCategories) => void;
+  actions: React.ReactNode;
+}) {
+  const [draft, setDraft] = useState<ConsentCategories>(categories);
+
+  return (
+    <>
+      <div className="mt-4">
+        <ToggleRow
+          title={dict.categories.necessary.title}
+          desc={dict.categories.necessary.desc}
+          checked
+          disabled
+          alwaysLabel={dict.always}
+        />
+        <ToggleRow
+          title={dict.categories.analytics.title}
+          desc={dict.categories.analytics.desc}
+          checked={draft.analytics}
+          onChange={(v) => setDraft((d) => ({ ...d, analytics: v }))}
+        />
+        <ToggleRow
+          title={dict.categories.media.title}
+          desc={dict.categories.media.desc}
+          checked={draft.media}
+          onChange={(v) => setDraft((d) => ({ ...d, media: v }))}
+        />
+      </div>
+
+      <div className={ACTIONS_ROW}>
+        <button onClick={() => onSave(draft)} className={BTN} style={PRIMARY_BTN}>
+          {dict.banner.save}
+        </button>
+        {actions}
+      </div>
+    </>
+  );
+}
+
+export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
+  const { ready, decided, settingsOpen, categories, save, acceptAll, rejectAll, closeSettings } = useConsent();
+  const [showPrefs, setShowPrefs] = useState(false);
+
+  // Render only after the cookie is read, and only when a choice is needed
+  // or the visitor reopened the settings.
+  if (!ready || (decided && !settingsOpen)) return null;
+
+  const prefsOpen = showPrefs || settingsOpen;
+
+  // Closing: if a choice was already made (reopened via footer) just close;
+  // on a first visit, treat closing as "necessary only" so no non-essential
+  // cookies load and the banner doesn't get stuck.
+  const handleClose = () => (decided ? closeSettings() : rejectAll());
+
+  const actions = (
+    <>
+      <button onClick={rejectAll} className={BTN} style={OUTLINE_BTN}>
+        {dict.banner.rejectAll}
+      </button>
+      <button onClick={acceptAll} className={BTN} style={PRIMARY_BTN}>
+        {dict.banner.acceptAll}
+      </button>
+    </>
+  );
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6" role="dialog" aria-modal="false" aria-label={dict.banner.title}>
@@ -95,42 +180,16 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
           .
         </p>
 
-        {prefsOpen && (
-          <div className="mt-4">
-            {toggleRow("necessary", dict.categories.necessary.title, dict.categories.necessary.desc, true, true)}
-            {toggleRow("analytics", dict.categories.analytics.title, dict.categories.analytics.desc, draft.analytics, false, (v) =>
-              setDraft((d) => ({ ...d, analytics: v })),
-            )}
-            {toggleRow("media", dict.categories.media.title, dict.categories.media.desc, draft.media, false, (v) =>
-              setDraft((d) => ({ ...d, media: v })),
-            )}
-          </div>
-        )}
-
-        <div className="mt-5 flex flex-col sm:flex-row gap-3 sm:justify-end">
-          {prefsOpen ? (
-            <button onClick={() => save(draft)} className={`${btnBase} w-full sm:w-auto`} style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}>
-              {dict.banner.save}
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setDraft(categories);
-                setShowPrefs(true);
-              }}
-              className={`${btnBase} w-full sm:w-auto`}
-              style={{ fontFamily: FONT.body, background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.35)", borderRadius: 2 }}
-            >
+        {prefsOpen ? (
+          <Preferences dict={dict} categories={categories} onSave={save} actions={actions} />
+        ) : (
+          <div className={ACTIONS_ROW}>
+            <button onClick={() => setShowPrefs(true)} className={BTN} style={OUTLINE_BTN}>
               {dict.banner.preferences}
             </button>
-          )}
-          <button onClick={rejectAll} className={`${btnBase} w-full sm:w-auto`} style={{ fontFamily: FONT.body, background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.35)", borderRadius: 2 }}>
-            {dict.banner.rejectAll}
-          </button>
-          <button onClick={acceptAll} className={`${btnBase} w-full sm:w-auto`} style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}>
-            {dict.banner.acceptAll}
-          </button>
-        </div>
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );
