@@ -11,6 +11,10 @@ concurrency:
   group: deploy-vps
   cancel-in-progress: true
 
+# Nothing here reads or writes the repository through GITHUB_TOKEN.
+permissions:
+  contents: read
+
 env:
   # Directory on the VPS holding the compose file + runtime .env for this app.
   APP_DIR: /opt/apps/nelissen-website
@@ -55,31 +59,66 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
 
+      # Pin the server's host key so the deploy can't be pointed at an imposter.
+      # Generate the secret's value once, from a machine you trust:
+      #   ssh-keyscan -t ed25519 <VPS_HOST>
+      # Until VPS_KNOWN_HOSTS is set this falls back to the old trust-on-first-use
+      # behaviour, so the deploy keeps working — it just warns.
+      - name: Pin VPS host key
+        env:
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          if [ -n "$KNOWN_HOSTS" ]; then
+            printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            echo "SSH_OPTS=-o StrictHostKeyChecking=yes" >> "$GITHUB_ENV"
+          else
+            echo "::warning title=Unpinned host key::VPS_KNOWN_HOSTS is not set; falling back to StrictHostKeyChecking=accept-new (trust on first use)."
+            echo "SSH_OPTS=-o StrictHostKeyChecking=accept-new" >> "$GITHUB_ENV"
+          fi
+
       # The server holds no source code — only a compose file and an .env.
+      #
+      # Secrets are passed through the environment rather than interpolated into
+      # the script body: `${{ }}` substitution happens before bash parses the
+      # line, so a value containing a quote, backtick or $(...) would otherwise
+      # be executed by the runner instead of written to the file.
       - name: Transfer deployment files to VPS
         env:
           HOST: ${{ secrets.VPS_HOST }}
           USER: ${{ secrets.VPS_USER }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          CONTACT_TO: ${{ secrets.CONTACT_TO }}
+          CONTACT_FROM: ${{ secrets.CONTACT_FROM }}
         run: |
-          SSH_OPTS="-o StrictHostKeyChecking=accept-new"
+          # Never leave the rendered secrets behind on the runner's workspace.
+          trap 'rm -f deploy.env' EXIT
+          umask 077
+
           ssh $SSH_OPTS "$USER@$HOST" "mkdir -p $APP_DIR"
 
           # Runtime config. Compose also reads this file for ${...} substitution
           # in docker-compose.yml, so a literal $ in a value must be written $$.
           {
-            printf "DOCKERHUB_USERNAME=%s\n" "${{ secrets.DOCKERHUB_USERNAME }}"
-            printf "SMTP_HOST=%s\n"    "${{ secrets.SMTP_HOST }}"
-            printf "SMTP_PORT=%s\n"    "${{ secrets.SMTP_PORT }}"
-            printf "SMTP_SECURE=%s\n"  "${{ secrets.SMTP_SECURE }}"
-            printf "SMTP_USER=%s\n"    "${{ secrets.SMTP_USER }}"
-            printf "SMTP_PASS=%s\n"    "${{ secrets.SMTP_PASS }}"
-            printf "CONTACT_TO=%s\n"   "${{ secrets.CONTACT_TO }}"
-            printf "CONTACT_FROM=%s\n" "${{ secrets.CONTACT_FROM }}"
+            printf 'DOCKERHUB_USERNAME=%s\n' "$DOCKERHUB_USERNAME"
+            printf 'SMTP_HOST=%s\n'    "$SMTP_HOST"
+            printf 'SMTP_PORT=%s\n'    "$SMTP_PORT"
+            printf 'SMTP_SECURE=%s\n'  "$SMTP_SECURE"
+            printf 'SMTP_USER=%s\n'    "$SMTP_USER"
+            printf 'SMTP_PASS=%s\n'    "$SMTP_PASS"
+            printf 'CONTACT_TO=%s\n'   "$CONTACT_TO"
+            printf 'CONTACT_FROM=%s\n' "$CONTACT_FROM"
           } > deploy.env
 
           rsync -avz -e "ssh $SSH_OPTS" \
             docker-compose.prod.yml "$USER@$HOST:$APP_DIR/docker-compose.yml"
-          rsync -avz -e "ssh $SSH_OPTS" \
+          rsync -avz --chmod=F600 -e "ssh $SSH_OPTS" \
             deploy.env "$USER@$HOST:$APP_DIR/.env"
 
       - name: Deploy with Docker Compose
@@ -87,5 +126,5 @@ jobs:
           HOST: ${{ secrets.VPS_HOST }}
           USER: ${{ secrets.VPS_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=accept-new "$USER@$HOST" \
+          ssh $SSH_OPTS "$USER@$HOST" \
             "cd $APP_DIR && docker compose pull && docker compose up -d && docker compose ps"
