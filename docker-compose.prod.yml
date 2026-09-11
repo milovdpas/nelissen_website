@@ -11,6 +11,17 @@ services:
       - .env
     expose:
       - "80"
+    # The image runs as an unprivileged user (uid 1001). This namespaced sysctl
+    # lets that user bind :80 inside the container, so the port stays the same
+    # for the proxy while the server no longer runs as root.
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    # A Node server that only listens on a socket needs no Linux capabilities and
+    # must never gain privileges through setuid binaries.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     networks:
       - web
     healthcheck:

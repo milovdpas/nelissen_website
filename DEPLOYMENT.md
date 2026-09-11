@@ -62,6 +62,7 @@ Settings → Secrets and variables → Actions.
 | `VPS_HOST`             | `159.195.28.227`                                       |
 | `VPS_USER`             | `deploy`                                               |
 | `VPS_SSH_PRIVATE_KEY`  | CI deploy private key                                  |
+| `VPS_KNOWN_HOSTS`      | `ssh-keyscan -t ed25519 <VPS_HOST>` output (host-key pin) |
 | `SMTP_HOST`            | mail host for the contact form                         |
 | `SMTP_PORT`            | `465`                                                  |
 | `SMTP_SECURE`          | `true`                                                 |
@@ -110,6 +111,29 @@ yet, so keep the file named `.conf.disabled` until the cert is issued.
 
 Full detail lives in the VPS docs repo (`02-reverse-proxy-and-tls.md`).
 
+4. Pin the host key so the deploy can't be redirected to another machine. From a
+   machine you trust, take the output of
+
+   ```bash
+   ssh-keyscan -t ed25519 159.195.28.227
+   ```
+
+   and store it as the `VPS_KNOWN_HOSTS` secret. Until that secret exists the
+   workflow still deploys, but it falls back to trust-on-first-use and logs a
+   warning.
+
+## Container privileges
+
+The image runs as an unprivileged user (`nextjs`, uid 1001), not root, and
+`docker-compose.prod.yml` drops every Linux capability plus `no-new-privileges`.
+
+It still listens on **:80**, so the reverse-proxy conf needs no change. That
+works because the compose file sets the namespaced sysctl
+`net.ipv4.ip_unprivileged_port_start=0`, which only affects this container's
+network namespace. If you ever move the app to a port above 1024, drop that
+sysctl and update `proxy_pass` in `/opt/apps/proxy/conf.d/nelissen-website.conf`
+in the same window, or the site 502s.
+
 ## 3. Deploy
 
 Push to `main`, or *Actions → Deploy to VPS → Run workflow*. Verify on the VPS:
@@ -136,3 +160,7 @@ can break silently — nothing else exercises it.
   `@img/sharp-wasm32`) carry floating `^` ranges on `@emnapi/*`, and a
   Windows-generated lock can fail `npm ci` inside the image build:
   `docker run --rm -v "$PWD":/app -w /app node:22-alpine npm install --package-lock-only`
+  Regenerate it **last**: a later `npm install` on Windows rewrites the lock and
+  drops the `@emnapi/*` entries again, so `npm ci` fails inside the image with
+  `Missing: @emnapi/runtime from lock file`. Local `node_modules` stays usable
+  without re-running install.
