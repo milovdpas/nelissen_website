@@ -22,7 +22,7 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
           >
             {dict.title}
           </h2>
-          <p className="mt-4 text-sm max-w-xl" style={{ fontFamily: FONT.body, color: "#7a7873" }}>
+          <p className="mt-4 text-sm max-w-xl" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
             {dict.intro}
           </p>
         </div>
@@ -51,7 +51,7 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
                 >
                   {dict.tegelzetter.title}
                 </h3>
-                <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "#7a7873" }}>
+                <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
                   {dict.tegelzetter.subtitle}
                 </p>
               </div>
@@ -67,7 +67,7 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
                   <span className="text-sm font-medium" style={{ fontFamily: FONT.body, color: BRAND.anthracite }}>
                     {row.label}
                   </span>
-                  <span className="text-sm font-semibold" style={{ fontFamily: FONT.body, color: row.highlight ? BRAND.anthracite : "#bbb" }}>
+                  <span className="text-sm font-semibold" style={{ fontFamily: FONT.body, color: row.highlight ? BRAND.anthracite : "#767676" }}>
                     {row.value}
                   </span>
                 </div>
@@ -106,7 +106,7 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
                 >
                   {dict.showroom.title}
                 </h3>
-                <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "#7a7873" }}>
+                <p className="text-xs mt-1" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
                   {dict.showroom.subtitle}
                 </p>
               </div>
@@ -140,7 +140,7 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
                   </span>
                   <span
                     className="text-sm font-semibold"
-                    style={{ fontFamily: FONT.body, color: row.value === "Gesloten" ? "#bbb" : "#7a7873" }}
+                    style={{ fontFamily: FONT.body, color: row.value === "Gesloten" ? "#767676" : "#5f5e58" }}
                   >
                     {row.value}
                   </span>

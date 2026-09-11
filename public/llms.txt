@@ -4,6 +4,14 @@
 > vakkundig tegels zetten bij woningen en bedrijfspanden, plus een eigen
 > showroom voor tegelverkoop.
 
+## Belangrijke links
+- [Homepage](https://www.tegelhandelnelissen.nl): overzicht van diensten, assortiment en contact
+- [Over ons](https://www.tegelhandelnelissen.nl/#over-ons): familiebedrijf met 25+ jaar ervaring
+- [Diensten](https://www.tegelhandelnelissen.nl/#diensten): tegels zetten bij woningen en bedrijfspanden
+- [Assortiment](https://www.tegelhandelnelissen.nl/#assortiment): vloer-, wand- en buitentegels, sanitair
+- [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom en zetwerk op afspraak
+- [Contact & offerte](https://www.tegelhandelnelissen.nl/#contact): vrijblijvend een offerte aanvragen
+
 ## Diensten
 - Tegels zetten bij woningen (badkamers, keukens, hallen, woonkamers, terrassen; vloer- en wandtegels)
 - Tegels zetten bij filialen en bedrijfspanden (winkels, horeca, kantoren, showrooms, buitenruimtes)
@@ -21,10 +29,10 @@ Noord-Brabant en omstreken.
 
 ## Contact
 - Adres: St. Willibrordusstraat 2a, 5351 EH Berghem, Noord-Brabant, Nederland
-- Telefoon: +31 412 403251
-- E-mail: info@tegelhandelnelissen.nl
-- Website: https://www.tegelhandelnelissen.nl
+- Telefoon: [+31 412 403251](tel:+31412403251)
+- E-mail: [info@tegelhandelnelissen.nl](mailto:info@tegelhandelnelissen.nl)
+- Website: [tegelhandelnelissen.nl](https://www.tegelhandelnelissen.nl)
 
 ## Offerte
-Offertes zijn vrijblijvend aan te vragen via het contactformulier op de website,
+Offertes zijn vrijblijvend aan te vragen via het [contactformulier](https://www.tegelhandelnelissen.nl/#contact),
 telefonisch of per e-mail.

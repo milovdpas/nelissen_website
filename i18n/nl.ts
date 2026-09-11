@@ -10,7 +10,7 @@ export const nl = {
   meta: {
     title: "Tegelhandel Nelissen | Tegelzettersbedrijf & showroom in Berghem",
     description:
-      "Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem (Noord-Brabant). Al 25+ jaar vakkundig tegels zetten bij woningen en bedrijfspanden, plus een eigen showroom. Vraag vrijblijvend een offerte aan.",
+      "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 25+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Vraag vrijblijvend een offerte aan.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
   },
 
@@ -111,9 +111,9 @@ export const nl = {
     label: "Contact",
     title: "Neem contact op.",
     fields: {
-      naam: { label: "Naam", placeholder: "Uw volledige naam" },
+      name: { label: "Naam", placeholder: "Uw volledige naam" },
       email: { label: "E-mailadres", placeholder: "uw@emailadres.nl" },
-      bericht: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
+      message: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
     },
     submit: "Verstuur bericht",
     sending: "Versturen...",
@@ -124,8 +124,8 @@ export const nl = {
     error:
       "Er ging iets mis bij het versturen. Probeer het later opnieuw of bel ons direct.",
     details: {
-      adres: "Adres",
-      telefoon: "Telefoon",
+      address: "Adres",
+      phone: "Telefoon",
       email: "E-mail",
       showroom: "Showroom",
       showroomValue: "Dinsdag 15:00 – 19:00\nOverige dagen op afspraak",
@@ -140,6 +140,43 @@ export const nl = {
     tegelzetterValue: "Maandag t/m zaterdag, op afspraak",
     showroomTitle: "Showroom tegelverkoop",
     rightsReserved: "Alle rechten voorbehouden.",
+    legal: {
+      privacy: "Privacybeleid",
+      cookies: "Cookiebeleid",
+      preferences: "Cookievoorkeuren",
+    },
+  },
+
+  cookies: {
+    banner: {
+      title: "Cookievoorkeuren",
+      body: "Wij gebruiken noodzakelijke cookies voor de werking van de website. Met uw toestemming gebruiken wij ook cookies voor statistieken (Google Analytics) en het tonen van externe media zoals Google Maps.",
+      privacyLink: "Lees ons cookiebeleid",
+      acceptAll: "Alles accepteren",
+      rejectAll: "Alleen noodzakelijk",
+      preferences: "Voorkeuren",
+      save: "Voorkeuren opslaan",
+    },
+    always: "Altijd actief",
+    categories: {
+      necessary: {
+        title: "Noodzakelijk",
+        desc: "Vereist voor de basisfunctionaliteit van de website, waaronder het onthouden van uw cookievoorkeuren.",
+      },
+      analytics: {
+        title: "Statistieken",
+        desc: "Google Analytics, om het gebruik van de website anoniem te meten en te verbeteren.",
+      },
+      media: {
+        title: "Externe media",
+        desc: "Ingesloten content van derden, zoals de Google Maps-kaart.",
+      },
+    },
+    map: {
+      title: "Kaart niet geladen",
+      body: "Om de Google Maps-kaart te tonen plaatsen wij cookies van Google. Accepteer externe media om de kaart te laden.",
+      button: "Kaart laden",
+    },
   },
 } as const;
 

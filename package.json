@@ -27,5 +27,7 @@
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "//browserslist": "Modern targets so Next skips legacy ES polyfills (Array.at, Object.hasOwn, etc.) — fine for a 2026 consumer site.",
+  "browserslist": ["last 2 years", "not dead"]
 }

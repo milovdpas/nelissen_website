@@ -2,18 +2,19 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { BRAND, FONT, site } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import { ContactForm } from "@/components/ContactForm";
+import { MapEmbed } from "@/components/cookies/MapEmbed";
 import type { Dictionary } from "@/i18n/dictionaries";
 
-export function Contact({ dict }: { dict: Dictionary["contact"] }) {
+export function Contact({ dict, mapDict }: { dict: Dictionary["contact"]; mapDict: Dictionary["cookies"]["map"] }) {
   const details = [
     {
       icon: <MapPin size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.adres,
+      label: dict.details.address,
       value: `${site.address.street}\n${site.address.postalCode} ${site.address.city}\n${site.address.region}, ${site.address.country}`,
     },
     {
       icon: <Phone size={17} style={{ color: BRAND.yellow }} />,
-      label: dict.details.telefoon,
+      label: dict.details.phone,
       value: site.phone,
       href: site.phoneHref,
     },
@@ -50,18 +51,15 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <ContactForm dict={dict} />
-          </div>
-
-          <div className="flex flex-col gap-5">
-            <div className="p-6 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
+        <ContactForm
+          dict={dict}
+          aside={
+            <div className="p-6 flex flex-col gap-5 h-full" style={{ background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
               {details.map((item) => (
                 <div key={item.label} className="flex gap-4 items-start">
                   <div className="mt-0.5 shrink-0">{item.icon}</div>
                   <div>
-                    <p className="text-xs font-semibold tracking-wide uppercase mb-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.38)" }}>
+                    <p className="text-xs font-semibold tracking-wide uppercase mb-1" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.6)" }}>
                       {item.label}
                     </p>
                     {item.href ? (
@@ -81,21 +79,12 @@ export function Contact({ dict }: { dict: Dictionary["contact"] }) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Full-width map below both columns */}
-        <div className="mt-12 overflow-hidden" style={{ borderRadius: 2, height: 360 }}>
-          <iframe
-            title={dict.mapTitle}
-            src={site.mapsEmbedUrl}
-            width="100%"
-            height="360"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+        {/* Full-width map below both columns (consent-gated) */}
+        <div className="mt-12">
+          <MapEmbed title={dict.mapTitle} dict={mapDict} />
         </div>
       </div>
     </section>
