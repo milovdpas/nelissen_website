@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main # Trigger deployment on push to the main branch
+  workflow_dispatch:
 
 # Avoid overlapping deploys clobbering each other.
 concurrency:
@@ -11,67 +12,80 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Path to the app on the VPS and the systemd unit that runs it.
-  APP_DIR: /var/www/nelissen-website
-  SERVICE: nelissen-website.service
+  # Directory on the VPS holding the compose file + runtime .env for this app.
+  APP_DIR: /opt/apps/nelissen-website
+  IMAGE: nelissen-website
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node and install dependencies
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: 22
-          cache: npm
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm ci
+      # NEXT_PUBLIC_* are inlined at build time (canonical URLs, sitemap,
+      # robots, OG, JSON-LD, analytics), so they are build args here.
+      # SMTP_* / CONTACT_* are read at runtime on the server — see below.
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.tegelhandelnelissen.nl' }}
+            NEXT_PUBLIC_GA_ID=${{ vars.NEXT_PUBLIC_GA_ID }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/nelissen-website:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/nelissen-website:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      # Step 3: Build the Next.js app (standalone output).
-      # NEXT_PUBLIC_SITE_URL is inlined at build time, so it must be set here.
-      # SMTP_* are read at runtime on the server, not here.
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.tegelhandelnelissen.nl' }}
-
-      # Step 4: Setup SSH with passphrase-protected key
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
 
-      # Step 5: Transfer the standalone build to the VPS.
-      # The standalone server needs three pieces side by side:
-      #   <APP_DIR>/server.js + minimal node_modules  (from .next/standalone)
-      #   <APP_DIR>/.next/static                       (static assets)
-      #   <APP_DIR>/public                             (public assets)
-      - name: Transfer files via rsync
+      # The server holds no source code — only a compose file and an .env.
+      - name: Transfer deployment files to VPS
         env:
           HOST: ${{ secrets.VPS_HOST }}
           USER: ${{ secrets.VPS_USER }}
         run: |
-          SSH_OPTS="-o StrictHostKeyChecking=no"
-          ssh $SSH_OPTS "$USER@$HOST" "mkdir -p $APP_DIR/.next/static $APP_DIR/public"
+          SSH_OPTS="-o StrictHostKeyChecking=accept-new"
+          ssh $SSH_OPTS "$USER@$HOST" "mkdir -p $APP_DIR"
 
-          # Server + traced node_modules (no --delete: it would wipe static/public)
-          rsync -avz -e "ssh $SSH_OPTS" ./.next/standalone/ "$USER@$HOST:$APP_DIR/"
-          # Static + public are self-contained, safe to mirror with --delete
-          rsync -avz --delete -e "ssh $SSH_OPTS" ./.next/static/ "$USER@$HOST:$APP_DIR/.next/static/"
-          rsync -avz --delete -e "ssh $SSH_OPTS" ./public/ "$USER@$HOST:$APP_DIR/public/"
+          # Runtime config. Compose also reads this file for ${...} substitution
+          # in docker-compose.yml, so a literal $ in a value must be written $$.
+          {
+            printf "DOCKERHUB_USERNAME=%s\n" "${{ secrets.DOCKERHUB_USERNAME }}"
+            printf "SMTP_HOST=%s\n"    "${{ secrets.SMTP_HOST }}"
+            printf "SMTP_PORT=%s\n"    "${{ secrets.SMTP_PORT }}"
+            printf "SMTP_SECURE=%s\n"  "${{ secrets.SMTP_SECURE }}"
+            printf "SMTP_USER=%s\n"    "${{ secrets.SMTP_USER }}"
+            printf "SMTP_PASS=%s\n"    "${{ secrets.SMTP_PASS }}"
+            printf "CONTACT_TO=%s\n"   "${{ secrets.CONTACT_TO }}"
+            printf "CONTACT_FROM=%s\n" "${{ secrets.CONTACT_FROM }}"
+          } > deploy.env
 
-      # Step 6: Restart the Next.js service via systemd
-      - name: Restart Next.js app
+          rsync -avz -e "ssh $SSH_OPTS" \
+            docker-compose.prod.yml "$USER@$HOST:$APP_DIR/docker-compose.yml"
+          rsync -avz -e "ssh $SSH_OPTS" \
+            deploy.env "$USER@$HOST:$APP_DIR/.env"
+
+      - name: Deploy with Docker Compose
         env:
           HOST: ${{ secrets.VPS_HOST }}
           USER: ${{ secrets.VPS_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=no "$USER@$HOST" \
-            "sudo systemctl daemon-reload && sudo systemctl restart $SERVICE"
+          ssh -o StrictHostKeyChecking=accept-new "$USER@$HOST" \
+            "cd $APP_DIR && docker compose pull && docker compose up -d && docker compose ps"
