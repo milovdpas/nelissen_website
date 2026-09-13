@@ -152,3 +152,64 @@ export function contactNotificationEmail(input: { name: string; email: string; m
 
   return { subject, html, text };
 }
+
+/**
+ * Acknowledgement sent to the visitor, so a submission doesn't just vanish.
+ * Their own message is echoed back as a record of what was sent.
+ */
+export function contactConfirmationEmail(input: { name: string; message: string }) {
+  const subject = `Wij hebben uw bericht ontvangen — ${site.shortName}`;
+  const phoneHref = site.phone.replace(/\s/g, "");
+
+  const contentHtml = `
+    <div style="font-family:${HEADING_STACK};font-weight:bold;font-size:22px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.anthracite};padding-bottom:4px;">
+      Bedankt voor uw bericht
+    </div>
+    <div style="font-family:${BODY_STACK};font-size:14px;color:#7a7873;padding-bottom:24px;">
+      Een bevestiging van uw aanvraag via onze website.
+    </div>
+
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:0 0 14px 0;">
+      Beste ${esc(input.name)},
+    </p>
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:0 0 14px 0;">
+      Wij hebben uw bericht in goede orde ontvangen en nemen zo snel mogelijk
+      contact met u op. U hoeft verder niets te doen.
+    </p>
+
+    <div style="font-family:${BODY_STACK};font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#7a7873;padding:10px 0 6px 0;">Uw bericht</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="background:#f7f6f4;border-left:3px solid ${BRAND.yellow};padding:16px 18px;font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};white-space:pre-wrap;">${esc(input.message)}</td>
+      </tr>
+    </table>
+
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:22px 0 0 0;">
+      Heeft u haast? Bel ons gerust op
+      <a href="tel:${phoneHref}" style="color:${BRAND.blue};text-decoration:none;font-weight:bold;">${esc(site.phone)}</a>.
+    </p>`;
+
+  const html = baseLayout({
+    title: subject,
+    preheader: "Wij hebben uw bericht ontvangen en nemen snel contact met u op.",
+    contentHtml,
+  });
+
+  const text = [
+    `Bedankt voor uw bericht`,
+    ``,
+    `Beste ${input.name},`,
+    ``,
+    `Wij hebben uw bericht in goede orde ontvangen en nemen zo snel mogelijk contact met u op. U hoeft verder niets te doen.`,
+    ``,
+    `Uw bericht:`,
+    input.message,
+    ``,
+    `Heeft u haast? Bel ons gerust op ${site.phone}.`,
+    ``,
+    `${site.legalName}`,
+    `${site.address.street}, ${site.address.postalCode} ${site.address.city}`,
+  ].join("\n");
+
+  return { subject, html, text };
+}

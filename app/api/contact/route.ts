@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sendMail } from "@/lib/mailer";
-import { contactNotificationEmail } from "@/lib/email-template";
+import { contactConfirmationEmail, contactNotificationEmail } from "@/lib/email-template";
+import { site } from "@/content/site";
 
 // Node runtime required for nodemailer (not Edge).
 export const runtime = "nodejs";
@@ -96,7 +97,11 @@ export async function POST(req: Request) {
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ ok: false, error: "validation" }, { status: 400 });
+    // Name the fields that failed so the form can point at them. Only the field
+    // names cross the wire — the wording lives in the dictionary, and nothing
+    // about the schema internals is disclosed.
+    const fields = [...new Set(parsed.error.issues.map((issue) => String(issue.path[0])))];
+    return NextResponse.json({ ok: false, error: "validation", fields }, { status: 400 });
   }
 
   // Honeypot tripped — pretend success so bots don't learn anything.
@@ -107,11 +112,22 @@ export async function POST(req: Request) {
   const { name, email, message } = parsed.data;
 
   try {
-    const { subject, html, text } = contactNotificationEmail({ name, email, message });
-    await sendMail({ subject, html, text, replyTo: email });
-    return NextResponse.json({ ok: true });
+    const notification = contactNotificationEmail({ name, email, message });
+    await sendMail({ ...notification, replyTo: email });
   } catch (err) {
     console.error("Contact mail failed:", err);
     return NextResponse.json({ ok: false, error: "send_failed" }, { status: 500 });
   }
+
+  // Acknowledgement to the visitor. Deliberately non-fatal: the enquiry has
+  // already reached the business, so a bounce here must not report failure to
+  // the visitor — they would simply send the same message again.
+  try {
+    const confirmation = contactConfirmationEmail({ name, message });
+    await sendMail({ ...confirmation, to: email, replyTo: site.email });
+  } catch (err) {
+    console.error("Contact confirmation failed (the enquiry itself was delivered):", err);
+  }
+
+  return NextResponse.json({ ok: true });
 }

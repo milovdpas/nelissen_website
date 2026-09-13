@@ -123,6 +123,15 @@ export const nl = {
     },
     error:
       "Er ging iets mis bij het versturen. Probeer het later opnieuw of bel ons direct.",
+    // Shown under the offending field when the API rejects the submission. The
+    // wording must match the limits in app/api/contact/route.ts.
+    validation: {
+      name: "Vul uw naam in (minimaal 2 tekens).",
+      email: "Vul een geldig e-mailadres in.",
+      message: "Uw bericht moet minimaal 5 tekens bevatten.",
+    },
+    rateLimited:
+      "U heeft zojuist een bericht verstuurd. Wacht even en probeer het opnieuw.",
     details: {
       address: "Adres",
       phone: "Telefoon",
