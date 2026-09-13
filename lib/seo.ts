@@ -13,7 +13,7 @@ export function localBusinessJsonLd() {
     legalName: site.legalName,
     url: site.url,
     email: site.email,
-    telephone: site.phone,
+    telephone: site.phoneE164,
     image: `${site.url}/images/showroom.jpeg`,
     priceRange: "€€",
     address: {

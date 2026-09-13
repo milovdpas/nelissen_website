@@ -86,7 +86,7 @@ export function baseLayout({ title, preheader, contentHtml }: BaseLayout): strin
             <td style="background:#f7f6f4;border-top:1px solid rgba(44,48,56,0.1);padding:20px 28px;font-family:${BODY_STACK};font-size:12px;line-height:1.6;color:#7a7873;">
               <strong style="color:${BRAND.anthracite};">${esc(site.legalName)}</strong><br />
               ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}<br />
-              <a href="tel:${site.phone.replace(/\s/g, "")}" style="color:${BRAND.anthracite};text-decoration:none;">${esc(site.phone)}</a>
+              <a href="${site.phoneHref}" style="color:${BRAND.anthracite};text-decoration:none;">${esc(site.phone)}</a>
               &nbsp;·&nbsp;
               <a href="mailto:${esc(site.email)}" style="color:${BRAND.anthracite};text-decoration:none;">${esc(site.email)}</a>
             </td>
@@ -99,9 +99,69 @@ export function baseLayout({ title, preheader, contentHtml }: BaseLayout): strin
 </html>`;
 }
 
+/** What the contact form collects. Shared by the API route and both e-mails. */
+export type ContactSubmission = {
+  type: "appointment" | "question";
+  name: string;
+  email: string;
+  phone?: string;
+  /** ISO yyyy-mm-dd, straight from <input type="date">. */
+  date?: string;
+  /** Any combination of the dayparts below — the visitor may pick several. */
+  dayparts?: string[];
+  message?: string;
+};
+
+const DAYPART_LABELS: Record<string, string> = {
+  ochtend: "Ochtend",
+  middag: "Middag",
+  avond: "Avond",
+};
+
+/** Chronological, so a selection always reads Ochtend → Middag → Avond. */
+const DAYPART_ORDER = ["ochtend", "middag", "avond"];
+
+/**
+ * "2026-09-16" -> "dinsdag 16 september 2026".
+ *
+ * Built and formatted in UTC on purpose: parsing a bare ISO date yields
+ * midnight UTC, which in a negative-offset timezone renders as the day before.
+ */
+function formatDutchDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return new Intl.DateTimeFormat("nl-NL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(y, m - 1, d)));
+}
+
+/** The requested slot as one human line, or null when nothing was chosen. */
+function slotLine(input: ContactSubmission): string | null {
+  const parts: string[] = [];
+  if (input.date) parts.push(formatDutchDate(input.date));
+
+  if (input.dayparts?.length) {
+    // Sorted and de-duplicated: the visitor clicks the chips in whatever order
+    // they like, and the e-mail should still read chronologically.
+    const labels = [...new Set(input.dayparts)]
+      .sort((a, b) => DAYPART_ORDER.indexOf(a) - DAYPART_ORDER.indexOf(b))
+      .map((value) => DAYPART_LABELS[value] ?? value);
+    parts.push(labels.join(", "));
+  }
+
+  return parts.length ? parts.join(" — ") : null;
+}
+
 /** Notification e-mail sent to the company when the contact form is submitted. */
-export function contactNotificationEmail(input: { name: string; email: string; message: string }) {
-  const subject = `Nieuw bericht via ${site.shortName}: ${input.name}`;
+export function contactNotificationEmail(input: ContactSubmission) {
+  const isAppointment = input.type === "appointment";
+  const subject = isAppointment
+    ? `Afspraakverzoek via ${site.shortName}: ${input.name}`
+    : `Nieuw bericht via ${site.shortName}: ${input.name}`;
 
   const field = (label: string, valueHtml: string) => `
     <tr>
@@ -111,26 +171,45 @@ export function contactNotificationEmail(input: { name: string; email: string; m
       </td>
     </tr>`;
 
-  const contentHtml = `
-    <div style="font-family:${HEADING_STACK};font-weight:bold;font-size:22px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.anthracite};padding-bottom:4px;">
-      Nieuwe contactaanvraag
-    </div>
-    <div style="font-family:${BODY_STACK};font-size:14px;color:#7a7873;padding-bottom:24px;">
-      Via het contactformulier op de website.
-    </div>
+  const slot = slotLine(input);
 
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      ${field("Naam", esc(input.name))}
-      ${field("E-mailadres", `<a href="mailto:${esc(input.email)}" style="color:${BRAND.blue};text-decoration:none;">${esc(input.email)}</a>`)}
-    </table>
+  const rows = [
+    field("Naam", esc(input.name)),
+    field(
+      "E-mailadres",
+      `<a href="mailto:${esc(input.email)}" style="color:${BRAND.blue};text-decoration:none;">${esc(input.email)}</a>`,
+    ),
+    input.phone
+      ? field(
+          "Telefoonnummer",
+          `<a href="tel:${esc(input.phone.replace(/[^0-9+]/g, ""))}" style="color:${BRAND.blue};text-decoration:none;">${esc(input.phone)}</a>`,
+        )
+      : "",
+    slot ? field("Voorkeursmoment", esc(slot)) : "",
+  ].join("");
 
-    <div style="font-family:${BODY_STACK};font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#7a7873;padding:6px 0 6px 0;">Bericht</div>
+  const messageBlock = input.message
+    ? `
+    <div style="font-family:${BODY_STACK};font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#7a7873;padding:6px 0 6px 0;">${isAppointment ? "Toelichting" : "Bericht"}</div>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="background:#f7f6f4;border-left:3px solid ${BRAND.yellow};padding:16px 18px;font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};white-space:pre-wrap;">${esc(input.message)}</td>
       </tr>
-    </table>
+    </table>`
+    : "";
 
+  const contentHtml = `
+    <div style="font-family:${HEADING_STACK};font-weight:bold;font-size:22px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.anthracite};padding-bottom:4px;">
+      ${isAppointment ? "Nieuwe afspraakaanvraag" : "Nieuwe contactaanvraag"}
+    </div>
+    <div style="font-family:${BODY_STACK};font-size:14px;color:#7a7873;padding-bottom:24px;">
+      ${isAppointment ? "Aanvraag voor een bezoek aan de showroom." : "Via het contactformulier op de website."}
+    </div>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      ${rows}
+    </table>
+${messageBlock}
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="padding-top:24px;">
       <tr>
         <td style="background:${BRAND.yellow};">
@@ -144,11 +223,108 @@ export function contactNotificationEmail(input: { name: string; email: string; m
 
   const html = baseLayout({
     title: subject,
-    preheader: `Bericht van ${input.name}`,
+    preheader: isAppointment ? `Afspraakverzoek van ${input.name}` : `Bericht van ${input.name}`,
     contentHtml,
   });
 
-  const text = `Nieuwe contactaanvraag via ${site.shortName}\n\nNaam: ${input.name}\nE-mail: ${input.email}\n\nBericht:\n${input.message}\n`;
+  const text = [
+    isAppointment
+      ? `Nieuwe afspraakaanvraag via ${site.shortName}`
+      : `Nieuwe contactaanvraag via ${site.shortName}`,
+    "",
+    `Naam: ${input.name}`,
+    `E-mail: ${input.email}`,
+    input.phone ? `Telefoon: ${input.phone}` : "",
+    slot ? `Voorkeursmoment: ${slot}` : "",
+    input.message ? `\n${isAppointment ? "Toelichting" : "Bericht"}:\n${input.message}` : "",
+    "",
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  return { subject, html, text };
+}
+
+/**
+ * Acknowledgement sent to the visitor, so a submission does not just vanish.
+ * Their own request is echoed back as a record of what was sent.
+ */
+export function contactConfirmationEmail(input: ContactSubmission) {
+  const isAppointment = input.type === "appointment";
+  const subject = isAppointment
+    ? `Wij hebben uw afspraakverzoek ontvangen — ${site.shortName}`
+    : `Wij hebben uw bericht ontvangen — ${site.shortName}`;
+
+  const slot = slotLine(input);
+
+  const intro = isAppointment
+    ? "Wij hebben uw aanvraag voor een afspraak in onze showroom ontvangen. Wij bevestigen de afspraak zo snel mogelijk per e-mail of telefoon."
+    : "Wij hebben uw bericht in goede orde ontvangen en nemen zo snel mogelijk contact met u op. U hoeft verder niets te doen.";
+
+  const slotBlock = slot
+    ? `
+    <div style="font-family:${BODY_STACK};font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#7a7873;padding:10px 0 6px 0;">Uw voorkeursmoment</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="background:#f7f6f4;border-left:3px solid ${BRAND.yellow};padding:14px 18px;font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};">${esc(slot)}</td>
+      </tr>
+    </table>`
+    : "";
+
+  const messageBlock = input.message
+    ? `
+    <div style="font-family:${BODY_STACK};font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#7a7873;padding:10px 0 6px 0;">${isAppointment ? "Uw toelichting" : "Uw bericht"}</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="background:#f7f6f4;border-left:3px solid ${BRAND.yellow};padding:16px 18px;font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};white-space:pre-wrap;">${esc(input.message)}</td>
+      </tr>
+    </table>`
+    : "";
+
+  const contentHtml = `
+    <div style="font-family:${HEADING_STACK};font-weight:bold;font-size:22px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.anthracite};padding-bottom:4px;">
+      ${isAppointment ? "Bedankt voor uw aanvraag" : "Bedankt voor uw bericht"}
+    </div>
+    <div style="font-family:${BODY_STACK};font-size:14px;color:#7a7873;padding-bottom:24px;">
+      Een bevestiging van uw aanvraag via onze website.
+    </div>
+
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:0 0 14px 0;">
+      Beste ${esc(input.name)},
+    </p>
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:0 0 14px 0;">
+      ${intro}
+    </p>
+${slotBlock}${messageBlock}
+    <p style="font-family:${BODY_STACK};font-size:15px;line-height:1.6;color:${BRAND.anthracite};margin:22px 0 0 0;">
+      Heeft u haast? Bel ons gerust op
+      <a href="${site.phoneHref}" style="color:${BRAND.blue};text-decoration:none;font-weight:bold;">${esc(site.phone)}</a>.
+    </p>`;
+
+  const html = baseLayout({
+    title: subject,
+    preheader: isAppointment
+      ? "Wij hebben uw afspraakverzoek ontvangen en bevestigen dit snel."
+      : "Wij hebben uw bericht ontvangen en nemen snel contact met u op.",
+    contentHtml,
+  });
+
+  const text = [
+    isAppointment ? "Bedankt voor uw aanvraag" : "Bedankt voor uw bericht",
+    "",
+    `Beste ${input.name},`,
+    "",
+    intro,
+    slot ? `\nUw voorkeursmoment:\n${slot}` : "",
+    input.message ? `\n${isAppointment ? "Uw toelichting" : "Uw bericht"}:\n${input.message}` : "",
+    "",
+    `Heeft u haast? Bel ons gerust op ${site.phone}.`,
+    "",
+    `${site.legalName}`,
+    `${site.address.street}, ${site.address.postalCode} ${site.address.city}`,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
 
   return { subject, html, text };
 }

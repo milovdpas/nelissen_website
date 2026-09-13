@@ -2,6 +2,7 @@
 
 import { MapPin } from "lucide-react";
 import { BRAND, FONT, site } from "@/content/site";
+import { Button } from "@/components/ui/Button";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { useConsent } from "./ConsentProvider";
 
@@ -41,14 +42,9 @@ export function MapEmbed({ title, dict }: { title: string; dict: Dictionary["coo
       <p className="text-xs max-w-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.7)" }}>
         {dict.body}
       </p>
-      <button
-        type="button"
-        onClick={() => grant("media")}
-        className="mt-1 inline-flex items-center px-5 py-2.5 text-sm font-semibold focus:outline-none"
-        style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
-      >
+      <Button type="button" size="sm" className="mt-1" onClick={() => grant("media")}>
         {dict.button}
-      </button>
+      </Button>
     </div>
   );
 }
