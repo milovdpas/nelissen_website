@@ -10,7 +10,7 @@ export const nl = {
   meta: {
     title: "Tegelhandel Nelissen | Tegelzettersbedrijf & showroom in Berghem",
     description:
-      "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 25+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Vraag vrijblijvend een offerte aan.",
+      "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 40+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Maak vrijblijvend een afspraak.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
   },
 
@@ -23,7 +23,7 @@ export const nl = {
       { href: "#openingstijden", label: "Openingstijden" },
       { href: "#contact", label: "Contact" },
     ],
-    cta: "Offerte aanvragen",
+    cta: "Afspraak maken",
     home: "#hero",
     menuLabel: "Menu",
   },
@@ -31,11 +31,11 @@ export const nl = {
   hero: {
     titleLine1: "Vakmanschap",
     titleLine2: "in elke tegel.",
-    body: "Al jaren zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant. Met oog voor detail, op afspraak, zes dagen per week. Bezoek onze showroom of vraag direct een offerte aan.",
-    ctaPrimary: "Offerte aanvragen",
+    body: "Al jaren zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant. Met oog voor detail, op afspraak, zes dagen per week. Kom langs in onze showroom of plan direct een afspraak.",
+    ctaPrimary: "Afspraak maken",
     ctaSecondary: "Showroom bezoeken",
     stats: [
-      { num: "25+", label: "Jaar ervaring" },
+      { num: "40+", label: "Jaar ervaring" },
       { num: "Ma–Za", label: "Zetwerk op afspraak" },
       { num: "Di 15–19", label: "Showroom open" },
     ],
@@ -46,7 +46,7 @@ export const nl = {
     titleLine1: "Een familiebedrijf",
     titleLine2: "met vakmanschap.",
     paragraphs: [
-      "Nelissen Tegelhandel & Tegelzettersbedrijf is een V.O.F. gevestigd in Berghem, Noord-Brabant. Al meer dan 25 jaar zetten wij tegels bij particulieren en bedrijfspanden, altijd met vakkundige aandacht voor het werk en de klant.",
+      "Nelissen Tegelhandel & Tegelzettersbedrijf is een V.O.F. gevestigd in Berghem, Noord-Brabant. Al meer dan 40 jaar zetten wij tegels bij particulieren en bedrijfspanden, altijd met vakkundige aandacht voor het werk en de klant.",
       "Ons team werkt flexibel: maandag tot en met zaterdag, op afspraak. Naast het zetwerk beschikt u bij ons ook over een showroom waar u tegels kunt bekijken en kopen. Elke dinsdag van 15:00 tot 19:00 uur.",
     ],
     checklist: [
@@ -94,7 +94,7 @@ export const nl = {
     },
     showroom: {
       title: "Showroom tegelverkoop",
-      subtitle: "St. Willibrordusstraat 2a, Berghem",
+      subtitle: "St. Willibrordusstraat 2b, Berghem",
       highlightDay: "Dinsdag",
       highlightHours: "15:00 – 19:00",
       rows: [
@@ -110,16 +110,53 @@ export const nl = {
   contact: {
     label: "Contact",
     title: "Neem contact op.",
+    // An appointment needs more from the visitor than a question does, so the
+    // extra fields only appear once "Afspraak showroom" is selected.
+    type: {
+      legend: "Waarvoor neemt u contact op?",
+      appointment: "Afspraak showroom",
+      question: "Algemene vraag",
+    },
     fields: {
       name: { label: "Naam", placeholder: "Uw volledige naam" },
       email: { label: "E-mailadres", placeholder: "uw@emailadres.nl" },
+      phone: { label: "Telefoonnummer (optioneel)", placeholder: "06 12345678" },
+      date: {
+        label: "Voorkeursdatum (optioneel)",
+        placeholder: "Kies een datum",
+        open: "Kies een voorkeursdatum",
+        previousMonth: "Vorige maand",
+        nextMonth: "Volgende maand",
+        clear: "Wissen",
+        closedNote: "Zondag gesloten",
+      },
+      dayparts: {
+        label: "Dagdeel (meerdere mogelijk)",
+        options: [
+          { value: "ochtend", label: "Ochtend" },
+          { value: "middag", label: "Middag" },
+          { value: "avond", label: "Avond" },
+        ],
+      },
       message: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
+      messageAppointment: {
+        label: "Toelichting (optioneel)",
+        placeholder: "Waar bent u naar op zoek? Bijvoorbeeld badkamer, vloer of terras...",
+      },
     },
+    // Sets the expectation that this is a request, not a confirmed booking.
+    appointmentNote:
+      "De showroom is op dinsdag geopend van 15:00 tot 19:00 uur; andere dagen kunnen op afspraak. Wij bevestigen uw afspraak per e-mail of telefoon.",
     submit: "Verstuur bericht",
+    submitAppointment: "Afspraak aanvragen",
     sending: "Versturen...",
     success: {
       title: "Bericht ontvangen!",
       body: "Bedankt voor uw bericht. Wij nemen zo snel mogelijk contact met u op.",
+    },
+    successAppointment: {
+      title: "Afspraakverzoek ontvangen!",
+      body: "Bedankt voor uw aanvraag. Wij bevestigen uw afspraak zo snel mogelijk per e-mail of telefoon.",
     },
     error:
       "Er ging iets mis bij het versturen. Probeer het later opnieuw of bel ons direct.",
@@ -128,6 +165,9 @@ export const nl = {
     validation: {
       name: "Vul uw naam in (minimaal 2 tekens).",
       email: "Vul een geldig e-mailadres in.",
+      phone: "Vul een geldig telefoonnummer in.",
+      date: "Kies een datum vanaf vandaag. Op zondag zijn wij gesloten.",
+      dayparts: "Kies een geldig dagdeel.",
       message: "Uw bericht moet minimaal 5 tekens bevatten.",
     },
     rateLimited:

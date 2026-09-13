@@ -28,10 +28,13 @@ export const site = {
   /** Production domain (no trailing slash). Override via NEXT_PUBLIC_SITE_URL. */
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.tegelhandelnelissen.nl").replace(/\/$/, ""),
   email: "info@tegelhandelnelissen.nl",
-  phone: "+31 412 403251",
-  phoneHref: "tel:+31412403251",
+  /** Display form, as Dutch customers expect to read it. */
+  phone: "06 48642639",
+  phoneHref: "tel:+31648642639",
+  /** E.164 for schema.org — Google wants the international form there. */
+  phoneE164: "+31648642639",
   address: {
-    street: "St. Willibrordusstraat 2a",
+    street: "St. Willibrordusstraat 2b",
     postalCode: "5351 EH",
     city: "Berghem",
     region: "Noord-Brabant",
@@ -42,7 +45,7 @@ export const site = {
     latitude: 51.7740555,
     longitude: 5.5664992,
   },
-  foundingYearsExperience: 25,
+  foundingYearsExperience: 40,
   // Google Maps embed for the contact section (src URL only, no iframe markup).
   mapsEmbedUrl:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2468.7566663829966!2d5.5664992!3d51.774055499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c6fdbad727391f%3A0x7f30b532443b3a26!2sNelissen%20Tegelhandel%20%26%20Tegelzettersbedrijf!5e0!3m2!1snl!2snl!4v1781645071522!5m2!1snl!2snl",

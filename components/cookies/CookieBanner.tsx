@@ -6,24 +6,10 @@ import { X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { useConsent, type ConsentCategories } from "./ConsentProvider";
+import { Button } from "@/components/ui/Button";
 
-const BTN =
-  "inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold focus:outline-none transition-colors duration-150 w-full sm:w-auto";
-
-const PRIMARY_BTN: React.CSSProperties = {
-  fontFamily: FONT.body,
-  background: BRAND.yellow,
-  color: BRAND.anthracite,
-  borderRadius: 2,
-};
-
-const OUTLINE_BTN: React.CSSProperties = {
-  fontFamily: FONT.body,
-  background: "transparent",
-  color: "#fff",
-  border: "1.5px solid rgba(255,255,255,0.35)",
-  borderRadius: 2,
-};
+// Every action in the banner is the same width rule.
+const BANNER_BTN = "w-full sm:w-auto justify-center";
 
 const ACTIONS_ROW = "mt-5 flex flex-col sm:flex-row gap-3 sm:justify-end";
 
@@ -118,9 +104,9 @@ function Preferences({
       </div>
 
       <div className={ACTIONS_ROW}>
-        <button onClick={() => onSave(draft)} className={BTN} style={PRIMARY_BTN}>
+        <Button className={BANNER_BTN} size="sm" onClick={() => onSave(draft)}>
           {dict.banner.save}
-        </button>
+        </Button>
         {actions}
       </div>
     </>
@@ -144,12 +130,12 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
 
   const actions = (
     <>
-      <button onClick={rejectAll} className={BTN} style={OUTLINE_BTN}>
+      <Button variant="outline" className={BANNER_BTN} size="sm" onClick={rejectAll}>
         {dict.banner.rejectAll}
-      </button>
-      <button onClick={acceptAll} className={BTN} style={PRIMARY_BTN}>
+      </Button>
+      <Button className={BANNER_BTN} size="sm" onClick={acceptAll}>
         {dict.banner.acceptAll}
-      </button>
+      </Button>
     </>
   );
 
@@ -184,9 +170,9 @@ export function CookieBanner({ dict }: { dict: Dictionary["cookies"] }) {
           <Preferences dict={dict} categories={categories} onSave={save} actions={actions} />
         ) : (
           <div className={ACTIONS_ROW}>
-            <button onClick={() => setShowPrefs(true)} className={BTN} style={OUTLINE_BTN}>
+            <Button variant="outline" className={BANNER_BTN} size="sm" onClick={() => setShowPrefs(true)}>
               {dict.banner.preferences}
-            </button>
+            </Button>
             {actions}
           </div>
         )}

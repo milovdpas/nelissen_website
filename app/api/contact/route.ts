@@ -1,20 +1,71 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sendMail } from "@/lib/mailer";
-import { contactConfirmationEmail, contactNotificationEmail } from "@/lib/email-template";
+import {
+  contactConfirmationEmail,
+  contactNotificationEmail,
+  type ContactSubmission,
+} from "@/lib/email-template";
 import { site } from "@/content/site";
 
 // Node runtime required for nodemailer (not Edge).
 export const runtime = "nodejs";
 
-const schema = z.object({
-  name: z.string().trim().min(2).max(100),
-  email: z.string().trim().email().max(150),
-  message: z.string().trim().min(5).max(5000),
-  // Honeypot: accepted by the schema, then checked explicitly below so a
-  // tripped honeypot returns a silent success instead of a validation error.
-  website: z.string().max(200).optional(),
-});
+const DAYPARTS = ["ochtend", "middag", "avond"] as const;
+
+/** An untouched optional input posts "" — treat that as "not provided". */
+const blank = (value: unknown) =>
+  typeof value === "string" && value.trim() === "" ? undefined : value;
+
+const schema = z
+  .object({
+    // Older clients (and anything hand-rolled) may omit this entirely.
+    type: z.enum(["appointment", "question"]).default("question"),
+    name: z.string().trim().min(2).max(100),
+    // Trim first, then validate: z.string().email() is deprecated in zod 4, and
+    // z.email() on its own would reject an address with stray whitespace.
+    email: z.string().trim().pipe(z.email().max(150)),
+    phone: z.preprocess(
+      blank,
+      z.string().trim().min(6).max(30).regex(/^[0-9+()\s-]+$/).optional(),
+    ),
+    // ISO yyyy-mm-dd, as produced by the calendar in components/ui/DatePicker.
+    date: z.preprocess(blank, z.string().trim().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
+    // Several dayparts may be picked. An empty array means "no preference",
+    // which is the same as not sending the field at all.
+    dayparts: z.preprocess(
+      (value) => (Array.isArray(value) && value.length === 0 ? undefined : value),
+      z.array(z.enum(DAYPARTS)).max(DAYPARTS.length).optional(),
+    ),
+    message: z.preprocess(blank, z.string().trim().max(5000).optional()),
+    // Honeypot: accepted by the schema, then checked explicitly below so a
+    // tripped honeypot returns a silent success instead of a validation error.
+    website: z.string().max(200).optional(),
+  })
+  .superRefine((value, ctx) => {
+    // A question is nothing without its text. An appointment stands on the
+    // name, e-mail and preferred slot, so its note stays optional.
+    if (value.type === "question" && (value.message ?? "").length < 5) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["message"],
+        message: "Message is required for a general question.",
+      });
+    }
+
+    // The calendar already greys these out, but it is client-side, so the same
+    // two rules are enforced here: nothing in the past, and never a Sunday
+    // (the showroom is closed). Comparing ISO strings is safe, and using UTC
+    // makes the past check lenient rather than over-strict for visitors an
+    // hour ahead of the server.
+    if (value.date) {
+      const [y, m, d] = value.date.split("-").map(Number);
+      const isSunday = new Date(Date.UTC(y, m - 1, d)).getUTCDay() === 0;
+      if (value.date < new Date().toISOString().slice(0, 10) || isSunday) {
+        ctx.addIssue({ code: "custom", path: ["date"], message: "Date is in the past or a Sunday." });
+      }
+    }
+  });
 
 // Lightweight in-memory rate limit (per IP). Resets on server restart; good
 // enough as a first line of defence on a single VPS instance.
@@ -109,11 +160,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const { name, email, message } = parsed.data;
+  // Rebuilt field by field so the honeypot can never reach a template.
+  const submission: ContactSubmission = {
+    type: parsed.data.type,
+    name: parsed.data.name,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    date: parsed.data.date,
+    dayparts: parsed.data.dayparts,
+    message: parsed.data.message,
+  };
 
   try {
-    const notification = contactNotificationEmail({ name, email, message });
-    await sendMail({ ...notification, replyTo: email });
+    const notification = contactNotificationEmail(submission);
+    await sendMail({ ...notification, replyTo: submission.email });
   } catch (err) {
     console.error("Contact mail failed:", err);
     return NextResponse.json({ ok: false, error: "send_failed" }, { status: 500 });
@@ -123,8 +183,8 @@ export async function POST(req: Request) {
   // already reached the business, so a bounce here must not report failure to
   // the visitor — they would simply send the same message again.
   try {
-    const confirmation = contactConfirmationEmail({ name, message });
-    await sendMail({ ...confirmation, to: email, replyTo: site.email });
+    const confirmation = contactConfirmationEmail(submission);
+    await sendMail({ ...confirmation, to: submission.email, replyTo: site.email });
   } catch (err) {
     console.error("Contact confirmation failed (the enquiry itself was delivered):", err);
   }
