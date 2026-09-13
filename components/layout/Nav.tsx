@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
+import { ButtonLink } from "@/components/ui/Button";
 import { LogoSquares } from "@/components/brand/LogoSquares";
 import type { Dictionary } from "@/i18n/dictionaries";
 
@@ -59,15 +60,15 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
           ))}
         </ul>
 
-        <a
+        <ButtonLink
           href="#contact"
-          className="hidden md:inline-flex items-center gap-2 text-sm font-semibold px-5 py-2 focus:outline-none transition-all duration-150"
-          style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
+          size="xs"
+          display="hidden md:inline-flex"
           onMouseEnter={(e) => (e.currentTarget.style.background = BRAND.yellowHover)}
           onMouseLeave={(e) => (e.currentTarget.style.background = BRAND.yellow)}
         >
           {dict.cta}
-        </a>
+        </ButtonLink>
 
         <button
           onClick={() => setOpen(!open)}
@@ -96,14 +97,15 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
               </li>
             ))}
             <li>
-              <a
+              <ButtonLink
                 href="#contact"
+                size="sm"
+                display="flex"
+                className="w-full justify-center"
                 onClick={() => setOpen(false)}
-                className="text-sm font-semibold px-5 py-2.5 w-full block text-center focus:outline-none"
-                style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
               >
                 {dict.cta}
-              </a>
+              </ButtonLink>
             </li>
           </ul>
         </div>

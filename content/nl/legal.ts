@@ -30,8 +30,8 @@ export const privacyPolicy: LegalDoc = {
       heading: "Wie zijn wij?",
       paragraphs: [
         "V.O.F. Nelissen Tegelhandel & Tegelzettersbedrijf",
-        "St. Willibrordusstraat 2a, 5351 EH Berghem, Noord-Brabant",
-        "Telefoon: +31 412 403251 · E-mail: info@tegelhandelnelissen.nl",
+        "St. Willibrordusstraat 2b, 5351 EH Berghem, Noord-Brabant",
+        "Telefoon: 06 48642639 · E-mail: info@tegelhandelnelissen.nl",
         "KvK-nummer: [KvK-nummer invullen]",
       ],
     },
@@ -39,7 +39,7 @@ export const privacyPolicy: LegalDoc = {
       heading: "Welke gegevens verzamelen wij?",
       paragraphs: ["Wij verzamelen alleen gegevens die u zelf aan ons verstrekt of die nodig zijn voor de werking van de website:"],
       list: [
-        "Contactformulier: uw naam, e-mailadres en de inhoud van uw bericht.",
+        "Contactformulier: uw naam, e-mailadres, eventueel uw telefoonnummer en voorkeursmoment voor een afspraak, en de inhoud van uw bericht.",
         "Technische gegevens: bij een bezoek aan de website worden tijdelijk technische gegevens verwerkt (zoals IP-adres) voor de werking en beveiliging van de website.",
         "Statistieken: met uw toestemming verzamelen wij via Google Analytics geanonimiseerde gebruiksstatistieken.",
       ],

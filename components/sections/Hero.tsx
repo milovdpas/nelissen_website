@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
+import { ButtonLink } from "@/components/ui/Button";
 import { LogoSquares } from "@/components/brand/LogoSquares";
 import type { Dictionary } from "@/i18n/dictionaries";
 
@@ -52,26 +53,12 @@ export function Hero({ dict }: { dict: Dictionary["hero"] & { imageAlt: string }
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 focus:outline-none"
-            style={{ fontFamily: FONT.body, background: BRAND.yellow, color: BRAND.anthracite, borderRadius: 2 }}
-          >
+          <ButtonLink href="#contact">
             {dict.ctaPrimary} <ArrowRight size={15} />
-          </a>
-          <a
-            href="#openingstijden"
-            className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold transition-all duration-150 focus:outline-none"
-            style={{
-              fontFamily: FONT.body,
-              color: "#fff",
-              border: "1.5px solid rgba(255,255,255,0.35)",
-              borderRadius: 2,
-              background: "transparent",
-            }}
-          >
+          </ButtonLink>
+          <ButtonLink href="#openingstijden" variant="outline">
             {dict.ctaSecondary}
-          </a>
+          </ButtonLink>
         </div>
 
         <div className="mt-16 flex flex-wrap gap-8 border-t pt-8" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
