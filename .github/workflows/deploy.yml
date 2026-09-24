@@ -41,7 +41,7 @@ jobs:
       # robots, OG, JSON-LD, analytics), so they are build args here.
       # SMTP_* / CONTACT_* are read at runtime on the server — see below.
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
