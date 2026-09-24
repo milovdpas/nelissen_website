@@ -1,0 +1,29 @@
+# Managed alongside the weekly audit in milovdpas/vps_hosting (doc 07).
+# Dependabot opens the fix PRs; the audit only reports what is still open.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for routine minor/patch noise; majors stay separate so a
+      # breaking bump is never hidden inside a batch.
+      routine:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+
+  # Keeps actions/checkout, setup-node etc. patched.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
