@@ -73,6 +73,27 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // The Joomla site this replaced is still in Google's index under /index.php/…
+  // URLs, and they were 404ing — so the ranking those pages built up was being
+  // thrown away instead of handed to their replacements. The first two rules map
+  // the old pages onto their equivalents; the catch-all sweeps up every other
+  // legacy path (and bare /index.php) to the homepage. Order matters: Next takes
+  // the first match, so the specific rules must stay above the catch-all.
+  async redirects() {
+    return [
+      {
+        source: "/index.php/nl-nl/service/privacy-statement",
+        destination: "/privacybeleid",
+        permanent: true,
+      },
+      {
+        source: "/index.php/nl-nl/service/contact",
+        destination: "/#contact",
+        permanent: true,
+      },
+      { source: "/index.php/:path*", destination: "/", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
