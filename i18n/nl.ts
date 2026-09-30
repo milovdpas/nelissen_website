@@ -1,6 +1,7 @@
 import { services } from "@/content/nl/services";
 import { assortiment } from "@/content/nl/assortiment";
 import { portfolio } from "@/content/nl/portfolio";
+import { tegels } from "@/content/nl/tegels";
 
 /**
  * Dutch dictionary: every translatable string + the section content arrays.
@@ -85,8 +86,17 @@ export const nl = {
     label: "Assortiment",
     title: "Tegels voor elk project.",
     items: assortiment,
+    // Impressions from the showroom, shown under the category cards. Not a
+    // catalogue — see the note in content/nl/tegels.ts.
+    carouselItems: tegels,
+    carousel: {
+      label: "Tegels uit onze showroom",
+      prev: "Vorige foto",
+      next: "Volgende foto",
+      goTo: "Ga naar foto",
+    },
     footnotePrefix: "Bezoek onze showroom voor het volledige assortiment: ",
-    footnoteStrong: "iedere dinsdag van 15:00 tot 19:00 uur.",
+    footnoteStrong: "zes dagen per week op afspraak, dinsdag 15:00–19:00 vrije inloop.",
   },
 
   openingstijden: {

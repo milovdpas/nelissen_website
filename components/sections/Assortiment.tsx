@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
+import { TegelCarousel } from "@/components/sections/TegelCarousel";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
@@ -60,6 +61,10 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
             </div>
           ))}
         </div>
+
+        {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
+            taste of the range, come and see it. */}
+        <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
 
         <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
           {dict.footnotePrefix}

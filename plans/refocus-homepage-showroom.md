@@ -56,7 +56,7 @@ step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 Oc
 | 3 | Section order | ✅ verified in the DOM |
 | 4 | New assortiment categories | ✅ copy in; **images still placeholders** |
 | 5 | Data shape (`alt`, `slug`) | ✅ 14 images, 0 empty alts |
-| 6 | Tile carousel | ☐ |
+| 6 | Tile carousel | ✅ hand-rolled, no dependency; hero stays the only preloaded image |
 | 7 | Photos from Mark | ☐ blocked — expected 1 Oct |
 | 8 | Backgrounds | ✅ no two adjacent sections alike |
 | 9 | Nav order | ✅ matches the page |
@@ -64,7 +64,7 @@ step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 Oc
 | 11 | Derived files (llms.txt, sitemap) | ✅ |
 | 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
 | — | Message to Ronald (informational) | ☐ |
-| — | Tier 2 — multi-page split | ☐ next round |
+| — | Tier 2 — multi-page split + showroom section | ☐ next round |
 
 ## 1. `APP_ENV` — keep acceptance out of Google and out of real inboxes
 
@@ -505,6 +505,31 @@ The style axis is **not** the homepage's six cards. Those are Mark's merchandisi
 mix stock ("Voorraad tegels"), format ("120×120"), style ("Handvorm") and room ("Badkamers").
 Pages follow search demand. Where they overlap, link the card straight to its page using the
 `slug` from §5 — which is what earns that field its place.
+
+### A showroom section on the homepage
+
+The homepage tells people *when* (Openingstijden) and *where* (the map in Contact), but never
+what the visit is actually like — and getting them through the door is the entire goal. This is
+the gap tegelsuden.nl fills by leading on "400 m2 inspiratie", style setups you can walk
+through, and building a mood board in the shop: it sells the **visit**, not the product.
+
+Sits between Assortiment and Openingstijden, which is also where the Tier 2 homepage
+(Hero → Assortiment → Openingstijden → Contact) has room for it. Roughly: what you find when you
+walk in, seeing a tile at full size in real light instead of on a screen — Mark's own argument
+for why customers come in — and personal advice on matching and quantities.
+
+Blocked on two things from Mark, both cheap to ask for:
+
+- **Photos of the showroom itself**, not of tiles. `public/images/showroom.jpeg` exists and is
+  already the hero background and OG image, so it needs at least one or two more to avoid
+  reusing the same shot twice on one page.
+- **A couple of concrete facts** — floor area in m², roughly how many tiles are on display,
+  what is set up to walk through. Specifics are what make this section land; "kom eens langs"
+  on its own is filler. He has already volunteered that they hold 300–400 different tiles,
+  which is a strong number to lead with.
+
+Reuses the §6 carousel and the existing section template, so the build is small once the
+content exists.
 
 ### Nav — dropdown under Assortiment
 
