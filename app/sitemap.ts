@@ -10,6 +10,7 @@ const LAST_MODIFIED = {
   home: "2026-09-30",
   assortiment: "2026-09-30",
   overOns: "2026-09-30",
+  contact: "2026-09-30",
   privacybeleid: "2026-06-17",
   cookiebeleid: "2026-06-17",
 } as const;
@@ -41,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: LAST_MODIFIED.overOns,
       changeFrequency: "yearly",
       priority: 0.6,
+    },
+    {
+      url: `${site.url}/contact`,
+      lastModified: LAST_MODIFIED.contact,
+      changeFrequency: "yearly",
+      priority: 0.7,
     },
     {
       url: `${site.url}/privacybeleid`,

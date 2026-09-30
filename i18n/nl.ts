@@ -20,13 +20,16 @@ export const nl = {
     // homepage, so a bare "#assortiment" would look for a section that is not
     // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
-      { href: "/#assortiment", label: "Assortiment" },
+      { href: "/assortiment", label: "Assortiment" },
       { href: "/#openingstijden", label: "Openingstijden" },
       { href: "/over-ons", label: "Over ons" },
-      { href: "/#contact", label: "Contact" },
+      { href: "/contact", label: "Contact" },
     ],
     cta: "Afspraak maken",
-    ctaHref: "/#contact",
+    // The page, not the homepage anchor: from a sub-page the anchor would send
+    // people back to the homepage to find a form that is already on the page
+    // they are reading.
+    ctaHref: "/contact",
     home: "/",
     menuLabel: "Menu",
   },
@@ -88,6 +91,18 @@ export const nl = {
     breadcrumbLabel: "Kruimelpad",
     suitableLabel: "Waar het goed tot zijn recht komt",
     siblingsLabel: "Andere stijlen",
+  },
+
+  // Page-level chrome for /contact. The form, details and map come from the
+  // shared Contact section; only the heading and metadata live here.
+  contactPage: {
+    metaTitle: "Contact & route",
+    metaDescription:
+      "Contact met Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem: showroom aan de St. Willibrordusstraat 2b, telefoon, e-mail en een offerteaanvraag zonder verplichting.",
+    label: "Contact",
+    title: "Kom langs of neem contact op.",
+    intro:
+      "Vragen over tegels, een offerte nodig, of wilt u de showroom bezoeken? Bel of mail ons, of laat hieronder uw gegevens achter. U vindt ons aan de St. Willibrordusstraat 2b in Berghem.",
   },
 
   // Page-level metadata for /over-ons. The sections themselves keep their own
