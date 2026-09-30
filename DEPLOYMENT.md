@@ -2,31 +2,14 @@
 
 Two branches, two environments:
 
-| Branch       | Target            | How                                                        |
-| ------------ | ----------------- | ---------------------------------------------------------- |
-| `acceptance` | Vercel (staging)  | Vercel Git integration (no workflow in this repo)          |
-| `main`       | VPS (production)  | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml) |
+| Branch       | Target             | How                                                                            |
+| ------------ | ------------------ | ------------------------------------------------------------------------------ |
+| `acceptance` | VPS (acceptance)   | GitHub Actions — [`deploy-acceptance.yml`](.github/workflows/deploy-acceptance.yml) |
+| `main`       | VPS (production)   | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml)                   |
 
----
-
-# Acceptance (Vercel)
-
-Handled by **Vercel's native Git integration** — no GitHub Actions workflow.
-The Vercel project is configured with Branch Tracking on `acceptance`, so every
-push to `acceptance` creates a Production Deployment (currently
-<https://nelissen-website.vercel.app>).
-
-Setup lives in the Vercel dashboard, not this repo:
-
-1. Project → Settings → Git → **Production Branch = `acceptance`**.
-2. Project → Settings → **Environment Variables** — set the runtime config
-   (these are *not* in this repo): `NEXT_PUBLIC_SITE_URL` (the acceptance URL),
-   `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
-   `CONTACT_TO`, `CONTACT_FROM`.
-
-> Do **not** add a Vercel deploy workflow on top of this — it would double-deploy.
-> `output: "standalone"` in `next.config.ts` is compatible with Vercel; Vercel
-> uses its own build adapter and ignores it.
+Both environments run on the same box, behind the same proxy, from the same
+`Dockerfile`. They differ only in the build args the workflow passes and the
+container they deploy to — see [The acceptance environment](#the-acceptance-environment).
 
 ---
 
