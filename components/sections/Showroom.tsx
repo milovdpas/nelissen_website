@@ -18,6 +18,12 @@ import type { Dictionary } from "@/i18n/dictionaries";
  * exactly the duplicate content that moving sections (rather than copying them)
  * was meant to avoid.
  *
+ * The CTA is an on-page anchor, not a link to /contact. Both pages that render
+ * this section also render the Contact section directly below it, so sending
+ * someone to another page would walk them away from the form they are being
+ * asked to fill in. If this section is ever used on a page without a Contact
+ * section, that anchor needs to become a prop.
+ *
  * ⚠️ The image is a PLACEHOLDER. public/images/showroom.jpeg is genuinely theirs
  * — better than a stock showroom, which would pass off someone else's premises
  * as Nelissen's — but it is already the hero background, so on the homepage the
@@ -56,7 +62,7 @@ export function Showroom({
                 {dict.compactBody}
               </p>
               <div className="mt-6">
-                <ButtonLink href="/contact">
+                <ButtonLink href="#contact">
                   {dict.cta} <ArrowRight size={15} />
                 </ButtonLink>
               </div>
@@ -121,7 +127,7 @@ export function Showroom({
             </ul>
 
             <div className="mt-8">
-              <ButtonLink href="/contact">
+              <ButtonLink href="#contact">
                 {dict.cta} <ArrowRight size={15} />
               </ButtonLink>
             </div>
