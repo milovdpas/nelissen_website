@@ -24,6 +24,12 @@ export type Stijl = {
   blocks: StijlBlock[];
   /** Rendered as a checklist — "waar komt dit goed tot zijn recht". */
   geschiktVoor: string[];
+  /**
+   * One line for the showroom block that closes the page. Specific to this
+   * style: every style has a different reason a screen does not do it justice,
+   * and eight pages ending on the same sentence reads as boilerplate.
+   */
+  showroomLine: string;
   /** Photos for the carousel on this page. */
   photos: StijlPhoto[];
   /** Card image on the /assortiment hub. */
@@ -89,6 +95,8 @@ export const stijlen: Stijl[] = [
       "Hallen en gangen, dankzij de slijtvastheid",
       "Vloeren met vloerverwarming — keramiek geleidt warmte beter dan hout",
     ],
+    showroomLine:
+      "Houtlook leeft van nerf en kleurverloop, en visgraat laat zich pas beoordelen over een paar vierkante meter. In onze showroom in Berghem liggen ze naast elkaar, zodat u ze in hetzelfde licht kunt vergelijken.",
     photos: [
       {
         slug: "houtlook-woonkamer",

@@ -11,6 +11,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import { Contact } from "@/components/sections/Contact";
+import { Showroom } from "@/components/sections/Showroom";
 import { TegelCarousel } from "@/components/sections/TegelCarousel";
 
 const dict = getDictionary(defaultLocale);
@@ -181,6 +182,8 @@ export default async function StijlPage({ params }: { params: Promise<{ slug: st
 
         {/* Same contact section as the homepage: the article ends with "come and
             see it", so the form has to be right there rather than a page away. */}
+        <Showroom dict={dict.showroom} variant="compact" body={stijl.showroomLine} />
+
         <Contact dict={dict.contact} mapDict={dict.cookies.map} />
       </main>
       <Footer dict={dict.footer} nav={dict.nav} />

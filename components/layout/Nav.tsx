@@ -2,15 +2,29 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { LogoSquares } from "@/components/brand/LogoSquares";
 import type { Dictionary } from "@/i18n/dictionaries";
 
+/** The only routes that render without a Contact section. */
+const PAGES_WITHOUT_CONTACT = ["/privacybeleid", "/cookiebeleid"];
+
 export function Nav({ dict }: { dict: Dictionary["nav"] }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Almost every page renders the Contact section, and on those the CTA should
+  // scroll to the form rather than navigate away from the page that already has
+  // it. The two legal pages are the only ones without one.
+  //
+  // Derived from the pathname rather than by looking for #contact after mount:
+  // that needs an effect, and the href would be wrong for the first paint and
+  // for anything that does not run JavaScript. Keep this list in step if a page
+  // is ever added that has no Contact section.
+  const pathname = usePathname();
+  const contactHref = PAGES_WITHOUT_CONTACT.includes(pathname) ? dict.ctaHref : "#contact";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -18,6 +32,7 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
 
   return (
     <nav
@@ -64,7 +79,7 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
         </ul>
 
         <ButtonLink
-          href={dict.ctaHref}
+          href={contactHref}
           size="xs"
           display="hidden md:inline-flex"
           onMouseEnter={(e) => (e.currentTarget.style.background = BRAND.yellowHover)}
@@ -101,7 +116,7 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
             ))}
             <li>
               <ButtonLink
-                href={dict.ctaHref}
+                href={contactHref}
                 size="sm"
                 display="flex"
                 className="w-full justify-center"

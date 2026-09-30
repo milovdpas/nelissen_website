@@ -33,9 +33,17 @@ import type { Dictionary } from "@/i18n/dictionaries";
 export function Showroom({
   dict,
   variant = "full",
+  body,
 }: {
   dict: Dictionary["showroom"];
   variant?: "full" | "compact";
+  /**
+   * Overrides the compact body copy. The style pages pass a line about that
+   * specific style — eight pages closing with the same two sentences would read
+   * as boilerplate, and each style has a different reason why a screen does not
+   * do it justice.
+   */
+  body?: string;
 }) {
   if (variant === "compact") {
     return (
@@ -59,7 +67,7 @@ export function Showroom({
                 {dict.compactTitle}
               </h2>
               <p className="mt-4 text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "#4f4e4a" }}>
-                {dict.compactBody}
+                {body ?? dict.compactBody}
               </p>
               <div className="mt-6">
                 <ButtonLink href="#contact">
