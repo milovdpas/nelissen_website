@@ -1,5 +1,6 @@
 import "server-only";
 import nodemailer, { type Transporter } from "nodemailer";
+import { appEnv, isProduction } from "./env";
 
 /**
  * Generic SMTP transport built from environment variables.
@@ -71,16 +72,34 @@ export type MailMessage = {
   to?: string;
 };
 
-/** Send an e-mail — to `message.to`, or the configured CONTACT_TO inbox. */
+/**
+ * Send an e-mail — to `message.to`, or the configured CONTACT_TO inbox.
+ *
+ * Outside production every message is diverted to a test inbox and labelled in
+ * the subject. Without the diversion, a form submission on acceptance arrives
+ * at info@ looking exactly like a real enquiry, and someone chases a customer
+ * who does not exist — and the confirmation mail would be sent to whatever
+ * address the tester typed in, which may not be theirs.
+ */
 export async function sendMail(message: MailMessage) {
   const transport = getTransport();
   const from = process.env.CONTACT_FROM ?? process.env.SMTP_USER!;
-  const to = message.to ?? process.env.CONTACT_TO ?? from;
+
+  // Falls back to `from` rather than SMTP_USER: on a Mailtrap-style transport
+  // SMTP_USER is an API token, not an address, and nodemailer rejects the send
+  // with "No recipients defined".
+  const to = isProduction
+    ? (message.to ?? process.env.CONTACT_TO ?? from)
+    : (process.env.CONTACT_TO_TEST ?? from);
+
+  const subject = isProduction
+    ? message.subject
+    : `[TEST — ${appEnv}] ${message.subject}`;
 
   return transport.sendMail({
     from,
     to,
-    subject: message.subject,
+    subject,
     text: message.text,
     html: message.html,
     replyTo: message.replyTo,

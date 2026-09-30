@@ -33,9 +33,10 @@ When someone submits the contact form, also send the visitor a branded
   using `baseLayout()`, and send it from `app/api/contact/route.ts` after the
   notification mail (to the visitor's address, from `CONTACT_FROM`).
 
-## SEO: keep acceptance out of Google — IMPLEMENTED (needs env set)
-A `NEXT_PUBLIC_NOINDEX` flag now exists: when set to `true`, `app/robots.ts`
-blocks all crawlers and the metadata emits `noindex, nofollow`.
-**Action:** set `NEXT_PUBLIC_NOINDEX=true` in the Vercel (acceptance) project's
-environment variables so the staging domain isn't indexed as duplicate content.
-Leave it unset on the production VPS.
+## SEO: keep acceptance out of Google — DONE
+Superseded by `APP_ENV` (`lib/env.ts`), which replaced the old
+`NEXT_PUBLIC_NOINDEX` boolean. Only `APP_ENV=production` is indexable: anything
+else blocks crawlers in `app/robots.ts`, emits `noindex, nofollow` metadata, and
+adds an `X-Robots-Tag` header. The same flag diverts and labels outgoing mail, so
+the two can never disagree. Acceptance additionally sits behind HTTP basic auth,
+which is the only layer that actually prevents access rather than requesting it.

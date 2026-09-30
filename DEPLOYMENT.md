@@ -68,7 +68,8 @@ Settings → Secrets and variables → Actions.
 | `SMTP_SECURE`          | `true`                                                 |
 | `SMTP_USER`            | `website@tegelhandelnelissen.nl`                       |
 | `SMTP_PASS`            | mailbox password — a literal `$` must be written `$$`  |
-| `CONTACT_TO`           | `info@tegelhandelnelissen.nl`                          |
+| `CONTACT_TO`           | `info@tegelhandelnelissen.nl` — production deploy only |
+| `CONTACT_TO_TEST`      | inbox that acceptance mail is diverted to              |
 | `CONTACT_FROM`         | `website@tegelhandelnelissen.nl`                       |
 
 **Variables** (optional)
@@ -76,13 +77,25 @@ Settings → Secrets and variables → Actions.
 | Name                   | Default                               | Notes                          |
 | ---------------------- | ------------------------------------- | ------------------------------ |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.tegelhandelnelissen.nl`  | Inlined at build.              |
-| `NEXT_PUBLIC_GA_ID`    | unset (analytics disabled)            | Inlined at build.              |
+| `NEXT_PUBLIC_GA_ID`    | unset (analytics disabled)            | Inlined at build. Left unset on acceptance so test traffic stays out of the live property. |
+| `APP_ENV`              | unset → treated as non-production     | Set per workflow, not per repo. Build arg **and** runtime env. |
 
 ⚠️ **`NEXT_PUBLIC_*` are compile-time constants.** They are baked into the image
 as build args — canonical URLs, `sitemap.xml`, `robots.txt`, OG tags and JSON-LD
 are prerendered. Changing one means a rebuild, not an `.env` edit. `SMTP_*` and
 `CONTACT_*` are the opposite: read at runtime from the `.env` on the server, so
 changing them is a redeploy (or `docker compose up -d`) with no rebuild.
+
+⚠️ **`APP_ENV` is the one variable that belongs in *both* columns.** `robots.txt`
+and the layout's robots metadata are generated during `next build`, while the
+mailer reads it per request — so it is passed as a Docker build ARG *and* written
+into the runtime `.env`. The Dockerfile also carries the build value into the
+runtime stage, so an `.env` that forgets it cannot silently divert production mail
+to the test inbox.
+
+Unset means **non-production** (`lib/env.ts`), deliberately: forgetting it costs a
+noindexed site or a test email — visible and recoverable — rather than an indexed
+acceptance environment or a customer enquiry sent to a mailbox nobody reads.
 
 `SMTP_PASS` needs the `$$` escape because Compose reads the same `.env` for
 `${DOCKERHUB_USERNAME}` substitution in `docker-compose.yml`.
@@ -121,6 +134,56 @@ Full detail lives in the VPS docs repo (`02-reverse-proxy-and-tls.md`).
    and store it as the `VPS_KNOWN_HOSTS` secret. Until that secret exists the
    workflow still deploys, but it falls back to trust-on-first-use and logs a
    warning.
+
+## The acceptance environment
+
+`acceptance` branch → `https://acceptance.tegelhandelnelissen.nl/`, same box, same
+proxy, same image recipe. Built by `.github/workflows/deploy-acceptance.yml` into
+`/opt/apps/nelissen-website-acceptance`, container `nelissen-website-acceptance`,
+image tag `:acceptance`.
+
+**DNS needs nothing.** `*.tegelhandelnelissen.nl` is a wildcard A record pointing
+at the VPS, so the hostname already resolves. Any future subdomain here likewise
+needs only an nginx conf and a certificate.
+
+It differs from production in exactly three places, all in the workflow:
+`NEXT_PUBLIC_SITE_URL` (self-referencing canonicals), `NEXT_PUBLIC_GA_ID` (omitted,
+so test clicks stay out of the live Analytics property) and `APP_ENV=acceptance`
+(blocks indexing, diverts all mail to `CONTACT_TO_TEST`). `CONTACT_TO` is never
+written to that machine at all.
+
+One-time proxy setup, once per environment:
+
+1. `/opt/apps/proxy/conf.d/nelissen-website-acceptance.conf`, `proxy_pass` to
+   `nelissen-website-acceptance`. Keep it `.conf.disabled` until the certificate
+   exists — nginx refuses to start while a conf references a missing cert.
+2. Certificate:
+
+```bash
+cd /opt/apps/proxy
+docker compose run --rm --entrypoint certbot certbot certonly --webroot -w /var/www/certbot \
+  -d acceptance.tegelhandelnelissen.nl \
+  --email vanderpasmilo@gmail.com --agree-tos --no-eff-email
+docker exec proxy nginx -t && docker exec proxy nginx -s reload
+```
+
+3. Basic auth. noindex asks crawlers politely; this is the part that actually
+   keeps people out. **Both exceptions matter:**
+
+```nginx
+auth_basic "Acceptance";
+auth_basic_user_file /etc/nginx/.htpasswd-nelissen;
+
+# Without this, certbot's HTTP-01 challenge gets a 401 and renewal fails
+# silently ~60 days later.
+location ^~ /.well-known/acme-challenge/ { auth_basic off; root /var/www/certbot; }
+
+# The container healthcheck probes 127.0.0.1 directly and is unaffected, but any
+# external uptime check would see 401 instead of 200.
+location = /health { auth_basic off; proxy_pass http://nelissen-website-acceptance; }
+```
+
+Create the password file with `htpasswd -c /etc/nginx/.htpasswd-nelissen <user>`.
 
 ## Container privileges
 
