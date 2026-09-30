@@ -5,13 +5,11 @@
 > showroom voor tegelverkoop.
 
 ## Belangrijke links
-- [Homepage](https://www.tegelhandelnelissen.nl): tegelassortiment, showroom, diensten en contact
+- [Homepage](https://www.tegelhandelnelissen.nl): tegelassortiment, showroom en contact
 - [Assortiment](https://www.tegelhandelnelissen.nl/#assortiment): voorraadtegels, slabs, handvorm, visgraat houtlook, 120×120, badkamers
-- [Portfolio](https://www.tegelhandelnelissen.nl/#portfolio): voorbeelden van uitgevoerd werk
-- [Diensten](https://www.tegelhandelnelissen.nl/#diensten): tegels zetten bij woningen en bedrijfspanden
-- [Over ons](https://www.tegelhandelnelissen.nl/#over-ons): familiebedrijf met 40+ jaar ervaring
 - [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom zes dagen per week op afspraak
 - [Contact & offerte](https://www.tegelhandelnelissen.nl/#contact): vrijblijvend een offerte aanvragen
+- [Over ons](https://www.tegelhandelnelissen.nl/over-ons): familiebedrijf met 40+ jaar ervaring, diensten en uitgevoerd werk
 
 ## Diensten
 - Tegels zetten bij woningen (badkamers, keukens, hallen, woonkamers, terrassen; vloer- en wandtegels)

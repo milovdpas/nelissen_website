@@ -7,6 +7,7 @@ import { site } from "@/content/site";
 // Seeded from the last commit that touched each page's content.
 const LAST_MODIFIED = {
   home: "2026-09-30",
+  overOns: "2026-09-30",
   privacybeleid: "2026-06-17",
   cookiebeleid: "2026-06-17",
 } as const;
@@ -18,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: LAST_MODIFIED.home,
       changeFrequency: "monthly",
       priority: 1,
+    },
+    {
+      url: `${site.url}/over-ons`,
+      lastModified: LAST_MODIFIED.overOns,
+      changeFrequency: "yearly",
+      priority: 0.6,
     },
     {
       url: `${site.url}/privacybeleid`,

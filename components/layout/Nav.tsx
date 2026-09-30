@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import { ButtonLink } from "@/components/ui/Button";
@@ -27,7 +28,9 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-        <a href={dict.home} className="flex items-center gap-3 focus:outline-none" aria-label={dict.home === "#hero" ? "Naar boven" : undefined}>
+        {/* next/link throughout: these hrefs are root-relative so they work from
+            /over-ons too, and a plain <a> would full-reload on every one. */}
+        <Link href={dict.home} className="flex items-center gap-3 focus:outline-none">
           <LogoSquares size={11} />
           <span
             style={{
@@ -42,12 +45,12 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
           >
             Tegelhandel <span style={{ color: BRAND.yellow }}>Nelissen</span>
           </span>
-        </a>
+        </Link>
 
         <ul className="hidden md:flex items-center gap-7">
           {dict.links.map((l) => (
             <li key={l.href}>
-              <a
+              <Link
                 href={l.href}
                 className="text-sm font-medium tracking-wide transition-colors duration-150 focus:outline-none"
                 style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}
@@ -55,13 +58,13 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
                 onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")}
               >
                 {l.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         <ButtonLink
-          href="#contact"
+          href={dict.ctaHref}
           size="xs"
           display="hidden md:inline-flex"
           onMouseEnter={(e) => (e.currentTarget.style.background = BRAND.yellowHover)}
@@ -86,19 +89,19 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
           <ul className="px-6 py-4 flex flex-col gap-4">
             {dict.links.map((l) => (
               <li key={l.href}>
-                <a
+                <Link
                   href={l.href}
                   onClick={() => setOpen(false)}
                   className="text-sm font-medium w-full block text-left focus:outline-none"
                   style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.85)" }}
                 >
                   {l.label}
-                </a>
+                </Link>
               </li>
             ))}
             <li>
               <ButtonLink
-                href="#contact"
+                href={dict.ctaHref}
                 size="sm"
                 display="flex"
                 className="w-full justify-center"

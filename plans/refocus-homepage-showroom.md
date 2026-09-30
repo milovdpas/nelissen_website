@@ -66,7 +66,6 @@ labelled). The only outstanding item is §7 — Mark's photos, expected 1 Octobe
 | 10 | Hero reweight | ✅ new H2 + showroom line, CTA repointed |
 | 11 | Derived files (llms.txt, sitemap) | ✅ |
 | 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
-| — | Message to Ronald (informational) | ☐ |
 | — | Tier 2 — multi-page split + showroom section | ☐ next round |
 
 ## 1. `APP_ENV` — keep acceptance out of Google and out of real inboxes
@@ -152,29 +151,8 @@ Two consequences worth knowing: every typo subdomain reaches the VPS and is serv
 nginx has as its default vhost, and any future subdomain on this domain needs no DNS work at all
 — only an nginx conf and a certificate.
 
-**Still tell Ronald**, even though nothing is required of him. The environment depends on that
-wildcard, so if it is ever replaced with explicit records the acceptance site dies silently and
-nobody connects the two. Draft:
-
-> Hoi Ronald,
->
-> Kleine heads-up, je hoeft er niets voor te doen. Ik ga voor Tegelhandel Nelissen een
-> acceptatie-omgeving draaien op:
->
-> `acceptance.tegelhandelnelissen.nl` → `159.195.28.227`
->
-> Die resolvet al, want er staat een wildcard (`*.tegelhandelnelissen.nl`) naar dezelfde server.
-> Het certificaat en de nginx-config regel ik zelf.
->
-> Enige wat ik wilde melden: mocht die wildcard ooit vervangen worden door losse records, dan
-> graag deze erbij houden — anders valt de acceptatie-omgeving om.
->
-> De omgeving komt achter een wachtwoord en op noindex, dus hij is niet vindbaar in Google en
-> concurreert niet met de live site.
->
-> Geen haast, puur ter info 🙂
->
-> (En de AAAA-record van tegelhandelnelissen.nl is eruit, top — thanks!)
+One standing risk worth remembering rather than acting on: acceptance depends on that wildcard,
+so if it is ever replaced with explicit per-host records this environment dies silently.
 
 ### New workflow — `.github/workflows/deploy-acceptance.yml`
 
@@ -546,6 +524,13 @@ Blocked on two things from Mark, both cheap to ask for:
 
 Reuses the §6 carousel and the existing section template, so the build is small once the
 content exists.
+
+**Also ends `/over-ons`**, where it closes the narrative — who we are, what we do, what we
+built, now come and see it. One caveat: repeating a short call-to-action across pages is normal
+and harmless (a footer does it), but repeating a *substantial* block of prose is the duplicate
+content we avoided by moving sections rather than copying them. So if the homepage version grows
+past a few sentences, give `/over-ons` a condensed variant — heading, one line, photo, button —
+rather than rendering the same component twice.
 
 ### Nav — dropdown under Assortiment
 

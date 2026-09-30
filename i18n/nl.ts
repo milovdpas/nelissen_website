@@ -16,18 +16,18 @@ export const nl = {
   },
 
   nav: {
-    // Must match the section order in app/page.tsx — nothing enforces it, and
-    // Footer.tsx renders this same array, so both follow from here.
+    // Root-relative on purpose: these render on /over-ons as well as on the
+    // homepage, so a bare "#assortiment" would look for a section that is not
+    // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
-      { href: "#assortiment", label: "Assortiment" },
-      { href: "#portfolio", label: "Portfolio" },
-      { href: "#diensten", label: "Diensten" },
-      { href: "#over-ons", label: "Over ons" },
-      { href: "#openingstijden", label: "Openingstijden" },
-      { href: "#contact", label: "Contact" },
+      { href: "/#assortiment", label: "Assortiment" },
+      { href: "/#openingstijden", label: "Openingstijden" },
+      { href: "/over-ons", label: "Over ons" },
+      { href: "/#contact", label: "Contact" },
     ],
     cta: "Afspraak maken",
-    home: "#hero",
+    ctaHref: "/#contact",
+    home: "/",
     menuLabel: "Menu",
   },
 
@@ -73,6 +73,24 @@ export const nl = {
     label: "Diensten",
     title: "Wat wij voor u doen.",
     items: services,
+  },
+
+  // Page-level metadata for /over-ons. The sections themselves keep their own
+  // dictionary blocks — only the <title>/<meta> live here.
+  overOnsPage: {
+    metaTitle: "Over ons",
+    metaDescription:
+      "Nelissen Tegelhandel & Tegelzettersbedrijf: familiebedrijf in Berghem, al meer dan 40 jaar tegels zetten bij woningen en bedrijfspanden, met eigen showroom.",
+    // The page needs its own h1: the three sections below it are built as
+    // homepage sections and all open at h2, so without this the page would have
+    // no h1 at all.
+    label: "Over ons",
+    // Deliberately no founding year: the only sourced claim anywhere on the
+    // site or in content/site.ts is "40+ jaar", and a specific year would be
+    // invented. Ask Mark if he wants one here.
+    title: "Al meer dan 40 jaar vakmanschap.",
+    intro:
+      "Al meer dan 40 jaar zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant, vanuit onze eigen showroom in Berghem. Hieronder leest u wie wij zijn, wat wij voor u doen en wat wij eerder hebben opgeleverd.",
   },
 
   portfolio: {

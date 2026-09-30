@@ -43,9 +43,13 @@ export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Diction
             <ul className="flex flex-col gap-2.5">
               {nav.links.map((l) => (
                 <li key={l.href}>
-                  <a href={`/${l.href}`} className="text-xs text-left" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
+                  {/* nav.links are already root-relative ("/#assortiment",
+                      "/over-ons"); the old `/${l.href}` prefix would now produce
+                      "//#assortiment", which the browser reads as a protocol-
+                      relative URL to a host named "#assortiment". */}
+                  <Link href={l.href} className="text-xs text-left" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.72)" }}>
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

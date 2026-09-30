@@ -3,14 +3,12 @@ import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import type { Dictionary } from "@/i18n/dictionaries";
 
-// bg-secondary, not bg-background: with the showroom-first section order this
-// sits directly after OverOns, which is bg-background. Two beige sections in a
-// row merge into one undifferentiated block, so the page alternates
-// dark → secondary → background → dark → background → secondary → dark.
-// Revisit if app/page.tsx is reordered again.
+// bg-background so the homepage keeps alternating: it now runs
+// Hero (dark) → Assortiment (secondary) → Openingstijden → Contact (dark), and
+// bg-secondary here would merge this section into the one above it.
 export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] }) {
   return (
-    <section id="openingstijden" className="py-24 bg-secondary">
+    <section id="openingstijden" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-14">
           <SectionLabel>{dict.label}</SectionLabel>
