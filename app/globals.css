@@ -67,8 +67,19 @@ input[type="checkbox"]:not(:disabled) {
   cursor: pointer;
 }
 
+/* Carousel slides crossfade; the component also stops auto-advancing under
+   prefers-reduced-motion, and this kills the fade itself so the swap is
+   instant when a viewer asks for no motion. */
+.tegel-slide {
+  transition: opacity 700ms ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .tegel-slide {
+    transition: none;
   }
 }

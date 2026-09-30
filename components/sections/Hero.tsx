@@ -48,15 +48,23 @@ export function Hero({ dict }: { dict: Dictionary["hero"] & { imageAlt: string }
           <span style={{ color: BRAND.yellow }}>{dict.titleLine2}</span>
         </h1>
 
+        {/* No subheading here on purpose: "Tegels voor ieder interieur" is the
+            Assortiment section's h2, and Assortiment is the very next section —
+            so the product-led heading is still high on the page without the
+            same sentence appearing twice within one screen. */}
         <p className="mt-6 max-w-lg text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.75)" }}>
           {dict.body}
+        </p>
+
+        <p className="mt-3 max-w-lg text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.92)" }}>
+          {dict.showroomLine}
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
           <ButtonLink href="#contact">
             {dict.ctaPrimary} <ArrowRight size={15} />
           </ButtonLink>
-          <ButtonLink href="#openingstijden" variant="outline">
+          <ButtonLink href="#assortiment" variant="outline">
             {dict.ctaSecondary}
           </ButtonLink>
         </div>

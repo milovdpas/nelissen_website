@@ -3,6 +3,9 @@ import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import type { Dictionary } from "@/i18n/dictionaries";
 
+// bg-background so the homepage keeps alternating: it now runs
+// Hero (dark) → Assortiment (secondary) → Openingstijden → Contact (dark), and
+// bg-secondary here would merge this section into the one above it.
 export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] }) {
   return (
     <section id="openingstijden" className="py-24 bg-background">

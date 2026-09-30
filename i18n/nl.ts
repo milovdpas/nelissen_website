@@ -1,6 +1,7 @@
 import { services } from "@/content/nl/services";
 import { assortiment } from "@/content/nl/assortiment";
 import { portfolio } from "@/content/nl/portfolio";
+import { tegels } from "@/content/nl/tegels";
 
 /**
  * Dutch dictionary: every translatable string + the section content arrays.
@@ -15,29 +16,39 @@ export const nl = {
   },
 
   nav: {
+    // Root-relative on purpose: these render on /over-ons as well as on the
+    // homepage, so a bare "#assortiment" would look for a section that is not
+    // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
-      { href: "#over-ons", label: "Over ons" },
-      { href: "#diensten", label: "Diensten" },
-      { href: "#portfolio", label: "Portfolio" },
-      { href: "#assortiment", label: "Assortiment" },
-      { href: "#openingstijden", label: "Openingstijden" },
-      { href: "#contact", label: "Contact" },
+      { href: "/#assortiment", label: "Assortiment" },
+      { href: "/#openingstijden", label: "Openingstijden" },
+      { href: "/over-ons", label: "Over ons" },
+      { href: "/#contact", label: "Contact" },
     ],
     cta: "Afspraak maken",
-    home: "#hero",
+    ctaHref: "/#contact",
+    home: "/",
     menuLabel: "Menu",
   },
 
+  // Copy below the H1 supplied by Mark. It leads with the product and the
+  // showroom instead of the zetwerk: they have more than enough tile-setting
+  // work and want to sell more tiles.
   hero: {
     titleLine1: "Vakmanschap",
     titleLine2: "in elke tegel.",
-    body: "Al jaren zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant. Met oog voor detail, op afspraak, zes dagen per week. Kom langs in onze showroom of plan direct een afspraak.",
+    body: "Van badkamer tot woonkamer en van woning tot bedrijfspand: wij leveren een ruime collectie tegels in diverse stijlen, formaten en uitvoeringen.",
+    showroomLine: "Ontdek onze collectie in de showroom. Zes dagen per week geopend op afspraak.",
     ctaPrimary: "Afspraak maken",
-    ctaSecondary: "Showroom bezoeken",
+    // Points at #assortiment, which now sits directly below the fold.
+    ctaSecondary: "Bekijk onze tegels",
+    // Leads on showroom availability. The old pair ("Zetwerk op afspraak" /
+    // "Showroom open Di 15–19") sold the zetwerk and made the showroom look like
+    // a four-hour-a-week operation, which is the opposite of the goal.
     stats: [
       { num: "40+", label: "Jaar ervaring" },
-      { num: "Ma–Za", label: "Zetwerk op afspraak" },
-      { num: "Di 15–19", label: "Showroom open" },
+      { num: "Ma–Za", label: "Showroom op afspraak" },
+      { num: "Di 15–19", label: "Vrije inloop" },
     ],
   },
 
@@ -64,6 +75,39 @@ export const nl = {
     items: services,
   },
 
+  // Chrome shared by /assortiment and /assortiment/[slug]. The per-style copy
+  // lives in content/nl/stijlen.ts.
+  assortimentPage: {
+    name: "Assortiment",
+    metaTitle: "Tegelassortiment",
+    metaDescription:
+      "Het tegelassortiment van Nelissen in Berghem: houtlook en visgraat, slabs, handvorm, betonlook en meer. Kom de tegels in het echt bekijken in onze showroom.",
+    title: "Ons tegelassortiment",
+    intro:
+      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs van 120×120. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
+    breadcrumbLabel: "Kruimelpad",
+    suitableLabel: "Waar het goed tot zijn recht komt",
+    siblingsLabel: "Andere stijlen",
+  },
+
+  // Page-level metadata for /over-ons. The sections themselves keep their own
+  // dictionary blocks — only the <title>/<meta> live here.
+  overOnsPage: {
+    metaTitle: "Over ons",
+    metaDescription:
+      "Nelissen Tegelhandel & Tegelzettersbedrijf: familiebedrijf in Berghem, al meer dan 40 jaar tegels zetten bij woningen en bedrijfspanden, met eigen showroom.",
+    // The page needs its own h1: the three sections below it are built as
+    // homepage sections and all open at h2, so without this the page would have
+    // no h1 at all.
+    label: "Over ons",
+    // Deliberately no founding year: the only sourced claim anywhere on the
+    // site or in content/site.ts is "40+ jaar", and a specific year would be
+    // invented. Ask Mark if he wants one here.
+    title: "Al meer dan 40 jaar vakmanschap.",
+    intro:
+      "Al meer dan 40 jaar zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant, vanuit onze eigen showroom in Berghem. Hieronder leest u wie wij zijn, wat wij voor u doen en wat wij eerder hebben opgeleverd.",
+  },
+
   portfolio: {
     label: "Portfolio",
     title: "Ons werk, voor u.",
@@ -72,10 +116,23 @@ export const nl = {
 
   assortiment: {
     label: "Assortiment",
-    title: "Tegels voor elk project.",
+    // Mark's line. It lives here rather than in the hero: as the second section
+    // it is still the first h2 on the page, so the product-led heading stays
+    // high up without saying the same thing twice.
+    title: "Tegels voor ieder interieur.",
     items: assortiment,
+    // Impressions from the showroom, shown under the category cards. Not a
+    // catalogue — see the note in content/nl/tegels.ts.
+    hubLink: "Toon hele assortiment",
+    carouselItems: tegels,
+    carousel: {
+      label: "Tegels uit onze showroom",
+      prev: "Vorige foto",
+      next: "Volgende foto",
+      goTo: "Ga naar foto",
+    },
     footnotePrefix: "Bezoek onze showroom voor het volledige assortiment: ",
-    footnoteStrong: "iedere dinsdag van 15:00 tot 19:00 uur.",
+    footnoteStrong: "zes dagen per week op afspraak, dinsdag 15:00–19:00 vrije inloop.",
   },
 
   openingstijden: {
@@ -95,15 +152,19 @@ export const nl = {
     showroom: {
       title: "Showroom tegelverkoop",
       subtitle: "St. Willibrordusstraat 2b, Berghem",
-      highlightDay: "Dinsdag",
+      // The showroom is open six days a week on appointment, with free walk-in
+      // on Tuesday afternoon. The old wording ("uitsluitend geopend op dinsdag")
+      // advertised four hours a week, which undersells it badly for a site whose
+      // whole job is getting people through the door.
+      highlightDay: "Dinsdag — vrije inloop",
       highlightHours: "15:00 – 19:00",
       rows: [
-        { label: "Overige dagen", value: "Op afspraak" },
+        { label: "Maandag t/m zaterdag", value: "Op afspraak" },
         { label: "Zondag", value: "Gesloten" },
       ],
-      noteLead: "Showroom uitsluitend geopend op ",
-      noteStrong: "dinsdag 15:00–19:00",
-      noteTail: ". Buiten deze tijd op afspraak.",
+      noteLead: "Zes dagen per week geopend ",
+      noteStrong: "op afspraak",
+      noteTail: ". Op dinsdagmiddag loopt u zonder afspraak binnen.",
     },
   },
 

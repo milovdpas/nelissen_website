@@ -55,3 +55,24 @@ export function websiteJsonLd() {
     publisher: { "@id": `${site.url}/#business` },
   };
 }
+
+/**
+ * Breadcrumb trail for a sub-page. Google renders this in the result snippet in
+ * place of the bare URL, which is most of why it is worth emitting.
+ *
+ * Pass the trail without the homepage — it is prepended here so every page
+ * agrees on what the root is called.
+ */
+export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
+  const items = [{ name: "Home", path: "/" }, ...trail];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: `${site.url}${item.path === "/" ? "" : item.path}`,
+    })),
+  };
+}

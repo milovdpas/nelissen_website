@@ -2,31 +2,14 @@
 
 Two branches, two environments:
 
-| Branch       | Target            | How                                                        |
-| ------------ | ----------------- | ---------------------------------------------------------- |
-| `acceptance` | Vercel (staging)  | Vercel Git integration (no workflow in this repo)          |
-| `main`       | VPS (production)  | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml) |
+| Branch       | Target             | How                                                                            |
+| ------------ | ------------------ | ------------------------------------------------------------------------------ |
+| `acceptance` | VPS (acceptance)   | GitHub Actions — [`deploy-acceptance.yml`](.github/workflows/deploy-acceptance.yml) |
+| `main`       | VPS (production)   | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml)                   |
 
----
-
-# Acceptance (Vercel)
-
-Handled by **Vercel's native Git integration** — no GitHub Actions workflow.
-The Vercel project is configured with Branch Tracking on `acceptance`, so every
-push to `acceptance` creates a Production Deployment (currently
-<https://nelissen-website.vercel.app>).
-
-Setup lives in the Vercel dashboard, not this repo:
-
-1. Project → Settings → Git → **Production Branch = `acceptance`**.
-2. Project → Settings → **Environment Variables** — set the runtime config
-   (these are *not* in this repo): `NEXT_PUBLIC_SITE_URL` (the acceptance URL),
-   `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
-   `CONTACT_TO`, `CONTACT_FROM`.
-
-> Do **not** add a Vercel deploy workflow on top of this — it would double-deploy.
-> `output: "standalone"` in `next.config.ts` is compatible with Vercel; Vercel
-> uses its own build adapter and ignores it.
+Both environments run on the same box, behind the same proxy, from the same
+`Dockerfile`. They differ only in the build args the workflow passes and the
+container they deploy to — see [The acceptance environment](#the-acceptance-environment).
 
 ---
 
@@ -152,38 +135,92 @@ so test clicks stay out of the live Analytics property) and `APP_ENV=acceptance`
 (blocks indexing, diverts all mail to `CONTACT_TO_TEST`). `CONTACT_TO` is never
 written to that machine at all.
 
-One-time proxy setup, once per environment:
+### One-time proxy setup
 
-1. `/opt/apps/proxy/conf.d/nelissen-website-acceptance.conf`, `proxy_pass` to
-   `nelissen-website-acceptance`. Keep it `.conf.disabled` until the certificate
-   exists — nginx refuses to start while a conf references a missing cert.
-2. Certificate:
+Two orderings matter, and both are easy to get wrong:
+
+- **The container must exist before the conf is enabled.** nginx resolves
+  `proxy_pass` upstream names at startup and refuses to start if
+  `nelissen-website-acceptance` is not running. Push `acceptance` first.
+- **Per-domain confs here contain only `listen 443` blocks.** `00-http.conf`
+  handles port 80 for every host — serving the ACME webroot and redirecting the
+  rest to HTTPS. So the certificate can be issued before this conf exists at all,
+  and the conf needs no `listen 80` block of its own. Renewals go over port 80
+  too, which is why the basic auth below cannot break them.
+
+**1. Password file** (no `htpasswd` binary needed on the host):
+
+```bash
+printf 'nelissen:%s\n' "$(openssl passwd -apr1)" \
+  > /opt/apps/proxy/conf.d/.htpasswd-nelissen
+```
+
+**2. Certificate:**
 
 ```bash
 cd /opt/apps/proxy
 docker compose run --rm --entrypoint certbot certbot certonly --webroot -w /var/www/certbot \
   -d acceptance.tegelhandelnelissen.nl \
   --email vanderpasmilo@gmail.com --agree-tos --no-eff-email
-docker exec proxy nginx -t && docker exec proxy nginx -s reload
 ```
 
-3. Basic auth. noindex asks crawlers politely; this is the part that actually
-   keeps people out. **Both exceptions matter:**
+**3. `/opt/apps/proxy/conf.d/nelissen-website-acceptance.conf`.** noindex asks
+crawlers politely; the auth is what actually keeps people out.
 
 ```nginx
-auth_basic "Acceptance";
-auth_basic_user_file /etc/nginx/.htpasswd-nelissen;
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name acceptance.tegelhandelnelissen.nl;
 
-# Without this, certbot's HTTP-01 challenge gets a 401 and renewal fails
-# silently ~60 days later.
-location ^~ /.well-known/acme-challenge/ { auth_basic off; root /var/www/certbot; }
+    ssl_certificate     /etc/letsencrypt/live/acceptance.tegelhandelnelissen.nl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/acceptance.tegelhandelnelissen.nl/privkey.pem;
 
-# The container healthcheck probes 127.0.0.1 directly and is unaffected, but any
-# external uptime check would see 401 instead of 200.
-location = /health { auth_basic off; proxy_pass http://nelissen-website-acceptance; }
+    auth_basic "Acceptance";
+    # Beside the confs on purpose: that directory is already mounted into the
+    # proxy container. A path elsewhere under /etc/nginx exists on the host but
+    # not in the container, and nginx then fails to start.
+    auth_basic_user_file /etc/nginx/conf.d/.htpasswd-nelissen;
+
+    # Renewal runs over port 80 via 00-http.conf, so this is belt-and-braces —
+    # it keeps renewals working if this vhost ever gains its own :80 block.
+    location ^~ /.well-known/acme-challenge/ {
+        auth_basic off;
+        root /var/www/certbot;
+    }
+
+    # For external uptime checks. The container healthcheck probes 127.0.0.1
+    # directly and never passes through nginx, so it is unaffected either way.
+    location = /health {
+        auth_basic off;
+        proxy_pass http://nelissen-website-acceptance:80;
+        proxy_set_header Host $host;
+    }
+
+    location / {
+        proxy_pass http://nelissen-website-acceptance:80;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
 ```
 
-Create the password file with `htpasswd -c /etc/nginx/.htpasswd-nelissen <user>`.
+**4. Reload and verify:**
+
+```bash
+docker exec proxy nginx -t && docker exec proxy nginx -s reload
+
+curl -I https://acceptance.tegelhandelnelissen.nl/                    # 401
+curl -I -u nelissen:PASS https://acceptance.tegelhandelnelissen.nl/   # 200 + X-Robots-Tag
+curl -u nelissen:PASS https://acceptance.tegelhandelnelissen.nl/robots.txt  # Disallow: /
+curl -I https://acceptance.tegelhandelnelissen.nl/health              # 200, no auth
+```
+
+Then submit the contact form once and confirm the mail is prefixed
+`[TEST — acceptance]`, carries the red banner, and arrived at `CONTACT_TO_TEST`
+rather than `info@`. That is the one path a misconfiguration breaks silently.
 
 ## Container privileges
 

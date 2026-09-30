@@ -46,25 +46,27 @@ production unseen.
 Lives at `plans/refocus-homepage-showroom.md` in the repo; tick items as they land so the file
 stays the source of truth rather than this chat.
 
-**Status:** §1 done, §2 code done — needs the one-time nginx + certificate + basic-auth
-step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 October).
+**Status:** Tier 1 is code-complete. The acceptance environment is live and verified
+(401 unauthenticated, `x-robots-tag: noindex`, `/health` open, test mail diverted and
+labelled). The only outstanding item is §7 — Mark's photos, expected 1 October.
+
+**Do not merge to `main` until they land.** `development` → `acceptance` is safe now.
 
 | | Item | State |
 |---|---|---|
 | 1 | `APP_ENV` flag + noindex + email labelling | ✅ verified on a built image: robots disallow, `X-Robots-Tag`, canonical self-refs acceptance, no GA id, mail diverted |
 | 2 | Acceptance environment on the VPS | ◐ workflow + compose done; **VPS nginx conf, certificate and basic auth still to do by hand** (DEPLOYMENT.md) |
-| 3 | Section order | ☐ |
-| 4 | New assortiment categories | ☐ |
-| 5 | Data shape (`alt`, `slug`) | ☐ |
-| 6 | Tile carousel | ☐ |
-| 7 | Photos from Mark | ☐ blocked |
-| 8 | Backgrounds | ☐ |
-| 9 | Nav order | ☐ |
-| 10 | Hero reweight | ☐ |
-| 11 | Derived files (llms.txt, sitemap) | ☐ |
-| 12 | Showroom availability wording | ☐ |
-| — | Message to Ronald (informational) | ☐ |
-| — | Tier 2 — multi-page split | ☐ next round |
+| 3 | Section order | ✅ verified in the DOM |
+| 4 | New assortiment categories | ✅ copy in; **images still placeholders** |
+| 5 | Data shape (`alt`, `slug`) | ✅ 14 images, 0 empty alts |
+| 6 | Tile carousel | ✅ hand-rolled, no dependency; hero stays the only preloaded image |
+| 7 | Photos from Mark | ☐ blocked — expected 1 Oct |
+| 8 | Backgrounds | ✅ no two adjacent sections alike |
+| 9 | Nav order | ✅ matches the page |
+| 10 | Hero reweight | ✅ new H2 + showroom line, CTA repointed |
+| 11 | Derived files (llms.txt, sitemap) | ✅ |
+| 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
+| — | Tier 2 — /over-ons ✅ · /assortiment hub + 1 style page ✅ · 7 more style pages ☐ · nav dropdown ☐ · showroom section ☐ |
 
 ## 1. `APP_ENV` — keep acceptance out of Google and out of real inboxes
 
@@ -149,29 +151,8 @@ Two consequences worth knowing: every typo subdomain reaches the VPS and is serv
 nginx has as its default vhost, and any future subdomain on this domain needs no DNS work at all
 — only an nginx conf and a certificate.
 
-**Still tell Ronald**, even though nothing is required of him. The environment depends on that
-wildcard, so if it is ever replaced with explicit records the acceptance site dies silently and
-nobody connects the two. Draft:
-
-> Hoi Ronald,
->
-> Kleine heads-up, je hoeft er niets voor te doen. Ik ga voor Tegelhandel Nelissen een
-> acceptatie-omgeving draaien op:
->
-> `acceptance.tegelhandelnelissen.nl` → `159.195.28.227`
->
-> Die resolvet al, want er staat een wildcard (`*.tegelhandelnelissen.nl`) naar dezelfde server.
-> Het certificaat en de nginx-config regel ik zelf.
->
-> Enige wat ik wilde melden: mocht die wildcard ooit vervangen worden door losse records, dan
-> graag deze erbij houden — anders valt de acceptatie-omgeving om.
->
-> De omgeving komt achter een wachtwoord en op noindex, dus hij is niet vindbaar in Google en
-> concurreert niet met de live site.
->
-> Geen haast, puur ter info 🙂
->
-> (En de AAAA-record van tegelhandelnelissen.nl is eruit, top — thanks!)
+One standing risk worth remembering rather than acting on: acceptance depends on that wildcard,
+so if it is ever replaced with explicit per-host records this environment dies silently.
 
 ### New workflow — `.github/workflows/deploy-acceptance.yml`
 
@@ -348,6 +329,19 @@ the frame.
 2. **Twelve to twenty carousel photos**, any tiles he likes the look of →
    `public/images/tegels/<slug>.jpg`. These need no relationship to stock levels, which is
    the point — he can shoot whatever is standing in the showroom.
+3. **Photos of finished jobs** for the Portfolio section → `public/images/portfolio/`.
+
+That third ask is a different kind of problem from the other two, and it is **already live in
+production**. The Portfolio section is headed *"Ons werk, voor u."* and labels six Unsplash
+stock photos as "Badkamer renovatie", "Woonkamer vloer", "Terras buiten" and so on — it
+presents stock photography as the company's own completed projects. The assortiment
+placeholders are merely generic; this one is a claim that is not true, and a customer who
+recognises a stock photo has a good reason to distrust the rest of the site.
+
+Two honest options, Mark's call: he supplies real job photos, or the section's framing changes
+from "our work" to inspiration. Worth raising while he has a camera out anyway — a tiler of
+40+ years will have finished bathrooms on his phone, and real ones will outperform stock for
+both credibility and image search.
 
 Local paths need no config change; CSP `'self'` already covers them. Leave
 `next.config.ts:63-68` `remotePatterns` alone for now — Portfolio still uses Unsplash.
@@ -505,6 +499,38 @@ The style axis is **not** the homepage's six cards. Those are Mark's merchandisi
 mix stock ("Voorraad tegels"), format ("120×120"), style ("Handvorm") and room ("Badkamers").
 Pages follow search demand. Where they overlap, link the card straight to its page using the
 `slug` from §5 — which is what earns that field its place.
+
+### A showroom section on the homepage
+
+The homepage tells people *when* (Openingstijden) and *where* (the map in Contact), but never
+what the visit is actually like — and getting them through the door is the entire goal. This is
+the gap tegelsuden.nl fills by leading on "400 m2 inspiratie", style setups you can walk
+through, and building a mood board in the shop: it sells the **visit**, not the product.
+
+Sits between Assortiment and Openingstijden, which is also where the Tier 2 homepage
+(Hero → Assortiment → Openingstijden → Contact) has room for it. Roughly: what you find when you
+walk in, seeing a tile at full size in real light instead of on a screen — Mark's own argument
+for why customers come in — and personal advice on matching and quantities.
+
+Blocked on two things from Mark, both cheap to ask for:
+
+- **Photos of the showroom itself**, not of tiles. `public/images/showroom.jpeg` exists and is
+  already the hero background and OG image, so it needs at least one or two more to avoid
+  reusing the same shot twice on one page.
+- **A couple of concrete facts** — floor area in m², roughly how many tiles are on display,
+  what is set up to walk through. Specifics are what make this section land; "kom eens langs"
+  on its own is filler. He has already volunteered that they hold 300–400 different tiles,
+  which is a strong number to lead with.
+
+Reuses the §6 carousel and the existing section template, so the build is small once the
+content exists.
+
+**Also ends `/over-ons`**, where it closes the narrative — who we are, what we do, what we
+built, now come and see it. One caveat: repeating a short call-to-action across pages is normal
+and harmless (a footer does it), but repeating a *substantial* block of prose is the duplicate
+content we avoided by moving sections rather than copying them. So if the homepage version grows
+past a few sentences, give `/over-ons` a condensed variant — heading, one line, photo, button —
+rather than rendering the same component twice.
 
 ### Nav — dropdown under Assortiment
 
