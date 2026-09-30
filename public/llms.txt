@@ -6,10 +6,11 @@
 
 ## Belangrijke links
 - [Homepage](https://www.tegelhandelnelissen.nl): tegelassortiment, showroom en contact
-- [Assortiment](https://www.tegelhandelnelissen.nl/#assortiment): voorraadtegels, slabs, handvorm, visgraat houtlook, 120×120, badkamers
-- [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom zes dagen per week op afspraak
-- [Contact & offerte](https://www.tegelhandelnelissen.nl/#contact): vrijblijvend een offerte aanvragen
+- [Assortiment](https://www.tegelhandelnelissen.nl/assortiment): overzicht van de tegelstijlen die wij voeren
+- [Houtlook tegels](https://www.tegelhandelnelissen.nl/assortiment/houtlook-tegels): houtlook en visgraat vloeren
 - [Over ons](https://www.tegelhandelnelissen.nl/over-ons): familiebedrijf met 40+ jaar ervaring, diensten en uitgevoerd werk
+- [Contact & offerte](https://www.tegelhandelnelissen.nl/contact): adres, openingstijden en offerteaanvraag
+- [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom zes dagen per week op afspraak
 
 ## Diensten
 - Tegels zetten bij woningen (badkamers, keukens, hallen, woonkamers, terrassen; vloer- en wandtegels)
