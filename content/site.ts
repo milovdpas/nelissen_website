@@ -49,8 +49,12 @@ export const site = {
   // Google Maps embed for the contact section (src URL only, no iframe markup).
   mapsEmbedUrl:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2468.7566663829966!2d5.5664992!3d51.774055499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c6fdbad727391f%3A0x7f30b532443b3a26!2sNelissen%20Tegelhandel%20%26%20Tegelzettersbedrijf!5e0!3m2!1snl!2snl!4v1781645071522!5m2!1snl!2snl",
-  // External profiles for schema.org `sameAs` (fill in as they become available).
-  sameAs: [] as string[],
+  // External profiles for schema.org `sameAs`. This is how Google ties the
+  // website to the listings it finds elsewhere, which matters here: the same
+  // business appears on several directories with an old landline and three
+  // different house numbers, and sameAs is the signal that says "these are all
+  // us". Add the Google Business Profile and any others as they are cleaned up.
+  sameAs: ["https://www.facebook.com/Tegelhandelnelissen/"] as string[],
   /**
    * Showroom opening hours in a machine-readable shape, reused by the
    * schema.org LocalBusiness JSON-LD. Tile-setting work is by appointment

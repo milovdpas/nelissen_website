@@ -4,6 +4,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Assortiment } from "@/components/sections/Assortiment";
+import { Showroom } from "@/components/sections/Showroom";
 import { Openingstijden } from "@/components/sections/Openingstijden";
 import { Contact } from "@/components/sections/Contact";
 
@@ -22,6 +23,7 @@ export default function Home() {
             in components/sections/Openingstijden.tsx. */}
         <Hero dict={{ ...dict.hero, imageAlt: dict.meta.ogAlt }} />
         <Assortiment dict={dict.assortiment} />
+        <Showroom dict={dict.showroom} />
         <Openingstijden dict={dict.openingstijden} />
         <Contact dict={dict.contact} mapDict={dict.cookies.map} />
       </main>
