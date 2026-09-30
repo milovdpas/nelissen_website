@@ -155,7 +155,10 @@ docker exec proxy nginx -t && docker exec proxy nginx -s reload
 
 ```nginx
 auth_basic "Acceptance";
-auth_basic_user_file /etc/nginx/.htpasswd-nelissen;
+# Lives beside the confs so it is inside the volume the proxy container already
+# mounts — a path elsewhere under /etc/nginx exists on the host but not in the
+# container, and nginx then fails to start.
+auth_basic_user_file /etc/nginx/conf.d/.htpasswd-nelissen;
 
 # Without this, certbot's HTTP-01 challenge gets a 401 and renewal fails
 # silently ~60 days later.
@@ -166,7 +169,19 @@ location ^~ /.well-known/acme-challenge/ { auth_basic off; root /var/www/certbot
 location = /health { auth_basic off; proxy_pass http://nelissen-website-acceptance; }
 ```
 
-Create the password file with `htpasswd -c /etc/nginx/.htpasswd-nelissen <user>`.
+Create the password file (no `htpasswd` binary needed on the host):
+
+```bash
+printf 'nelissen:%s\n' "$(openssl passwd -apr1)" \
+  > /opt/apps/proxy/conf.d/.htpasswd-nelissen
+```
+
+**Order matters.** nginx resolves `proxy_pass` upstream names at startup and
+refuses to start if `nelissen-website-acceptance` does not exist, so deploy the
+container (push `acceptance`) *before* enabling this conf. And the certificate
+cannot be issued until something serves `/.well-known/acme-challenge/` for the
+hostname over HTTP — so enable an HTTP-only server block first, get the cert,
+then add the TLS block.
 
 ## Container privileges
 
