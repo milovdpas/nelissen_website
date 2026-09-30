@@ -17,16 +17,26 @@ COPY . .
 # does nothing. Changing the domain means rebuilding the image.
 ARG NEXT_PUBLIC_SITE_URL
 ARG NEXT_PUBLIC_GA_ID
-ARG NEXT_PUBLIC_NOINDEX
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
-    NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID \
-    NEXT_PUBLIC_NOINDEX=$NEXT_PUBLIC_NOINDEX
+    NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
+# APP_ENV is needed here as well as at runtime: robots.txt and the layout's
+# robots metadata are baked during `next build`, while the mailer reads it per
+# request. Unset means non-production (lib/env.ts), so a forgotten arg costs a
+# noindexed site rather than an indexed acceptance one.
+ARG APP_ENV
+ENV APP_ENV=$APP_ENV
 RUN npm run build
 
 FROM node:22-alpine AS runtime
 WORKDIR /app
+# Carried into the runtime stage on purpose (ARGs do not cross stages). The image
+# then knows which environment it was built for, so a compose file that forgets
+# APP_ENV cannot silently divert production mail to the test inbox. An explicit
+# value in the runtime .env still wins.
+ARG APP_ENV
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
+    APP_ENV=$APP_ENV \
     PORT=80 \
     HOSTNAME=0.0.0.0
 

@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// Mirrors lib/env.ts, which this file cannot import (next.config runs outside the
+// app module graph, and lib/env.ts is `server-only`). Same fail-closed rule:
+// anything that isn't explicitly production is treated as not production.
+const isProduction = process.env.APP_ENV === "production";
+
 // Content-Security-Policy.
 //
 // Every directive except script-src is locked to the origins actually used:
@@ -50,6 +55,12 @@ const securityHeaders = [
   ...(isDev
     ? []
     : [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]),
+  // Belt to robots.txt's braces. The meta tag in the layout only covers HTML a
+  // crawler bothers to parse; this header covers every response, including the
+  // sitemap and any file a crawler reaches directly.
+  ...(isProduction
+    ? []
+    : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]),
 ];
 
 const nextConfig: NextConfig = {
