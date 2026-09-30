@@ -66,7 +66,7 @@ labelled). The only outstanding item is §7 — Mark's photos, expected 1 Octobe
 | 10 | Hero reweight | ✅ new H2 + showroom line, CTA repointed |
 | 11 | Derived files (llms.txt, sitemap) | ✅ |
 | 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
-| — | Tier 2 — multi-page split + showroom section | ☐ next round |
+| — | Tier 2 — /over-ons ✅ · /assortiment hub + 1 style page ✅ · 7 more style pages ☐ · nav dropdown ☐ · showroom section ☐ |
 
 ## 1. `APP_ENV` — keep acceptance out of Google and out of real inboxes
 

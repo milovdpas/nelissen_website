@@ -75,6 +75,21 @@ export const nl = {
     items: services,
   },
 
+  // Chrome shared by /assortiment and /assortiment/[slug]. The per-style copy
+  // lives in content/nl/stijlen.ts.
+  assortimentPage: {
+    name: "Assortiment",
+    metaTitle: "Tegelassortiment",
+    metaDescription:
+      "Het tegelassortiment van Nelissen in Berghem: houtlook en visgraat, slabs, handvorm, betonlook en meer. Kom de tegels in het echt bekijken in onze showroom.",
+    title: "Ons tegelassortiment",
+    intro:
+      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs van 120×120. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
+    breadcrumbLabel: "Kruimelpad",
+    suitableLabel: "Waar het goed tot zijn recht komt",
+    siblingsLabel: "Andere stijlen",
+  },
+
   // Page-level metadata for /over-ons. The sections themselves keep their own
   // dictionary blocks — only the <title>/<meta> live here.
   overOnsPage: {
@@ -108,6 +123,7 @@ export const nl = {
     items: assortiment,
     // Impressions from the showroom, shown under the category cards. Not a
     // catalogue — see the note in content/nl/tegels.ts.
+    hubLink: "Toon hele assortiment",
     carouselItems: tegels,
     carousel: {
       label: "Tegels uit onze showroom",

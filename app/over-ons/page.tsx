@@ -8,6 +8,7 @@ import { SectionLabel } from "@/components/brand/SectionLabel";
 import { OverOns } from "@/components/sections/OverOns";
 import { Diensten } from "@/components/sections/Diensten";
 import { Portfolio } from "@/components/sections/Portfolio";
+import { Contact } from "@/components/sections/Contact";
 
 const dict = getDictionary(defaultLocale);
 
@@ -67,6 +68,9 @@ export default function OverOnsPage() {
         <OverOns dict={dict.overOns} />
         <Diensten dict={dict.diensten} />
         <Portfolio dict={dict.portfolio} />
+
+        {/* Consistent with the other sub-pages: reach the bottom, act there. */}
+        <Contact dict={dict.contact} mapDict={dict.cookies.map} />
       </main>
       <Footer dict={dict.footer} nav={dict.nav} />
     </>

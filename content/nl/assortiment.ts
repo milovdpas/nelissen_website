@@ -5,6 +5,9 @@ export type AssortimentItem = {
   label: string;
   /** Image URL. PLACEHOLDER Unsplash stock — see the note below. */
   url: string;
+  /** Style page this card links to, when one exists. Cards without a match stay
+   *  plain, because a link to nothing is worse than no link. */
+  href?: string;
   /** Describes the photo, not the category. The label is already on the card,
    *  so repeating it here would waste the slot for screen readers and image
    *  search alike. Rewrite each of these when the real photo lands. */
@@ -48,6 +51,7 @@ export const assortiment: AssortimentItem[] = [
   {
     slug: "visgraat-houtlook-vloeren",
     label: "Visgraat houtlook vloeren",
+    href: "/assortiment/houtlook-tegels",
     url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop&auto=format",
     alt: "Vloertegels in een woonkamer",
     desc: "De warme uitstraling van hout, met het gemak van een tegel.",
