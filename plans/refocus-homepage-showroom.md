@@ -53,15 +53,15 @@ step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 Oc
 |---|---|---|
 | 1 | `APP_ENV` flag + noindex + email labelling | ✅ verified on a built image: robots disallow, `X-Robots-Tag`, canonical self-refs acceptance, no GA id, mail diverted |
 | 2 | Acceptance environment on the VPS | ◐ workflow + compose done; **VPS nginx conf, certificate and basic auth still to do by hand** (DEPLOYMENT.md) |
-| 3 | Section order | ☐ |
-| 4 | New assortiment categories | ☐ |
-| 5 | Data shape (`alt`, `slug`) | ☐ |
+| 3 | Section order | ✅ verified in the DOM |
+| 4 | New assortiment categories | ✅ copy in; **images still placeholders** |
+| 5 | Data shape (`alt`, `slug`) | ✅ 14 images, 0 empty alts |
 | 6 | Tile carousel | ☐ |
-| 7 | Photos from Mark | ☐ blocked |
-| 8 | Backgrounds | ☐ |
-| 9 | Nav order | ☐ |
+| 7 | Photos from Mark | ☐ blocked — expected 1 Oct |
+| 8 | Backgrounds | ✅ no two adjacent sections alike |
+| 9 | Nav order | ✅ matches the page |
 | 10 | Hero reweight | ☐ |
-| 11 | Derived files (llms.txt, sitemap) | ☐ |
+| 11 | Derived files (llms.txt, sitemap) | ✅ |
 | 12 | Showroom availability wording | ☐ |
 | — | Message to Ronald (informational) | ☐ |
 | — | Tier 2 — multi-page split | ☐ next round |

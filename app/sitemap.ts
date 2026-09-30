@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 // on each rebuild, and Google discounts a lastmod it learns to distrust.
 // Seeded from the last commit that touched each page's content.
 const LAST_MODIFIED = {
-  home: "2026-09-13",
+  home: "2026-09-30",
   privacybeleid: "2026-06-17",
   cookiebeleid: "2026-06-17",
 } as const;

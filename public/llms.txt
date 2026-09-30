@@ -5,11 +5,12 @@
 > showroom voor tegelverkoop.
 
 ## Belangrijke links
-- [Homepage](https://www.tegelhandelnelissen.nl): overzicht van diensten, assortiment en contact
-- [Over ons](https://www.tegelhandelnelissen.nl/#over-ons): familiebedrijf met 40+ jaar ervaring
+- [Homepage](https://www.tegelhandelnelissen.nl): tegelassortiment, showroom, diensten en contact
+- [Assortiment](https://www.tegelhandelnelissen.nl/#assortiment): voorraadtegels, slabs, handvorm, visgraat houtlook, 120×120, badkamers
+- [Portfolio](https://www.tegelhandelnelissen.nl/#portfolio): voorbeelden van uitgevoerd werk
 - [Diensten](https://www.tegelhandelnelissen.nl/#diensten): tegels zetten bij woningen en bedrijfspanden
-- [Assortiment](https://www.tegelhandelnelissen.nl/#assortiment): vloer-, wand- en buitentegels, sanitair
-- [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom en zetwerk op afspraak
+- [Over ons](https://www.tegelhandelnelissen.nl/#over-ons): familiebedrijf met 40+ jaar ervaring
+- [Openingstijden](https://www.tegelhandelnelissen.nl/#openingstijden): showroom zes dagen per week op afspraak
 - [Contact & offerte](https://www.tegelhandelnelissen.nl/#contact): vrijblijvend een offerte aanvragen
 
 ## Diensten
@@ -18,7 +19,9 @@
 - Tegelverkoop via de showroom met persoonlijk advies
 
 ## Assortiment
-Vloertegels, wandtegels, buitentegels, natuursteenlook en decor, groot formaat, sanitair.
+Voorraad tegels (direct leverbaar), slabs, handvorm tegels, visgraat houtlook
+vloeren, 120×120 tegels en complete badkamers. Daarnaast vloer-, wand- en
+buitentegels in diverse stijlen, formaten en uitvoeringen.
 
 ## Werkgebied
 Noord-Brabant en omstreken.

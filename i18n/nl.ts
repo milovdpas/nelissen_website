@@ -15,11 +15,13 @@ export const nl = {
   },
 
   nav: {
+    // Must match the section order in app/page.tsx — nothing enforces it, and
+    // Footer.tsx renders this same array, so both follow from here.
     links: [
-      { href: "#over-ons", label: "Over ons" },
-      { href: "#diensten", label: "Diensten" },
-      { href: "#portfolio", label: "Portfolio" },
       { href: "#assortiment", label: "Assortiment" },
+      { href: "#portfolio", label: "Portfolio" },
+      { href: "#diensten", label: "Diensten" },
+      { href: "#over-ons", label: "Over ons" },
       { href: "#openingstijden", label: "Openingstijden" },
       { href: "#contact", label: "Contact" },
     ],

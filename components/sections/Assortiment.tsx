@@ -5,7 +5,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 
 export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
   return (
-    <section id="assortiment" className="py-24" style={{ background: "#eeecea" }}>
+    <section id="assortiment" className="py-24 bg-secondary">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-14">
           <SectionLabel>{dict.label}</SectionLabel>
@@ -27,14 +27,14 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {dict.items.map((item) => (
             <div
-              key={item.label}
+              key={item.slug}
               className="bg-card overflow-hidden group transition-shadow duration-200 hover:shadow-lg"
               style={{ borderRadius: 2 }}
             >
               <div className="relative overflow-hidden h-48">
                 <Image
                   src={item.url}
-                  alt={item.label}
+                  alt={item.alt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
