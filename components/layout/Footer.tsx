@@ -3,6 +3,7 @@ import { Phone, Mail } from "lucide-react";
 import { BRAND, FONT, site } from "@/content/site";
 import { LogoSquares } from "@/components/brand/LogoSquares";
 import { ManageCookiesButton } from "@/components/cookies/ManageCookiesButton";
+import { locaties } from "@/content/nl/locaties";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Dictionary["nav"] }) {
@@ -80,7 +81,20 @@ export function Footer({ dict, nav }: { dict: Dictionary["footer"]; nav: Diction
           </div>
         </div>
 
+        {/* Regional pages. They live here rather than in the top nav — which is
+            kept short on purpose — but they do need to be linked from somewhere,
+            or they are orphans that only the sitemap knows about. */}
         <div className="mt-12 pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs" style={{ fontFamily: FONT.body }}>
+            {locaties.map((l) => (
+              <Link key={l.slug} href={`/${l.slug}`} style={{ color: "rgba(255,255,255,0.72)" }}>
+                {l.metaTitle}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs" style={{ fontFamily: FONT.body }}>
             <Link href="/privacybeleid" style={{ color: "rgba(255,255,255,0.72)" }}>
               {dict.legal.privacy}

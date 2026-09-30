@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
 import { stijlen } from "@/content/nl/stijlen";
+import { locaties } from "@/content/nl/locaties";
 
 // Hand-maintained per page: bump the date when that page's *content* actually
 // changes. Deliberately not `new Date()` — that stamps every page as modified
@@ -11,6 +12,7 @@ const LAST_MODIFIED = {
   assortiment: "2026-09-30",
   overOns: "2026-09-30",
   contact: "2026-09-30",
+  locaties: "2026-09-30",
   privacybeleid: "2026-06-17",
   cookiebeleid: "2026-06-17",
 } as const;
@@ -43,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.6,
     },
+    ...locaties.map((l) => ({
+      url: `${site.url}/${l.slug}`,
+      lastModified: LAST_MODIFIED.locaties,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     {
       url: `${site.url}/contact`,
       lastModified: LAST_MODIFIED.contact,

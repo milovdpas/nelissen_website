@@ -21,7 +21,6 @@ export const nl = {
     // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
       { href: "/assortiment", label: "Assortiment" },
-      { href: "/#openingstijden", label: "Openingstijden" },
       { href: "/over-ons", label: "Over ons" },
       { href: "/contact", label: "Contact" },
     ],
@@ -91,6 +90,13 @@ export const nl = {
     breadcrumbLabel: "Kruimelpad",
     suitableLabel: "Waar het goed tot zijn recht komt",
     siblingsLabel: "Andere stijlen",
+  },
+
+  // Chrome shared by the location pages. The per-place copy lives in
+  // content/nl/locaties.ts and is deliberately different per page.
+  locatiePage: {
+    praktischLabel: "Praktisch",
+    assortimentLink: "Bekijk ons assortiment",
   },
 
   // Page-level chrome for /contact. The form, details and map come from the
