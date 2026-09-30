@@ -21,7 +21,6 @@ export const nl = {
     // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
       { href: "/assortiment", label: "Assortiment" },
-      { href: "/#openingstijden", label: "Openingstijden" },
       { href: "/over-ons", label: "Over ons" },
       { href: "/contact", label: "Contact" },
     ],
@@ -91,6 +90,13 @@ export const nl = {
     breadcrumbLabel: "Kruimelpad",
     suitableLabel: "Waar het goed tot zijn recht komt",
     siblingsLabel: "Andere stijlen",
+  },
+
+  // Chrome shared by the location pages. The per-place copy lives in
+  // content/nl/locaties.ts and is deliberately different per page.
+  locatiePage: {
+    praktischLabel: "Praktisch",
+    assortimentLink: "Bekijk ons assortiment",
   },
 
   // Page-level chrome for /contact. The form, details and map come from the
@@ -222,7 +228,7 @@ export const nl = {
     },
     // Sets the expectation that this is a request, not a confirmed booking.
     appointmentNote:
-      "De showroom is op dinsdag geopend van 15:00 tot 19:00 uur; andere dagen kunnen op afspraak. Wij bevestigen uw afspraak per e-mail of telefoon.",
+      "De showroom is maandag tot en met zaterdag geopend op afspraak; op dinsdag van 15:00 tot 19:00 uur loopt u zonder afspraak binnen. Wij bevestigen uw afspraak per e-mail of telefoon.",
     submit: "Verstuur bericht",
     submitAppointment: "Afspraak aanvragen",
     sending: "Versturen...",
@@ -253,17 +259,25 @@ export const nl = {
       phone: "Telefoon",
       email: "E-mail",
       showroom: "Showroom",
-      showroomValue: "Dinsdag 15:00 – 19:00\nOverige dagen op afspraak",
+      // Same reframe as everywhere else: availability first, Tuesday as the
+      // bonus. This one sits in the Contact section, which now renders on five
+      // pages — so the old "overige dagen" wording was the most visible of the
+      // three copies that survived.
+      showroomValue: "Ma t/m za op afspraak\nDinsdag 15:00 – 19:00 vrije inloop",
     },
     mapTitle: "Locatie Nelissen Tegelhandel Berghem",
   },
 
   footer: {
     navHeading: "Navigatie",
+    regioHeading: "Werkgebied",
     hoursHeading: "Openingstijden",
     tegelzetterTitle: "Tegelzettersbedrijf",
     tegelzetterValue: "Maandag t/m zaterdag, op afspraak",
     showroomTitle: "Showroom tegelverkoop",
+    showroomValue: "Ma t/m za",
+    showroomStrong: "op afspraak",
+    showroomNote: "Dinsdag 15:00–19:00 vrije inloop",
     rightsReserved: "Alle rechten voorbehouden.",
     legal: {
       privacy: "Privacybeleid",
