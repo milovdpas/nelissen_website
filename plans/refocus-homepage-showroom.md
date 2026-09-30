@@ -46,8 +46,11 @@ production unseen.
 Lives at `plans/refocus-homepage-showroom.md` in the repo; tick items as they land so the file
 stays the source of truth rather than this chat.
 
-**Status:** §1 done, §2 code done — needs the one-time nginx + certificate + basic-auth
-step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 October).
+**Status:** Tier 1 is code-complete. The acceptance environment is live and verified
+(401 unauthenticated, `x-robots-tag: noindex`, `/health` open, test mail diverted and
+labelled). The only outstanding item is §7 — Mark's photos, expected 1 October.
+
+**Do not merge to `main` until they land.** `development` → `acceptance` is safe now.
 
 | | Item | State |
 |---|---|---|
@@ -348,6 +351,19 @@ the frame.
 2. **Twelve to twenty carousel photos**, any tiles he likes the look of →
    `public/images/tegels/<slug>.jpg`. These need no relationship to stock levels, which is
    the point — he can shoot whatever is standing in the showroom.
+3. **Photos of finished jobs** for the Portfolio section → `public/images/portfolio/`.
+
+That third ask is a different kind of problem from the other two, and it is **already live in
+production**. The Portfolio section is headed *"Ons werk, voor u."* and labels six Unsplash
+stock photos as "Badkamer renovatie", "Woonkamer vloer", "Terras buiten" and so on — it
+presents stock photography as the company's own completed projects. The assortiment
+placeholders are merely generic; this one is a claim that is not true, and a customer who
+recognises a stock photo has a good reason to distrust the rest of the site.
+
+Two honest options, Mark's call: he supplies real job photos, or the section's framing changes
+from "our work" to inspiration. Worth raising while he has a camera out anyway — a tiler of
+40+ years will have finished bathrooms on his phone, and real ones will outperform stock for
+both credibility and image search.
 
 Local paths need no config change; CSP `'self'` already covers them. Leave
 `next.config.ts:63-68` `remotePatterns` alone for now — Portfolio still uses Unsplash.
