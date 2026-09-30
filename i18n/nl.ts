@@ -37,7 +37,6 @@ export const nl = {
   hero: {
     titleLine1: "Vakmanschap",
     titleLine2: "in elke tegel.",
-    subtitle: "Tegels voor ieder interieur",
     body: "Van badkamer tot woonkamer en van woning tot bedrijfspand: wij leveren een ruime collectie tegels in diverse stijlen, formaten en uitvoeringen.",
     showroomLine: "Ontdek onze collectie in de showroom. Zes dagen per week geopend op afspraak.",
     ctaPrimary: "Afspraak maken",
@@ -84,7 +83,10 @@ export const nl = {
 
   assortiment: {
     label: "Assortiment",
-    title: "Tegels voor elk project.",
+    // Mark's line. It lives here rather than in the hero: as the second section
+    // it is still the first h2 on the page, so the product-led heading stays
+    // high up without saying the same thing twice.
+    title: "Tegels voor ieder interieur.",
     items: assortiment,
     // Impressions from the showroom, shown under the category cards. Not a
     // catalogue — see the note in content/nl/tegels.ts.
