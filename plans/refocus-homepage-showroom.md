@@ -60,9 +60,9 @@ step on the VPS, then the homepage work. Waiting on Mark's photos (expected 1 Oc
 | 7 | Photos from Mark | ☐ blocked — expected 1 Oct |
 | 8 | Backgrounds | ✅ no two adjacent sections alike |
 | 9 | Nav order | ✅ matches the page |
-| 10 | Hero reweight | ☐ |
+| 10 | Hero reweight | ✅ new H2 + showroom line, CTA repointed |
 | 11 | Derived files (llms.txt, sitemap) | ✅ |
-| 12 | Showroom availability wording | ☐ |
+| 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
 | — | Message to Ronald (informational) | ☐ |
 | — | Tier 2 — multi-page split | ☐ next round |
 

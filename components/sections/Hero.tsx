@@ -48,15 +48,36 @@ export function Hero({ dict }: { dict: Dictionary["hero"] & { imageAlt: string }
           <span style={{ color: BRAND.yellow }}>{dict.titleLine2}</span>
         </h1>
 
-        <p className="mt-6 max-w-lg text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.75)" }}>
+        {/* An h2 rather than styled text: one H1 is preserved, and it puts a
+            product-led heading at the very top of the page, which is most of
+            what the shift toward tile sales buys us in search. */}
+        <h2
+          className="mt-5 max-w-lg"
+          style={{
+            fontFamily: FONT.heading,
+            fontWeight: 700,
+            fontSize: "clamp(1.15rem, 2.4vw, 1.6rem)",
+            color: "#fff",
+            letterSpacing: "0.02em",
+            lineHeight: 1.2,
+          }}
+        >
+          {dict.subtitle}
+        </h2>
+
+        <p className="mt-4 max-w-lg text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.75)" }}>
           {dict.body}
+        </p>
+
+        <p className="mt-3 max-w-lg text-base leading-relaxed" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.92)" }}>
+          {dict.showroomLine}
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
           <ButtonLink href="#contact">
             {dict.ctaPrimary} <ArrowRight size={15} />
           </ButtonLink>
-          <ButtonLink href="#openingstijden" variant="outline">
+          <ButtonLink href="#assortiment" variant="outline">
             {dict.ctaSecondary}
           </ButtonLink>
         </div>

@@ -30,16 +30,25 @@ export const nl = {
     menuLabel: "Menu",
   },
 
+  // Copy below the H1 supplied by Mark. It leads with the product and the
+  // showroom instead of the zetwerk: they have more than enough tile-setting
+  // work and want to sell more tiles.
   hero: {
     titleLine1: "Vakmanschap",
     titleLine2: "in elke tegel.",
-    body: "Al jaren zetten wij tegels bij woningen en bedrijfspanden in Noord-Brabant. Met oog voor detail, op afspraak, zes dagen per week. Kom langs in onze showroom of plan direct een afspraak.",
+    subtitle: "Tegels voor ieder interieur",
+    body: "Van badkamer tot woonkamer en van woning tot bedrijfspand: wij leveren een ruime collectie tegels in diverse stijlen, formaten en uitvoeringen.",
+    showroomLine: "Ontdek onze collectie in de showroom. Zes dagen per week geopend op afspraak.",
     ctaPrimary: "Afspraak maken",
-    ctaSecondary: "Showroom bezoeken",
+    // Points at #assortiment, which now sits directly below the fold.
+    ctaSecondary: "Bekijk onze tegels",
+    // Leads on showroom availability. The old pair ("Zetwerk op afspraak" /
+    // "Showroom open Di 15–19") sold the zetwerk and made the showroom look like
+    // a four-hour-a-week operation, which is the opposite of the goal.
     stats: [
       { num: "40+", label: "Jaar ervaring" },
-      { num: "Ma–Za", label: "Zetwerk op afspraak" },
-      { num: "Di 15–19", label: "Showroom open" },
+      { num: "Ma–Za", label: "Showroom op afspraak" },
+      { num: "Di 15–19", label: "Vrije inloop" },
     ],
   },
 
@@ -97,15 +106,19 @@ export const nl = {
     showroom: {
       title: "Showroom tegelverkoop",
       subtitle: "St. Willibrordusstraat 2b, Berghem",
-      highlightDay: "Dinsdag",
+      // The showroom is open six days a week on appointment, with free walk-in
+      // on Tuesday afternoon. The old wording ("uitsluitend geopend op dinsdag")
+      // advertised four hours a week, which undersells it badly for a site whose
+      // whole job is getting people through the door.
+      highlightDay: "Dinsdag — vrije inloop",
       highlightHours: "15:00 – 19:00",
       rows: [
-        { label: "Overige dagen", value: "Op afspraak" },
+        { label: "Maandag t/m zaterdag", value: "Op afspraak" },
         { label: "Zondag", value: "Gesloten" },
       ],
-      noteLead: "Showroom uitsluitend geopend op ",
-      noteStrong: "dinsdag 15:00–19:00",
-      noteTail: ". Buiten deze tijd op afspraak.",
+      noteLead: "Zes dagen per week geopend ",
+      noteStrong: "op afspraak",
+      noteTail: ". Op dinsdagmiddag loopt u zonder afspraak binnen.",
     },
   },
 
