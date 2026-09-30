@@ -2,7 +2,6 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import type { Locatie } from "@/content/nl/locaties";
-import { locaties } from "@/content/nl/locaties";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Nav } from "@/components/layout/Nav";
@@ -21,7 +20,6 @@ const dict = getDictionary(defaultLocale);
  * /tegels-<plaats>, not /tegels/<plaats>. Each route file is then three lines.
  */
 export function LocatieContent({ locatie }: { locatie: Locatie }) {
-  const others = locaties.filter((l) => l.slug !== locatie.slug);
 
   return (
     <>
@@ -98,7 +96,12 @@ export function LocatieContent({ locatie }: { locatie: Locatie }) {
               ))}
             </ul>
 
-            <div className="mt-10 flex flex-wrap gap-3">
+            {/* Deliberately NO links to the other location pages. A visitor in
+                Oss does not care about Nistelrode, and every regional page
+                linking to every other builds exactly the tight cluster of
+                near-identical pages that marks a doorway scheme. The footer
+                carries them once, which is enough for discovery. */}
+            <div className="mt-10">
               <Link
                 href="/assortiment"
                 className="inline-flex items-center px-4 py-2 text-sm"
@@ -112,22 +115,6 @@ export function LocatieContent({ locatie }: { locatie: Locatie }) {
               >
                 {dict.locatiePage.assortimentLink}
               </Link>
-              {others.map((l) => (
-                <Link
-                  key={l.slug}
-                  href={`/${l.slug}`}
-                  className="inline-flex items-center px-4 py-2 text-sm"
-                  style={{
-                    fontFamily: FONT.body,
-                    color: BRAND.anthracite,
-                    background: "#fff",
-                    border: "1px solid rgba(44,48,56,0.12)",
-                    borderRadius: 2,
-                  }}
-                >
-                  {l.metaTitle}
-                </Link>
-              ))}
             </div>
           </div>
         </section>
