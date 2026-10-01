@@ -14,8 +14,9 @@ export type AssortimentItem = {
    *  search alike. */
   alt: string;
   desc: string;
-  /** Style page this card links to, when one exists. Cards without a match stay
-   *  plain, because a link to nothing is worse than no link. */
+  /** Where the card links to. Every card has one: a single unclickable card
+   *  among six reads as broken rather than deliberate, so the odd one out
+   *  points at the hub. */
   href?: string;
 };
 
@@ -36,6 +37,11 @@ export const assortiment: AssortimentItem[] = [
     url: "/images/voorraad-tegels/thumbnail.jpg",
     alt: "Pallets met tegels op voorraad in het magazijn",
     desc: "Direct leverbare tegels uit voorraad. Bekijk ons assortiment voor iedere stijl en toepassing.",
+    // The hub rather than a style page: voorraad is a claim about breadth, not
+    // a style, so it has nowhere of its own to point at. Linking it anyway keeps
+    // all six cards behaving the same way, which matters more than the
+    // destination being perfect.
+    href: "/assortiment",
   },
   {
     slug: "slabs",
