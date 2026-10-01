@@ -101,7 +101,7 @@ export const nl = {
     title: "Kom de tegels in het echt zien.",
     paragraphs: [
       "Bijna iedere klant wil een tegel uiteindelijk in het echt zien. Kleur en glans veranderen met het licht, structuur voelt anders dan hij eruitziet, en een patroon beoordeelt u pas goed over een paar vierkante meter. Daarom hebben wij geen webshop maar een showroom.",
-      "In Berghem liggen doorgaans drie- tot vierhonderd verschillende tegels. Van de meeste soorten een of twee, want het assortiment beweegt mee met wat fabrikanten maken. Wat er nu ligt, ligt er over een half jaar misschien niet meer — en daarom loont het om gewoon even langs te komen.",
+      "In Berghem liggen doorgaans drie- tot vierhonderd verschillende tegels. Van de meeste soorten een of twee, want het assortiment beweegt mee met wat fabrikanten maken. Wat er nu ligt, ligt er over een half jaar misschien niet meer. Daarom loont het om gewoon even langs te komen.",
     ],
     points: [
       "Drie- tot vierhonderd verschillende tegels",
@@ -202,7 +202,7 @@ export const nl = {
       // on Tuesday afternoon. The old wording ("uitsluitend geopend op dinsdag")
       // advertised four hours a week, which undersells it badly for a site whose
       // whole job is getting people through the door.
-      highlightDay: "Dinsdag — vrije inloop",
+      highlightDay: "Dinsdag, vrije inloop",
       highlightHours: "15:00 – 19:00",
       rows: [
         { label: "Maandag t/m zaterdag", value: "Op afspraak" },

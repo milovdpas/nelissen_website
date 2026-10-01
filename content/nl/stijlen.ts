@@ -65,7 +65,7 @@ export const stijlen: Stijl[] = [
       "Houtlook tegels en visgraat vloeren in onze showroom in Berghem. De warme uitstraling van hout, met het onderhoudsgemak van keramiek. Kom ze in het echt bekijken.",
     title: "Houtlook tegels",
     intro:
-      "De warme uitstraling van hout, met het gemak van een tegel. Houtlook tegels geven een vloer de sfeer van planken, maar zijn ongevoelig voor vocht, krassen en slijtage — ook in de badkamer, de keuken of de hal.",
+      "De warme uitstraling van hout, met het gemak van een tegel. Houtlook tegels geven een vloer de sfeer van planken, maar zijn ongevoelig voor vocht, krassen en slijtage. Ook in de badkamer, de keuken of de hal.",
     blocks: [
       {
         heading: "Wat zijn houtlook tegels?",
@@ -77,7 +77,7 @@ export const stijlen: Stijl[] = [
       {
         heading: "Visgraat en andere legpatronen",
         paragraphs: [
-          "Houtlook leent zich bij uitstek voor een legpatroon. Visgraat is daarvan de bekendste: smalle tegels die haaks op elkaar worden gelegd, waardoor een vloer richting en rust krijgt. Het patroon is tijdloos, maar vraagt vakwerk — de eerste rijen bepalen of de hele vloer strak uitkomt.",
+          "Houtlook leent zich bij uitstek voor een legpatroon. Visgraat is daarvan de bekendste: smalle tegels die haaks op elkaar worden gelegd, waardoor een vloer richting en rust krijgt. Het patroon is tijdloos, maar het vraagt wel vakwerk. De eerste rijen bepalen of de hele vloer strak uitkomt.",
           "Naast visgraat leggen wij houtlook ook in halfsteensverband of recht. Wat het beste werkt hangt af van de afmetingen van de ruimte, de lichtinval en het formaat van de tegel. Daar denken wij graag in mee voordat u kiest.",
         ],
       },
@@ -93,7 +93,7 @@ export const stijlen: Stijl[] = [
       "Woonkamers en open keukens die een houten uitstraling moeten hebben",
       "Badkamers en toiletten, waar echt hout te veel te lijden heeft",
       "Hallen en gangen, dankzij de slijtvastheid",
-      "Vloeren met vloerverwarming — keramiek geleidt warmte beter dan hout",
+      "Vloeren met vloerverwarming, omdat keramiek warmte beter geleidt dan hout",
     ],
     showroomLine:
       "Houtlook leeft van nerf en kleurverloop, en visgraat laat zich pas beoordelen over een paar vierkante meter. In onze showroom in Berghem liggen ze naast elkaar, zodat u ze in hetzelfde licht kunt vergelijken.",
