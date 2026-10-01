@@ -46,6 +46,7 @@ export const assortiment: AssortimentItem[] = [
     focus: "top",
     alt: "Wand bekleed met een slab met uitgesproken marmertekening",
     desc: "Grote en luxe uitstraling met minimale voegen. Ontdek onze slabs voor de perfecte badkamer.",
+    href: "/assortiment/slabs-grootformaat",
   },
   {
     slug: "handvorm-tegels",
@@ -53,6 +54,7 @@ export const assortiment: AssortimentItem[] = [
     url: "/images/handvorm-tegels/thumbnail.jpg",
     alt: "Terracotta handvormtegels in visgraatverband boven een bad",
     desc: "Karakter in iedere tegel. Ambachtelijke uitstraling met een unieke, levendige look.",
+    href: "/assortiment/handvorm-tegels",
   },
   {
     slug: "visgraat-houtlook-vloeren",
@@ -72,6 +74,7 @@ export const assortiment: AssortimentItem[] = [
     focus: "center",
     alt: "Woonkamer met grijze vloertegels van 120 bij 120 centimeter",
     desc: "Groot formaat met rustige lijnen, voor een moderne en luxe uitstraling.",
+    href: "/assortiment/slabs-grootformaat",
   },
   {
     slug: "badkamers",
@@ -79,5 +82,6 @@ export const assortiment: AssortimentItem[] = [
     url: "/images/badkamers/thumbnail.jpg",
     alt: "Badkamer met betonlook tegels op vloer en wanden en verzonken baden",
     desc: "Van vloer tot wand. Creëer een badkamer die stijl, comfort en luxe samenbrengt.",
+    href: "/assortiment/badkamertegels",
   },
 ];

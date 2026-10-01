@@ -65,4 +65,16 @@ export const portfolio: PortfolioItem[] = [
     alt: "Toiletruimte betegeld met grootformaat tegels, met uitsparingen voor de bedieningsplaat en de aansluitingen",
     label: "Grootformaat met uitsparingen",
   },
+  {
+    slug: "kookeiland-handvorm",
+    url: "/images/handvorm-tegels/4a07ed29-ddb2-441b-89e9-ba82df936f55.jpg",
+    alt: "Gebogen kookeiland bekleed met lichtblauwe handvormtegels",
+    label: "Gebogen kookeiland",
+  },
+  {
+    slug: "inloopdouche-nissen",
+    url: "/images/120x120/0e6566b9-7a11-48bd-ae2d-80ca61b5e27e.jpg",
+    alt: "Inloopdouche met grootformaat tegels, twee nissen en een lijnafvoer",
+    label: "Inloopdouche met nissen",
+  },
 ];
