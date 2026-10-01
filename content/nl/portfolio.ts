@@ -59,4 +59,10 @@ export const portfolio: PortfolioItem[] = [
     alt: "Grote houtlook visgraatvloer wordt gelegd met nivelleerclips",
     label: "Visgraatvloer",
   },
+  {
+    slug: "toiletruimte-grootformaat",
+    url: "/images/carousel/50d797bb-7090-42c3-8f37-0b43278ceb95.jpg",
+    alt: "Toiletruimte betegeld met grootformaat tegels, met uitsparingen voor de bedieningsplaat en de aansluitingen",
+    label: "Grootformaat met uitsparingen",
+  },
 ];
