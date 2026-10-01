@@ -45,7 +45,7 @@ export const locaties: Locatie[] = [
         heading: "Wat u bij ons vindt",
         paragraphs: [
           "Wij hebben doorgaans drie- tot vierhonderd verschillende tegels in huis: vloer- en wandtegels, houtlook en visgraat, betonlook, handvorm, grote formaten tot 120×120 en alles wat daarbij hoort voor een complete badkamer. Van de meeste soorten liggen er een of twee, omdat het assortiment meebeweegt met wat fabrikanten maken.",
-          "Dat betekent ook dat het loont om even langs te komen in plaats van te bellen. Wat er vandaag ligt, ligt er over een half jaar misschien niet meer — en omgekeerd staat er geregeld iets nieuws.",
+          "Dat betekent ook dat het loont om even langs te komen in plaats van te bellen. Wat er vandaag ligt, ligt er over een half jaar misschien niet meer, en omgekeerd staat er geregeld iets nieuws.",
         ],
       },
       {
@@ -108,7 +108,7 @@ export const locaties: Locatie[] = [
       {
         heading: "Eén keer kijken is meestal niet genoeg",
         paragraphs: [
-          "De meeste mensen kiezen hun tegel niet in één bezoek. U ziet iets moois, u twijfelt tussen twee kleuren, en thuis blijkt het licht in de badkamer heel anders te vallen dan in de showroom. Dat is normaal — het is een vloer waar u twintig jaar op kijkt.",
+          "De meeste mensen kiezen hun tegel niet in één bezoek. U ziet iets moois, u twijfelt tussen twee kleuren, en thuis blijkt het licht in de badkamer heel anders te vallen dan in de showroom. Dat is normaal, want het is een vloer waar u twintig jaar op kijkt.",
           "Omdat u vanuit Nistelrode zo bij ons bent, kunt u dat gewoon rustig doen. Een keer oriënteren, thuis opmeten, terugkomen met foto's of een stukje van uw keukenblad. Wij zetten de kandidaten dan naast elkaar zodat u ze in hetzelfde licht vergelijkt.",
         ],
       },
@@ -141,7 +141,7 @@ export const locaties: Locatie[] = [
         heading: "Verkoop én zetwerk, ook bij u in de buurt",
         paragraphs: [
           "Nelissen is van oorsprong een tegelzettersbedrijf. Wij zetten al meer dan veertig jaar tegels bij woningen en bedrijfspanden in Noord-Brabant, Uden en omstreken inbegrepen, en verkopen daarnaast uit onze eigen showroom.",
-          "Voor u scheelt dat een schakel. Geen tegels bestellen bij de één en vervolgens een zetter zoeken die ermee uit de voeten kan, maar één partij die weet wat er geleverd is en hoe het gelegd moet worden. Wilt u alleen tegels? Ook goed — dat is geen voorwaarde.",
+          "Voor u scheelt dat een schakel. Geen tegels bestellen bij de één en vervolgens een zetter zoeken die ermee uit de voeten kan, maar één partij die weet wat er geleverd is en hoe het gelegd moet worden. Wilt u alleen tegels? Ook goed, dat is geen voorwaarde.",
         ],
       },
       {

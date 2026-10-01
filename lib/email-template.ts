@@ -24,7 +24,7 @@ function testBanner(): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#b3261e;">
     <tr>
       <td align="center" style="padding:12px 16px;font-family:${HEADING_STACK};font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#ffffff;">
-        Testbericht — ${esc(appEnv)}-omgeving. Dit is geen echte aanvraag.
+        Testbericht uit de ${esc(appEnv)}-omgeving. Dit is geen echte aanvraag.
       </td>
     </tr>
   </table>`;
@@ -171,7 +171,7 @@ function slotLine(input: ContactSubmission): string | null {
     parts.push(labels.join(", "));
   }
 
-  return parts.length ? parts.join(" — ") : null;
+  return parts.length ? parts.join(", ") : null;
 }
 
 /** Notification e-mail sent to the company when the contact form is submitted. */
@@ -270,8 +270,8 @@ ${messageBlock}
 export function contactConfirmationEmail(input: ContactSubmission) {
   const isAppointment = input.type === "appointment";
   const subject = isAppointment
-    ? `Wij hebben uw afspraakverzoek ontvangen — ${site.shortName}`
-    : `Wij hebben uw bericht ontvangen — ${site.shortName}`;
+    ? `Wij hebben uw afspraakverzoek ontvangen | ${site.shortName}`
+    : `Wij hebben uw bericht ontvangen | ${site.shortName}`;
 
   const slot = slotLine(input);
 
