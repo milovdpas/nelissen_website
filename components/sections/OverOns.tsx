@@ -52,11 +52,25 @@ export function OverOns({ dict }: { dict: Dictionary["overOns"] }) {
           <div className="relative">
             <div className="absolute -top-4 -left-4 w-full h-full" style={{ background: BRAND.yellow, zIndex: 0, borderRadius: 2 }} />
             <div className="relative z-10 overflow-hidden h-[420px]" style={{ borderRadius: 2 }}>
+              {/* Eager, not lazy. This section only renders on /over-ons, where
+                  the page header above it is plain text on a flat colour — so
+                  on a desktop this photo is both above the fold and the LCP
+                  element, and next/image's default lazy loading means it is not
+                  discovered until after layout. Next flags exactly this case.
+
+                  `loading="eager"` rather than `priority`: priority also emits a
+                  preload link, and on a phone the grid is single-column, so the
+                  photo sits well below a title, three paragraphs and a
+                  checklist. Preloading it there would pull a large image to the
+                  front of the queue ahead of content the visitor can actually
+                  see. Eager fixes the desktop discovery delay without taking
+                  that trade. */}
               <Image
                 src="/images/bedrijfsbus.jpeg"
                 alt={dict.imageAlt}
                 fill
                 quality={60}
+                loading="eager"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
               />
