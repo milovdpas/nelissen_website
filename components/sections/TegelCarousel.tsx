@@ -204,6 +204,13 @@ export function TegelCarousel({ items, dict }: Props) {
 
   const layout = count >= PER_VIEW_DESKTOP ? FOUR_UP : NARROWER[count];
   const slideWidth = 100 / perView;
+  // `isDesktop` is false on the server, so a short carousel renders as though it
+  // scrolls: arrows, dots and clones all present. From `lg` up those few photos
+  // sit side by side and it does not scroll, so the controls have to be hidden
+  // in CSS as well as in JS. Without this the style pages, which carry three
+  // photos each, flash their arrows and lose the ~24px dot row the moment the
+  // bundle lands.
+  const controlsOnlyBelowDesktop = count <= PER_VIEW_DESKTOP ? " lg:hidden" : "";
   const activeDot = ((index % count) + count) % count;
   const buttonStyle: React.CSSProperties = {
     background: "rgba(44,48,56,0.55)",
@@ -286,7 +293,7 @@ export function TegelCarousel({ items, dict }: Props) {
               type="button"
               onClick={() => go(index - 1)}
               aria-label={dict.prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2"
+              className={`absolute left-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2${controlsOnlyBelowDesktop}`}
               style={buttonStyle}
             >
               <ChevronLeft size={18} />
@@ -295,7 +302,7 @@ export function TegelCarousel({ items, dict }: Props) {
               type="button"
               onClick={() => go(index + 1)}
               aria-label={dict.next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2"
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2${controlsOnlyBelowDesktop}`}
               style={buttonStyle}
             >
               <ChevronRight size={18} />
@@ -305,7 +312,7 @@ export function TegelCarousel({ items, dict }: Props) {
       </div>
 
       {canScroll ? (
-        <div className="mt-4 flex justify-center gap-2">
+        <div className={`mt-4 flex justify-center gap-2${controlsOnlyBelowDesktop}`}>
           {items.map((item, i) => (
             <button
               key={item.slug}
