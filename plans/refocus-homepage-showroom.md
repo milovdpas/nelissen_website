@@ -46,27 +46,41 @@ production unseen.
 Lives at `plans/refocus-homepage-showroom.md` in the repo; tick items as they land so the file
 stays the source of truth rather than this chat.
 
-**Status:** Tier 1 is code-complete. The acceptance environment is live and verified
-(401 unauthenticated, `x-robots-tag: noindex`, `/health` open, test mail diverted and
-labelled). The only outstanding item is §7 — Mark's photos, expected 1 October.
+**Status (2 October):** Tier 1 is done. Acceptance is live and verified. Tier 2 is mostly
+built: five page types exist, every stock photo is gone, and all 23 rendered images are
+Nelissen's own.
 
-**Do not merge to `main` until they land.** `development` → `acceptance` is safe now.
+**Still not merged to `main`.** `development` → `acceptance` is safe.
+
+**Tier 1 — all complete**
 
 | | Item | State |
 |---|---|---|
-| 1 | `APP_ENV` flag + noindex + email labelling | ✅ verified on a built image: robots disallow, `X-Robots-Tag`, canonical self-refs acceptance, no GA id, mail diverted |
-| 2 | Acceptance environment on the VPS | ◐ workflow + compose done; **VPS nginx conf, certificate and basic auth still to do by hand** (DEPLOYMENT.md) |
-| 3 | Section order | ✅ verified in the DOM |
-| 4 | New assortiment categories | ✅ copy in; **images still placeholders** |
-| 5 | Data shape (`alt`, `slug`) | ✅ 14 images, 0 empty alts |
-| 6 | Tile carousel | ✅ hand-rolled, no dependency; hero stays the only preloaded image |
-| 7 | Photos from Mark | ☐ blocked — expected 1 Oct |
-| 8 | Backgrounds | ✅ no two adjacent sections alike |
-| 9 | Nav order | ✅ matches the page |
-| 10 | Hero reweight | ✅ new H2 + showroom line, CTA repointed |
-| 11 | Derived files (llms.txt, sitemap) | ✅ |
-| 12 | Showroom availability wording | ✅ six days leads, Tuesday = vrije inloop |
-| — | Tier 2 — /over-ons ✅ · /assortiment hub + 1 style page ✅ · 7 more style pages ☐ · nav dropdown ☐ · showroom section ☐ |
+| 1 | `APP_ENV` + noindex + email diversion | ✅ verified on a built image |
+| 2 | Acceptance environment | ✅ live: 401 unauthenticated, `X-Robots-Tag`, `/health` open, mail diverted |
+| 3–6, 8–12 | Section order, categories, data shape, carousel, backgrounds, nav, hero, derived files, hours wording | ✅ |
+| 7 | Real photos | ✅ wired October 2026; see "photos still wanted" below |
+
+**Tier 2**
+
+| Item | State |
+|---|---|
+| `/over-ons`, `/contact`, `/assortiment` hub | ✅ |
+| Six regional pages | ✅ worst pairwise body overlap 22.5% |
+| Showroom section (full + compact) | ✅ |
+| Style pages | ◐ 1 of 8 (`houtlook-tegels`). Mark's feedback was content edits, not structural, so the template stands |
+| Nav dropdown | ☐ waits for more style pages |
+| Desktop carousel layout | ☐ specified below, not built |
+| Portfolio grid | ◐ 7 items in a 3-column grid, so one orphan card; 2 more would square it |
+
+**Blocked on Mark and Tom**
+
+- Visgraat vs houtlook as the card title (card currently says visgraat and shows visgraat)
+- A voorraad photo from the showroom rather than the warehouse pallets
+- Whether they sell betonlook, natuursteenlook and terrastegels, which decides the next style pages
+- Showroom photos after the rebuild
+- House number: 2, 2A or 2b
+- Google reviews, and the old landline still on Facebook, Infobel and MapQuest
 
 ## 1. `APP_ENV` — keep acceptance out of Google and out of real inboxes
 

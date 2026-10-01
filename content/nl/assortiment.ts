@@ -69,8 +69,7 @@ export const assortiment: AssortimentItem[] = [
     slug: "120x120-tegels",
     label: "120×120 tegels",
     url: "/images/120x120/thumbnail.jpg",
-    // The floor is the subject; the top of the frame is a television and wall.
-    focus: "bottom",
+    focus: "center",
     alt: "Woonkamer met grijze vloertegels van 120 bij 120 centimeter",
     desc: "Groot formaat met rustige lijnen, voor een moderne en luxe uitstraling.",
   },
