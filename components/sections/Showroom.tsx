@@ -24,11 +24,15 @@ import type { Dictionary } from "@/i18n/dictionaries";
  * asked to fill in. If this section is ever used on a page without a Contact
  * section, that anchor needs to become a prop.
  *
- * ⚠️ The image is a PLACEHOLDER. public/images/showroom.jpeg is genuinely theirs
- * — better than a stock showroom, which would pass off someone else's premises
- * as Nelissen's — but it is already the hero background, so on the homepage the
- * same shot appears twice. Swap it when Mark supplies photos of the showroom
- * itself (not of tiles).
+ * The photo is the showroom interior from the batch Tom supplied, which also
+ * settles the clash this comment used to record: the section previously reused
+ * public/images/showroom.jpeg, still the hero background and the OG image, so
+ * the same shot appeared twice on the homepage.
+ *
+ * Interim, by Milo's call: the showroom is being rebuilt, so this shows the
+ * premises as they were. Replace it once Mark supplies photos of the finished
+ * room, and prefer a wide shot of the racks over a close-up of tiles — the
+ * point of the section is what the visit is like, not what is on the shelves.
  */
 export function Showroom({
   dict,
@@ -78,7 +82,7 @@ export function Showroom({
 
             <div className="relative h-64 lg:h-72 overflow-hidden" style={{ borderRadius: 2 }}>
               <Image
-                src="/images/showroom.jpeg"
+                src="/images/showroom/thumbnail.jpg"
                 alt={dict.imageAlt}
                 fill
                 quality={60}
@@ -148,7 +152,7 @@ export function Showroom({
               style={{ background: BRAND.yellow, zIndex: 0, borderRadius: 2 }}
             />
             <Image
-              src="/images/showroom.jpeg"
+              src="/images/showroom/thumbnail.jpg"
               alt={dict.imageAlt}
               fill
               quality={60}

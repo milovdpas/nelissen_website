@@ -11,6 +11,22 @@ const INTERVAL_MS = 4000;
 const DESKTOP_QUERY = "(min-width: 1024px)";
 const PER_VIEW_DESKTOP = 4;
 
+/**
+ * How wide one slide is from `lg` up, per photo count.
+ *
+ * Spelled out as literal class names rather than built from `count`: Tailwind
+ * only emits classes it can actually see in the source, so an interpolated
+ * `lg:w-1/${n}` would generate nothing at all. The `sizes` hint lives beside the
+ * class on purpose — if the two ever disagree the browser picks the wrong
+ * candidate out of the srcset and the photo renders soft.
+ */
+const FOUR_UP = { width: "lg:w-1/4", size: "25vw" };
+const NARROWER: Record<number, { width: string; size: string }> = {
+  1: { width: "lg:w-full", size: "100vw" },
+  2: { width: "lg:w-1/2", size: "50vw" },
+  3: { width: "lg:w-1/3", size: "33vw" },
+};
+
 type Props = {
   items: TegelPhoto[];
   dict: {
@@ -24,10 +40,9 @@ type Props = {
 /**
  * Subscribe to a media query without setState-in-an-effect.
  *
- * The server snapshot is `false`, so the first paint is the one-card mobile
- * layout and the client corrects on hydration. The markup is identical either
- * way, only widths and the transform change, so there is nothing for React to
- * complain about.
+ * The server snapshot is `false`. Only the *offset* reads this now, and at the
+ * first paint the offset is zero either way, so a desktop visitor no longer
+ * sees the phone layout before hydration.
  */
 function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
@@ -42,6 +57,25 @@ function useMediaQuery(query: string): boolean {
 }
 
 /**
+ * True while the tab is in the background.
+ *
+ * Auto-play has to stop there. A hidden tab still runs timers but does not run
+ * animations, so the strip would keep advancing while the `transitionend` that
+ * resets it never fires, and the viewer would come back to a carousel some
+ * arbitrary number of slides along.
+ */
+function useDocumentHidden(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      document.addEventListener("visibilitychange", onChange);
+      return () => document.removeEventListener("visibilitychange", onChange);
+    },
+    () => document.hidden,
+    () => false,
+  );
+}
+
+/**
  * Photo strip under the assortiment cards.
  *
  * One card at a time on a phone, four side by side from `lg` up. The single
@@ -50,11 +84,20 @@ function useMediaQuery(query: string): boolean {
  * showing several tiles at once also argues the thing the copy keeps asserting:
  * that there are hundreds of them.
  *
+ * Slide *width* is pure CSS and slide *offset* is the only thing JavaScript
+ * decides. The server cannot know the viewport, so anything width-related in JS
+ * renders the phone layout first and then snaps — one 800px-tall photo
+ * collapsing to a 210px row once the bundle lands.
+ *
  * It loops in both directions without ever snapping back to the start. That is
  * done by appending clones of the first few slides and, once the strip has
  * animated onto them, silently resetting to the real first slide with the
  * transition switched off. Going backwards from the start does the same in
  * reverse: jump to the clone position with no transition, then animate.
+ *
+ * `index` is kept inside `[0, count]` at all times. Beyond `count` the strip
+ * runs off the end of the clones and shows blank space, which is exactly what
+ * happened when a second click arrived before the reset had run.
  *
  * Clones cost no extra network: they reuse the same URLs, so the browser serves
  * them from cache.
@@ -72,6 +115,7 @@ export function TegelCarousel({ items, dict }: Props) {
 
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const tabHidden = useDocumentHidden();
 
   const count = items.length;
   const perView = isDesktop ? Math.min(PER_VIEW_DESKTOP, count) : 1;
@@ -117,17 +161,25 @@ export function TegelCarousel({ items, dict }: Props) {
         return;
       }
 
-      if (next < 0) {
-        // Jump to the clone position with the transition off, then animate one
-        // step back into the real slides on the next frame.
+      // Both wraps work the same way: land on the position showing identical
+      // pixels with the transition off, then animate one step from there.
+      //
+      // Forwards this only triggers when a click lands while the strip is
+      // already sitting on the clones and `onTransitionEnd` has not reset it
+      // yet — interrupting a transition means the original never reports
+      // finishing. Without this, `index` ran to `count + 1` and the right-hand
+      // slot had no slide to show.
+      if (next < 0 || next > count) {
+        const from = next < 0 ? count : 0;
+        const to = next < 0 ? count - 1 : 1;
         setAnimate(false);
-        setIndex(count);
-        remember(count);
+        setIndex(from);
+        remember(from);
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setAnimate(true);
-            setIndex(count - 1);
-            remember(count - 1);
+            setIndex(to);
+            remember(to);
           });
         });
         return;
@@ -143,14 +195,22 @@ export function TegelCarousel({ items, dict }: Props) {
   // updates several pieces of state, and doing that inside an interval's updater
   // would be a side effect in a reducer.
   useEffect(() => {
-    if (paused || reducedMotion || !canScroll) return;
+    if (paused || tabHidden || reducedMotion || !canScroll) return;
     const id = window.setTimeout(() => go(index + 1), INTERVAL_MS);
     return () => window.clearTimeout(id);
-  }, [index, paused, reducedMotion, canScroll, go]);
+  }, [index, paused, tabHidden, reducedMotion, canScroll, go]);
 
   if (count === 0) return null;
 
+  const layout = count >= PER_VIEW_DESKTOP ? FOUR_UP : NARROWER[count];
   const slideWidth = 100 / perView;
+  // `isDesktop` is false on the server, so a short carousel renders as though it
+  // scrolls: arrows, dots and clones all present. From `lg` up those few photos
+  // sit side by side and it does not scroll, so the controls have to be hidden
+  // in CSS as well as in JS. Without this the style pages, which carry three
+  // photos each, flash their arrows and lose the ~24px dot row the moment the
+  // bundle lands.
+  const controlsOnlyBelowDesktop = count <= PER_VIEW_DESKTOP ? " lg:hidden" : "";
   const activeDot = ((index % count) + count) % count;
   const buttonStyle: React.CSSProperties = {
     background: "rgba(44,48,56,0.55)",
@@ -178,13 +238,18 @@ export function TegelCarousel({ items, dict }: Props) {
           <div
             className="flex"
             style={{
-              transform: `translateX(-${index * slideWidth}%)`,
+              // Offset only applies while the strip actually scrolls. Every
+              // slide fits at once otherwise, and a stale offset would shunt
+              // them sideways and leave a blank gap — which is what a tablet
+              // rotated from portrait to landscape used to do.
+              transform: `translateX(-${canScroll ? index * slideWidth : 0}%)`,
               transition: animate && !reducedMotion ? "transform 600ms ease-in-out" : "none",
             }}
             onTransitionEnd={(e) => {
               // Once the strip has animated onto the clones, drop back to the
               // real slides with the transition off. Identical pixels, so the
-              // reset is invisible.
+              // reset is invisible. `go` caps `index` at `count`, so this only
+              // ever lands on 0.
               if (e.propertyName !== "transform" || index < count) return;
               setAnimate(false);
               setIndex(index - count);
@@ -194,7 +259,7 @@ export function TegelCarousel({ items, dict }: Props) {
             }}
           >
             {rendered.map((item, i) => (
-              <div key={`${item.slug}-${i}`} className="shrink-0 px-1.5" style={{ width: `${slideWidth}%` }}>
+              <div key={`${item.slug}-${i}`} className={`shrink-0 px-1.5 w-full ${layout.width}`}>
                 <div
                   className="relative w-full overflow-hidden"
                   style={{ aspectRatio: "3 / 2", borderRadius: 2, background: "rgba(44,48,56,0.06)" }}
@@ -211,7 +276,7 @@ export function TegelCarousel({ items, dict }: Props) {
                       // images, which would compete with the hero, the page's
                       // actual LCP element.
                       loading="lazy"
-                      sizes="(max-width: 1024px) 100vw, 25vw"
+                      sizes={`(max-width: 1024px) 100vw, ${layout.size}`}
                       className="object-cover"
                       style={{ objectPosition: focusPosition(item.focus) }}
                     />
@@ -228,7 +293,7 @@ export function TegelCarousel({ items, dict }: Props) {
               type="button"
               onClick={() => go(index - 1)}
               aria-label={dict.prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2"
+              className={`absolute left-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2${controlsOnlyBelowDesktop}`}
               style={buttonStyle}
             >
               <ChevronLeft size={18} />
@@ -237,7 +302,7 @@ export function TegelCarousel({ items, dict }: Props) {
               type="button"
               onClick={() => go(index + 1)}
               aria-label={dict.next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2"
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 focus:outline-none focus-visible:ring-2${controlsOnlyBelowDesktop}`}
               style={buttonStyle}
             >
               <ChevronRight size={18} />
@@ -247,7 +312,7 @@ export function TegelCarousel({ items, dict }: Props) {
       </div>
 
       {canScroll ? (
-        <div className="mt-4 flex justify-center gap-2">
+        <div className={`mt-4 flex justify-center gap-2${controlsOnlyBelowDesktop}`}>
           {items.map((item, i) => (
             <button
               key={item.slug}

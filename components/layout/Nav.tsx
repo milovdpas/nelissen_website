@@ -81,6 +81,22 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
                   setOpenMenu(null);
                 }
               }}
+              onKeyDown={(e) => {
+                if (!l.children || e.key !== "Escape" || openMenu !== l.href) return;
+                // Move focus first, close second, and not the other way round.
+                //
+                // Hiding the submenu while focus is inside it would drop focus
+                // onto the body, leaving the viewer at the top of the tab order
+                // with no idea where they are, so Escape puts them back on the
+                // parent link — the first anchor in this <li>.
+                //
+                // But focus() dispatches focusin synchronously, which is what
+                // React maps onFocus to, so the handler above runs here and
+                // reopens the menu. Both updates land in the same batch and the
+                // last one wins, so closing has to come after the focus move.
+                e.currentTarget.querySelector("a")?.focus();
+                setOpenMenu(null);
+              }}
             >
               <Link
                 href={l.href}

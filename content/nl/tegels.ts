@@ -23,8 +23,14 @@ export type TegelPhoto = {
  * a visit worth it, and the work-in-progress shots are the most striking ones
  * they have.
  *
- * Not used from the supplied folder: a photo of a bare toilet wall with pipe
- * stubs and no tiles on it at all.
+ * Two photos were held back at first as "untiled" and both readings were wrong:
+ * what looked like pipe stubs were levelling clips, and what looked like bare
+ * plasterboard was large-format tile laid with butt joints. Both are in use now,
+ * one here and one in the Portfolio.
+ *
+ * The folders under public/images still hold more photos than any page uses.
+ * They are kept deliberately, as stock for the style pages not yet written, not
+ * because they were judged unusable.
  */
 export const tegels: TegelPhoto[] = [
   {
@@ -70,5 +76,13 @@ export const tegels: TegelPhoto[] = [
     slug: "bedieningsplaat-betonlook",
     url: "/images/carousel/6d2736b7-18da-45ff-8956-4a81fa4c4d0a.jpg",
     alt: "Bedieningsplaat weggewerkt in een betonlook wandtegel",
+  },
+  {
+    slug: "doucheruimte-schuin-dak",
+    // Lives under badkamers/ rather than carousel/: the carousel folder held a
+    // byte-identical copy of this file under a placeholder name, which has been
+    // removed rather than kept in step with the original.
+    url: "/images/badkamers/ddb58f27-89ff-42bb-958c-3df02d127469.jpg",
+    alt: "Doucheruimte onder een schuin dak, betegeld met lichtgrijze natuursteenlook tegels en een lijnafvoer",
   },
 ];

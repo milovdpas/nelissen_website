@@ -14,10 +14,12 @@ export type AssortimentItem = {
    *  search alike. */
   alt: string;
   desc: string;
-  /** Where the card links to. Every card has one: a single unclickable card
+  /** Where the card links to. Required, not optional: a single unclickable card
    *  among six reads as broken rather than deliberate, so the odd one out
-   *  points at the hub. */
-  href?: string;
+   *  points at the hub instead. Keeping it required means a new category added
+   *  without a destination fails the typecheck rather than shipping as the one
+   *  dead card. */
+  href: string;
 };
 
 /**

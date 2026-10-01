@@ -126,7 +126,8 @@ export const nl = {
       "Zes dagen per week op afspraak, dinsdagmiddag vrije inloop",
     ],
     cta: "Plan uw bezoek",
-    imageAlt: "Showroom van Tegelhandel Nelissen in Berghem",
+    imageAlt:
+      "Showroom van Tegelhandel Nelissen in Berghem, met rekken vol tegelstalen in diverse formaten en kleuren",
     // Shorter variant for /over-ons, so the two pages do not carry the same
     // block of prose twice.
     compactTitle: "Kom langs in de showroom.",
