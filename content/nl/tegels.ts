@@ -23,10 +23,14 @@ export type TegelPhoto = {
  * a visit worth it, and the work-in-progress shots are the most striking ones
  * they have.
  *
- * Every supplied photo that shows tiles is now used here or in the Portfolio.
- * Two were held back at first as "untiled" and both were wrong: what looked like
- * pipe stubs were levelling clips, and what looked like bare plasterboard was
- * large-format tile laid with butt joints.
+ * Two photos were held back at first as "untiled" and both readings were wrong:
+ * what looked like pipe stubs were levelling clips, and what looked like bare
+ * plasterboard was large-format tile laid with butt joints. Both are in use now,
+ * one here and one in the Portfolio.
+ *
+ * The folders under public/images still hold more photos than any page uses.
+ * They are kept deliberately, as stock for the style pages not yet written, not
+ * because they were judged unusable.
  */
 export const tegels: TegelPhoto[] = [
   {
