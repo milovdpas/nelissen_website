@@ -64,7 +64,11 @@ export default function ContactPage() {
           </div>
         </header>
 
-        <Contact dict={dict.contact} mapDict={dict.cookies.map} />
+        {/* heading={false}: the header above already carries the label, the
+            title and the intro, on this same anthracite. With the section's own
+            label and h2 as well the page opened with two yellow squares and two
+            uppercase titles saying nearly the same thing. */}
+        <Contact dict={dict.contact} mapDict={dict.cookies.map} heading={false} />
       </main>
       <Footer dict={dict.footer} nav={dict.nav} />
 
