@@ -81,6 +81,15 @@ export function Nav({ dict }: { dict: Dictionary["nav"] }) {
                   setOpenMenu(null);
                 }
               }}
+              onKeyDown={(e) => {
+                if (!l.children || e.key !== "Escape" || openMenu !== l.href) return;
+                setOpenMenu(null);
+                // Hiding the submenu while focus is inside it would drop focus
+                // onto the body, leaving the viewer at the top of the tab order
+                // with no idea where they are. The first anchor in this <li> is
+                // the parent link, which is where Escape should land.
+                e.currentTarget.querySelector("a")?.focus();
+              }}
             >
               <Link
                 href={l.href}
