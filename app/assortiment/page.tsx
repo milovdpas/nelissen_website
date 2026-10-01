@@ -6,6 +6,7 @@ import { stijlen } from "@/content/nl/stijlen";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { focusPosition } from "@/content/nl/image-focus";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { Contact } from "@/components/sections/Contact";
@@ -74,6 +75,7 @@ export default function AssortimentHub() {
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      style={{ objectPosition: focusPosition(s.cardFocus) }}
                     />
                   </div>
                   <div className="p-5">

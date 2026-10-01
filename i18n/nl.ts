@@ -86,7 +86,7 @@ export const nl = {
       "Het tegelassortiment van Nelissen in Berghem: houtlook en visgraat, slabs, handvorm, betonlook en meer. Kom de tegels in het echt bekijken in onze showroom.",
     title: "Ons tegelassortiment",
     intro:
-      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs van 120×120. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
+      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
     breadcrumbLabel: "Kruimelpad",
     suitableLabel: "Waar het goed tot zijn recht komt",
     siblingsLabel: "Andere stijlen",

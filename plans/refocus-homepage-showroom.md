@@ -532,6 +532,31 @@ content we avoided by moving sections rather than copying them. So if the homepa
 past a few sentences, give `/over-ons` a condensed variant — heading, one line, photo, button —
 rather than rendering the same component twice.
 
+### Carousel: a different layout on desktop
+
+The carousel is a full-width 3:2 box. On a phone that is fine; at desktop width it is roughly
+800px tall for what is a supporting element, and it pushes Openingstijden and Contact far below
+the fold.
+
+**Multi-card strip on desktop**, advancing one card every few seconds, with the current
+one-at-a-time version kept for mobile. Showing four or five tiles at once also argues the thing
+the copy keeps asserting — that there are hundreds of them — far better than a single large
+photo does. This is the variant already noted in §6 as worth trying.
+
+**Click to open a lightbox**, which is where the big-format view moves to. Worth doing, but it is
+the expensive half and should be costed separately: a lightbox needs a focus trap, Escape to
+close, arrow-key navigation, background scroll lock and focus restored to the thumbnail on
+close. Done badly it is worse than no lightbox, particularly for keyboard users.
+
+A cheaper interim, if the lightbox is not worth it yet: keep one image but give it a wider
+aspect ratio above `lg` (16:9 or 21:9). That removes most of the height for a one-line change
+and needs no new interaction model.
+
+Whatever is built, the existing rules still hold: auto-advance pauses on hover and focus, stops
+entirely under `prefers-reduced-motion`, and only the slides actually in view get mounted —
+mounting all of them defeats `loading="lazy"`, which is already a live constraint at ten photos
+and gets worse as Mark sends more.
+
 ### Nav — dropdown under Assortiment
 
 With Diensten and Portfolio absorbed into `/over-ons`, the bar gets shorter as well as deeper:

@@ -1,8 +1,11 @@
+import type { Focus } from "./image-focus";
+
 export type TegelPhoto = {
   /** Stable id, used as the React key. */
   slug: string;
-  /** Image URL. PLACEHOLDER Unsplash stock — see the note below. */
   url: string;
+  /** Which part of the photo to keep when the landscape frame crops it. */
+  focus?: Focus;
   /** Describes the photo for screen readers and image search. */
   alt: string;
 };
@@ -10,69 +13,62 @@ export type TegelPhoto = {
 /**
  * Photos for the carousel under the assortiment cards.
  *
- * These are deliberately **impressions, not products**. The showroom carries
- * 300–400 different tiles with only one or two of each, and manufacturers drop
- * a line within a year if it sells slowly — so anything that looks like a
- * catalogue would be wrong within weeks. The carousel shows breadth and style
- * without implying any specific tile is in stock, which is exactly what makes
- * it maintainable.
+ * These are impressions, not products, and that is the point. The showroom
+ * carries 300-400 different tiles with one or two of each and manufacturers
+ * drop a line within a year, so anything resembling a catalogue would be wrong
+ * within weeks. Photos here need no relationship to current stock.
  *
- * Consequence: photos here need no relationship to current stock. Mark can
- * shoot whatever is standing in the showroom and swap entries freely.
+ * All Nelissen's own work, supplied October 2026. The set deliberately mixes
+ * finished rooms with tiles being laid: the craft is a large part of what makes
+ * a visit worth it, and the work-in-progress shots are the most striking ones
+ * they have.
  *
- * ⚠️ STILL PLACEHOLDERS. Mark is supplying 12–20 real photos (landscape 3:2,
- * ≥1200×800) which land in public/images/tegels/. Do not merge to `main` before
- * they do.
+ * Not used from the supplied folder: a photo of a bare toilet wall with pipe
+ * stubs and no tiles on it at all.
  */
 export const tegels: TegelPhoto[] = [
   {
-    slug: "badkamer-grijs",
-    url: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&h=800&fit=crop&auto=format",
-    alt: "Badkamer met grote grijze tegels",
+    slug: "decor-badkamer",
+    url: "/images/carousel/96ec67fb-8558-493c-a607-81ce63bed482.jpg",
+    alt: "Doucheruimte betegeld met patchwork van decortegels in grijs en bruin",
   },
   {
-    slug: "woonkamer-marmerlook",
-    url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop&auto=format",
-    alt: "Woonkamer met marmerlook vloertegels",
+    slug: "visgraat-handvorm-wand",
+    url: "/images/carousel/5f6c6b2c-c16a-4812-8d13-5274204c2a9d.jpg",
+    alt: "Tegelzetter legt terracotta handvormtegels in visgraatverband op een wand",
   },
   {
-    slug: "keuken-achterwand",
-    url: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=1200&h=800&fit=crop&auto=format",
-    alt: "Keuken met witte wandtegels als achterwand",
+    slug: "octagon-hal",
+    url: "/images/carousel/e29e529a-2e8c-4be5-8797-e7ef4e6c1437.jpg",
+    alt: "Klassieke zwart-witte octagonvloer met sierrand in een entree",
   },
   {
-    slug: "terras-buiten",
-    url: "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=1200&h=800&fit=crop&auto=format",
-    alt: "Terras met buitentegels",
+    slug: "houtlook-vloer",
+    url: "/images/houtlook/thumbnail.jpg",
+    focus: "bottom",
+    alt: "Houtlook vloertegels in lange planken in een lege woonruimte",
   },
   {
-    slug: "douche-mozaiek",
-    url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=1200&h=800&fit=crop&auto=format",
-    alt: "Douche met mozaïektegels",
+    slug: "natuursteenlook-hal",
+    url: "/images/carousel/f01b497a-9a78-490d-b196-7b265c6f2465.jpg",
+    focus: "bottom",
+    alt: "Hal met natuursteenlook vloertegels en bijpassende plinten",
   },
   {
-    slug: "hal-groot-formaat",
-    url: "https://images.unsplash.com/photo-1564540583246-934409427776?w=1200&h=800&fit=crop&auto=format",
-    alt: "Hal met tegels in groot formaat",
+    slug: "houtlook-chevron-bar",
+    url: "/images/carousel/5cf783c3-66fe-4681-acf5-a966d95c30d4.jpg",
+    // The tiled bar sits in the middle of a working building site.
+    focus: "center",
+    alt: "Bar bekleed met houtlook tegels in chevronpatroon",
   },
   {
-    slug: "vloertegels-neutraal",
-    url: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&h=800&fit=crop&auto=format",
-    alt: "Ruimte met neutrale vloertegels",
+    slug: "visgraat-vloer-leggen",
+    url: "/images/carousel/6bdec630-36fa-4354-8acf-3a4e7caf067f.jpg",
+    alt: "Houtlook visgraatvloer wordt gelegd met nivelleerclips",
   },
   {
-    slug: "wandtegels-strak",
-    url: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=1200&h=800&fit=crop&auto=format",
-    alt: "Strakke wandtegels in een keuken",
-  },
-  {
-    slug: "groot-formaat-woonruimte",
-    url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop&auto=format",
-    alt: "Woonruimte met tegels in groot formaat",
-  },
-  {
-    slug: "badkamer-sanitair",
-    url: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1200&h=800&fit=crop&auto=format",
-    alt: "Badkamer met bad en betegelde wand",
+    slug: "bedieningsplaat-betonlook",
+    url: "/images/carousel/6d2736b7-18da-45ff-8956-4a81fa4c4d0a.jpg",
+    alt: "Bedieningsplaat weggewerkt in een betonlook wandtegel",
   },
 ];

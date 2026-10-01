@@ -1,3 +1,5 @@
+import type { Focus } from "./image-focus";
+
 export type StijlBlock = {
   heading: string;
   paragraphs: string[];
@@ -6,6 +8,8 @@ export type StijlBlock = {
 export type StijlPhoto = {
   slug: string;
   url: string;
+  /** Which part of the photo to keep when the landscape frame crops it. */
+  focus?: Focus;
   alt: string;
 };
 
@@ -34,6 +38,7 @@ export type Stijl = {
   photos: StijlPhoto[];
   /** Card image on the /assortiment hub. */
   cardUrl: string;
+  cardFocus?: Focus;
   cardAlt: string;
 };
 
@@ -70,15 +75,15 @@ export const stijlen: Stijl[] = [
       {
         heading: "Wat zijn houtlook tegels?",
         paragraphs: [
-          "Houtlook tegels zijn keramische of porseleinen tegels met een printlaag die de nerf, kleur en structuur van hout nabootst. Door moderne druktechnieken is het verschil met een echte houten vloer op ooghoogte nauwelijks te zien, terwijl de tegel zelf gewoon keramiek blijft.",
-          "Dat verschil merkt u vooral in het onderhoud. Waar een houten vloer periodiek geolied of geschuurd moet worden en slecht tegen water kan, neemt een houtlook tegel geen vocht op, verkleurt hij niet in de zon en is hij bestand tegen krassen van stoelpoten of hondennagels.",
+          "Houtlook tegels zijn keramische tegels met een printlaag die de nerf, kleur en structuur van hout nabootst. Door moderne druktechnieken is het verschil met een echte houten vloer op ooghoogte nauwelijks te zien, terwijl de tegel zelf gewoon keramiek blijft.",
+          "Dat verschil merkt u vooral in het onderhoud. Waar een houten vloer periodiek geolied of geschuurd moet worden en slecht tegen water kan, neemt een houtlook tegel geen vocht op.",
         ],
       },
       {
         heading: "Visgraat en andere legpatronen",
         paragraphs: [
           "Houtlook leent zich bij uitstek voor een legpatroon. Visgraat is daarvan de bekendste: smalle tegels die haaks op elkaar worden gelegd, waardoor een vloer richting en rust krijgt. Het patroon is tijdloos, maar het vraagt wel vakwerk. De eerste rijen bepalen of de hele vloer strak uitkomt.",
-          "Naast visgraat leggen wij houtlook ook in halfsteensverband of recht. Wat het beste werkt hangt af van de afmetingen van de ruimte, de lichtinval en het formaat van de tegel. Daar denken wij graag in mee voordat u kiest.",
+          "Naast visgraat leggen wij houtlook ook in halfsteensverband of wisselend verband. Wat het beste werkt hangt af van de afmetingen van de ruimte, de lichtinval en het formaat van de tegel. Daar denken wij graag in mee voordat u kiest.",
         ],
       },
       {
@@ -99,23 +104,26 @@ export const stijlen: Stijl[] = [
       "Houtlook leeft van nerf en kleurverloop, en visgraat laat zich pas beoordelen over een paar vierkante meter. In onze showroom in Berghem liggen ze naast elkaar, zodat u ze in hetzelfde licht kunt vergelijken.",
     photos: [
       {
-        slug: "houtlook-woonkamer",
-        url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop&auto=format",
-        alt: "Woonkamer met houtlook vloertegels",
+        slug: "houtlook-visgraat",
+        url: "/images/houtlook/3b731ae1-6c89-4bf5-ab7b-741b5fa5318a.jpg",
+        focus: "bottom",
+        alt: "Houtlook vloertegels in visgraatverband bij een openslaande deur",
       },
       {
-        slug: "houtlook-hal",
-        url: "https://images.unsplash.com/photo-1564540583246-934409427776?w=1200&h=800&fit=crop&auto=format",
-        alt: "Hal met vloertegels in een legpatroon",
+        slug: "houtlook-planken",
+        url: "/images/houtlook/thumbnail.jpg",
+        focus: "bottom",
+        alt: "Houtlook vloertegels in lange planken in een lege woonruimte",
       },
       {
-        slug: "houtlook-keuken",
-        url: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=1200&h=800&fit=crop&auto=format",
-        alt: "Keuken met vloertegels in houtlook",
+        slug: "houtlook-visgraat-leggen",
+        url: "/images/carousel/6bdec630-36fa-4354-8acf-3a4e7caf067f.jpg",
+        alt: "Houtlook visgraatvloer wordt gelegd met nivelleerclips",
       },
     ],
-    cardUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop&auto=format",
-    cardAlt: "Woonkamer met houtlook vloertegels",
+    cardUrl: "/images/houtlook/3b731ae1-6c89-4bf5-ab7b-741b5fa5318a.jpg",
+    cardFocus: "bottom",
+    cardAlt: "Houtlook vloertegels in visgraatverband bij een openslaande deur",
   },
 ];
 

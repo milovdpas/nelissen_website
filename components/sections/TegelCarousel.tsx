@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BRAND } from "@/content/site";
 import type { TegelPhoto } from "@/content/nl/tegels";
+import { focusPosition } from "@/content/nl/image-focus";
 
 const INTERVAL_MS = 4000;
 
@@ -121,7 +122,7 @@ export function TegelCarousel({ items, dict }: Props) {
               sizes="(max-width: 1024px) 100vw, 1200px"
               aria-hidden={!active}
               className="tegel-slide object-cover"
-              style={{ opacity: active ? 1 : 0 }}
+              style={{ opacity: active ? 1 : 0, objectPosition: focusPosition(item.focus) }}
             />
           );
         })}

@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
+import { focusPosition } from "@/content/nl/image-focus";
 import { TegelCarousel } from "@/components/sections/TegelCarousel";
 import type { Dictionary } from "@/i18n/dictionaries";
 
@@ -38,6 +39,7 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ objectPosition: focusPosition(item.focus) }}
                   />
                 </div>
                 <div className="p-5">
