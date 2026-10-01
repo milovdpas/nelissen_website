@@ -161,7 +161,6 @@ export function TegelCarousel({ items, dict }: Props) {
 
   return (
     <div
-      className="mt-12"
       role="group"
       aria-roledescription="carousel"
       aria-label={dict.label}

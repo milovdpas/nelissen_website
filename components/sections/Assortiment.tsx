@@ -85,8 +85,12 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
             show; see ROADMAP.md. */}
 
         {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
-            taste of the range, come and see it. */}
-        <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
+            taste of the range, come and see it. mt-5 matches the grid's gap-5,
+            so the step from the last row of cards into the carousel is the same
+            as the gap between card rows. */}
+        <div className="mt-5">
+          <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
+        </div>
 
         <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
           {dict.footnotePrefix}
