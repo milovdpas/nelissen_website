@@ -148,7 +148,9 @@ export default async function StijlPage({ params }: { params: Promise<{ slug: st
               ))}
             </ul>
 
-            <TegelCarousel items={stijl.photos} dict={dict.assortiment.carousel} />
+            <div className="mt-12">
+              <TegelCarousel items={stijl.photos} dict={dict.assortiment.carousel} />
+            </div>
           </div>
         </section>
 

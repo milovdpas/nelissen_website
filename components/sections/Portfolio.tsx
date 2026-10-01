@@ -2,6 +2,7 @@ import Image from "next/image";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { focusPosition } from "@/content/nl/image-focus";
 
 export function Portfolio({ dict }: { dict: Dictionary["portfolio"] }) {
   return (
@@ -26,13 +27,14 @@ export function Portfolio({ dict }: { dict: Dictionary["portfolio"] }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {dict.items.map((item) => (
-            <div key={item.url} className="overflow-hidden group relative" style={{ borderRadius: 2, height: 280 }}>
+            <div key={item.slug} className="overflow-hidden group relative" style={{ borderRadius: 2, height: 280 }}>
               <Image
                 src={item.url}
                 alt={item.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                style={{ objectPosition: focusPosition(item.focus) }}
               />
               <div
                 className="absolute inset-0 flex items-end p-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"

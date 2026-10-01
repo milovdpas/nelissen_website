@@ -27,7 +27,7 @@ const csp = [
   // Tailwind + the inline `style={{}}` props throughout the components.
   "style-src 'self' 'unsafe-inline'",
   // data:/blob: cover next/image blur placeholders and the generated icons.
-  "img-src 'self' data: blob: https://images.unsplash.com https://www.googletagmanager.com https://*.google-analytics.com",
+  "img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com",
   // next/font self-hosts Barlow + DM Sans, so no external font origin.
   "font-src 'self' data:",
   "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
@@ -69,14 +69,10 @@ const nextConfig: NextConfig = {
   images: {
     // Allow lighter compression for heavy photos (Next 16 allowlists qualities).
     qualities: [60, 75],
-    // Temporary: portfolio/assortiment use Unsplash stock until the company's
-    // own tile photos are supplied. Remove this block once images are local.
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
+    // No remotePatterns: every image is now Nelissen's own, served from
+    // public/images. Adding a remote host again means allowing it here *and* in
+    // the CSP img-src above — the optimizer will refuse the URL without the
+    // first, and the browser will block the render without the second.
     // The optimizer renders whatever the remote host returns; SVG is a scripting
     // vector, so keep it disabled (this is the default, pinned here on purpose).
     dangerouslyAllowSVG: false,

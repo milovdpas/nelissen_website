@@ -1,18 +1,23 @@
+import type { Focus } from "./image-focus";
+
 export type AssortimentItem = {
   /** Stable id. Used as the React key, and as the route segment when these
    *  categories grow their own pages — so it must not change once published. */
   slug: string;
   label: string;
-  /** Image URL. PLACEHOLDER Unsplash stock — see the note below. */
+  /** Photo of the company's own work, in public/images/<category>/. */
   url: string;
-  /** Style page this card links to, when one exists. Cards without a match stay
-   *  plain, because a link to nothing is worse than no link. */
-  href?: string;
+  /** Which part of the photo to keep when the landscape card crops it. */
+  focus?: Focus;
   /** Describes the photo, not the category. The label is already on the card,
    *  so repeating it here would waste the slot for screen readers and image
-   *  search alike. Rewrite each of these when the real photo lands. */
+   *  search alike. */
   alt: string;
   desc: string;
+  /** Where the card links to. Every card has one: a single unclickable card
+   *  among six reads as broken rather than deliberate, so the odd one out
+   *  points at the hub. */
+  href?: string;
 };
 
 /**
@@ -20,54 +25,69 @@ export type AssortimentItem = {
  * format, style, finished room) rather than material categories like
  * floor/wall/outdoor.
  *
- * ⚠️ The images below are STILL PLACEHOLDERS and several do not match their
- * category — they are leftovers from the old set. Mark is supplying six real
- * photos (landscape 3:2, ≥1200×800) which land in public/images/assortiment/.
- * Do not merge this to `main` until they do: showing "Slabs" over a stock
- * bathroom is the exact mismatch this whole change exists to fix.
+ * Every photo here is Nelissen's own work, supplied October 2026. Each folder
+ * also contains a `thumbnail.jpg`, which is the image Mark picked himself — used
+ * here except for visgraat, where his pick showed straight-laid planks rather
+ * than a herringbone pattern and so contradicted the card's own title.
  */
 export const assortiment: AssortimentItem[] = [
   {
     slug: "voorraad-tegels",
     label: "Voorraad tegels",
-    url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop&auto=format",
-    alt: "Ruimte met neutrale vloertegels",
+    url: "/images/voorraad-tegels/thumbnail.jpg",
+    alt: "Pallets met tegels op voorraad in het magazijn",
     desc: "Direct leverbare tegels uit voorraad. Bekijk ons assortiment voor iedere stijl en toepassing.",
+    // The hub rather than a style page: voorraad is a claim about breadth, not
+    // a style, so it has nowhere of its own to point at. Linking it anyway keeps
+    // all six cards behaving the same way, which matters more than the
+    // destination being perfect.
+    href: "/assortiment",
   },
   {
     slug: "slabs",
     label: "Slabs",
-    url: "https://images.unsplash.com/photo-1564540583246-934409427776?w=600&h=400&fit=crop&auto=format",
-    alt: "Hal met grote formaat tegels",
+    url: "/images/slabs/thumbnail.jpg",
+    // The slab fills the upper half of the frame; the bottom is an unfinished
+    // floor screed.
+    focus: "top",
+    alt: "Wand bekleed met een slab met uitgesproken marmertekening",
     desc: "Grote en luxe uitstraling met minimale voegen. Ontdek onze slabs voor de perfecte badkamer.",
+    href: "/assortiment/slabs-grootformaat",
   },
   {
     slug: "handvorm-tegels",
     label: "Handvorm tegels",
-    url: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?w=600&h=400&fit=crop&auto=format",
-    alt: "Witte wandtegels als keukenachterwand",
+    url: "/images/handvorm-tegels/thumbnail.jpg",
+    alt: "Terracotta handvormtegels in visgraatverband boven een bad",
     desc: "Karakter in iedere tegel. Ambachtelijke uitstraling met een unieke, levendige look.",
+    href: "/assortiment/handvorm-tegels",
   },
   {
     slug: "visgraat-houtlook-vloeren",
     label: "Visgraat houtlook vloeren",
-    href: "/assortiment/houtlook-tegels",
-    url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop&auto=format",
-    alt: "Vloertegels in een woonkamer",
+    // Deliberately not houtlook/thumbnail.jpg: that photo shows planks in
+    // wisselend verband, not visgraat, which would contradict the card title.
+    url: "/images/houtlook/3b731ae1-6c89-4bf5-ab7b-741b5fa5318a.jpg",
+    focus: "bottom",
+    alt: "Houtlook vloertegels in visgraatverband bij een openslaande deur",
     desc: "De warme uitstraling van hout, met het gemak van een tegel.",
+    href: "/assortiment/houtlook-tegels",
   },
   {
     slug: "120x120-tegels",
     label: "120×120 tegels",
-    url: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=400&fit=crop&auto=format",
-    alt: "Moderne badkamer met grote grijze tegels",
+    url: "/images/120x120/thumbnail.jpg",
+    focus: "center",
+    alt: "Woonkamer met grijze vloertegels van 120 bij 120 centimeter",
     desc: "Groot formaat met rustige lijnen, voor een moderne en luxe uitstraling.",
+    href: "/assortiment/slabs-grootformaat",
   },
   {
     slug: "badkamers",
     label: "Badkamers",
-    url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop&auto=format",
-    alt: "Badkamer met betegelde douche",
+    url: "/images/badkamers/thumbnail.jpg",
+    alt: "Badkamer met betonlook tegels op vloer en wanden en verzonken baden",
     desc: "Van vloer tot wand. Creëer een badkamer die stijl, comfort en luxe samenbrengt.",
+    href: "/assortiment/badkamertegels",
   },
 ];

@@ -2,6 +2,16 @@ import { services } from "@/content/nl/services";
 import { assortiment } from "@/content/nl/assortiment";
 import { portfolio } from "@/content/nl/portfolio";
 import { tegels } from "@/content/nl/tegels";
+import { stijlen } from "@/content/nl/stijlen";
+
+/** A nav entry, optionally with a submenu. Typed explicitly so that `as const`
+ *  does not narrow each entry into its own shape, which would leave `children`
+ *  missing from the ones that have no submenu. */
+export type NavLink = {
+  href: string;
+  label: string;
+  children?: { href: string; label: string }[];
+};
 
 /**
  * Dutch dictionary: every translatable string + the section content arrays.
@@ -20,10 +30,17 @@ export const nl = {
     // homepage, so a bare "#assortiment" would look for a section that is not
     // on the current page. Nav.tsx and Footer.tsx both render this array.
     links: [
-      { href: "/assortiment", label: "Assortiment" },
+      // `children` renders as a dropdown. The style pages only earn their
+      // rankings if they are reachable from every page, and the sitemap alone
+      // does not do that.
+      {
+        href: "/assortiment",
+        label: "Assortiment",
+        children: stijlen.map((s) => ({ href: `/assortiment/${s.slug}`, label: s.name })),
+      },
       { href: "/over-ons", label: "Over ons" },
       { href: "/contact", label: "Contact" },
-    ],
+    ] as NavLink[],
     cta: "Afspraak maken",
     // The page, not the homepage anchor: from a sub-page the anchor would send
     // people back to the homepage to find a form that is already on the page
@@ -86,7 +103,7 @@ export const nl = {
       "Het tegelassortiment van Nelissen in Berghem: houtlook en visgraat, slabs, handvorm, betonlook en meer. Kom de tegels in het echt bekijken in onze showroom.",
     title: "Ons tegelassortiment",
     intro:
-      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs van 120×120. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
+      "Wij voeren tegels voor vrijwel iedere toepassing, van vloer tot wand en van klein formaat tot slabs. Hieronder vindt u de stijlen die wij het meest verkopen. Het volledige assortiment staat in onze showroom in Berghem, waar u de tegels op ware grootte en in echt licht ziet.",
     breadcrumbLabel: "Kruimelpad",
     suitableLabel: "Waar het goed tot zijn recht komt",
     siblingsLabel: "Andere stijlen",

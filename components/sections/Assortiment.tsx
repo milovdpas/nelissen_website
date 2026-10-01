@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
+import { focusPosition } from "@/content/nl/image-focus";
 import { TegelCarousel } from "@/components/sections/TegelCarousel";
 import type { Dictionary } from "@/i18n/dictionaries";
 
@@ -38,6 +38,7 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ objectPosition: focusPosition(item.focus) }}
                   />
                 </div>
                 <div className="p-5">
@@ -79,20 +80,17 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
           })}
         </div>
 
-        {/* Mark's mockup: bottom-right, below the cards. */}
-        <div className="mt-6 flex justify-end">
-          <Link
-            href="/assortiment"
-            className="inline-flex items-center gap-2 text-sm font-semibold"
-            style={{ fontFamily: FONT.body, color: BRAND.anthracite }}
-          >
-            {dict.hubLink} <ArrowRight size={15} />
-          </Link>
-        </div>
+        {/* A "Toon hele assortiment" button used to sit here, bottom-right.
+            Removed until the hub carries categories this page does not already
+            show; see ROADMAP.md. */}
 
         {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
-            taste of the range, come and see it. */}
-        <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
+            taste of the range, come and see it. mt-5 matches the grid's gap-5,
+            so the step from the last row of cards into the carousel is the same
+            as the gap between card rows. */}
+        <div className="mt-5">
+          <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
+        </div>
 
         <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
           {dict.footnotePrefix}

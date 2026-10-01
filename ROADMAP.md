@@ -36,6 +36,20 @@ leave a Google review.
 - **Seam in place:** reuse `sendMail()` and `baseLayout()` for a new builder.
 - Needs a trigger (a small admin endpoint, or manual) and the Google review link.
 
+## Bring back the "Toon hele assortiment" button
+
+Mark's mockup had a button bottom-right of the homepage assortiment section,
+linking to `/assortiment`. It was built and then removed, because the hub lists
+four style pages against the six cards directly above it: the button promised
+more than it delivered.
+
+Put it back once the hub carries categories that are not already on the
+homepage. The markup is a few lines in `components/sections/Assortiment.tsx` and
+the label is still in the dictionary as `assortiment.hubLink`.
+
+The hub is not orphaned in the meantime: it is in the nav, and the Voorraad
+tegels card points at it.
+
 ## Remaining style pages
 
 One of eight is written (`houtlook-tegels`) as a template to agree the shape.
