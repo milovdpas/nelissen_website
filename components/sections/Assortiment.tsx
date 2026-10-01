@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
@@ -81,16 +80,9 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
           })}
         </div>
 
-        {/* Mark's mockup: bottom-right, below the cards. */}
-        <div className="mt-6 flex justify-end">
-          <Link
-            href="/assortiment"
-            className="inline-flex items-center gap-2 text-sm font-semibold"
-            style={{ fontFamily: FONT.body, color: BRAND.anthracite }}
-          >
-            {dict.hubLink} <ArrowRight size={15} />
-          </Link>
-        </div>
+        {/* A "Toon hele assortiment" button used to sit here, bottom-right.
+            Removed until the hub carries categories this page does not already
+            show; see ROADMAP.md. */}
 
         {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
             taste of the range, come and see it. */}
