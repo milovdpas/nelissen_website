@@ -28,56 +28,45 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {dict.items.map((item) => {
-            const body = (
-              <>
-                <div className="relative overflow-hidden h-48">
-                  <Image
-                    src={item.url}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ objectPosition: focusPosition(item.focus) }}
-                  />
-                </div>
-                <div className="p-5">
-                  <h3
-                    style={{
-                      fontFamily: FONT.heading,
-                      fontWeight: 700,
-                      fontSize: "1.1rem",
-                      color: BRAND.anthracite,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    {item.label}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "#6a6a6a" }}>
-                    {item.desc}
-                  </p>
-                </div>
-              </>
-            );
-
-            const className =
-              "bg-card overflow-hidden group transition-shadow duration-200 hover:shadow-lg block";
-
-            // Cards with a matching style page become links; the rest stay plain
-            // until their page exists, because a link to nothing is worse than
-            // no link. Branching on the element rather than swapping the tag
-            // keeps `href` correctly typed.
-            return item.href ? (
-              <Link key={item.slug} href={item.href} className={className} style={{ borderRadius: 2 }}>
-                {body}
-              </Link>
-            ) : (
-              <div key={item.slug} className={className} style={{ borderRadius: 2 }}>
-                {body}
+          {/* Every card is a link: `href` is required on AssortimentItem, so a
+              category added without a destination fails the typecheck instead
+              of shipping as the one dead card among six. */}
+          {dict.items.map((item) => (
+            <Link
+              key={item.slug}
+              href={item.href}
+              className="bg-card overflow-hidden group transition-shadow duration-200 hover:shadow-lg block"
+              style={{ borderRadius: 2 }}
+            >
+              <div className="relative overflow-hidden h-48">
+                <Image
+                  src={item.url}
+                  alt={item.alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  style={{ objectPosition: focusPosition(item.focus) }}
+                />
               </div>
-            );
-          })}
+              <div className="p-5">
+                <h3
+                  style={{
+                    fontFamily: FONT.heading,
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    color: BRAND.anthracite,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {item.label}
+                </h3>
+                <p className="mt-1.5 text-sm leading-relaxed" style={{ fontFamily: FONT.body, color: "#6a6a6a" }}>
+                  {item.desc}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
 
         {/* A "Toon hele assortiment" button used to sit here, bottom-right.
