@@ -15,7 +15,11 @@ export const services: Service[] = [
     points: [
       "Badkamers en doucheruimtes",
       "Keukens en achterwanden",
-      "Hallen, woonkamers en terrassen",
+      // Terrassen deliberately not listed. Mark, 2 Oct 2026: outdoor tiling is
+      // "altijd gezeik me de klant" because of the Dutch climate, and he would
+      // rather it were not advertised as work they seek. Selling outdoor tiles
+      // is fine and stays on the assortiment side.
+      "Hallen en woonkamers",
       "Vloer- én wandtegels",
     ],
   },
@@ -27,7 +31,7 @@ export const services: Service[] = [
       "Winkels en horeca",
       "Kantoren en bedrijfsruimtes",
       "Showrooms en recepties",
-      "Buitenruimtes en entrees",
+      "Entrees en hallen",
     ],
   },
   {
