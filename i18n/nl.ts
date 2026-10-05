@@ -156,6 +156,20 @@ export const nl = {
     title: "Kom langs of neem contact op.",
     intro:
       "Vragen over tegels, een offerte nodig, of wilt u de showroom bezoeken? Bel of mail ons, of laat hieronder uw gegevens achter. U vindt ons aan de St. Willibrordusstraat 2b in Berghem.",
+    // Closing block, below the form and the map. The page was the thinnest real
+    // one on the site at 235 words, which is light for something meant to rank
+    // on "tegelhandel Berghem adres" and "openingstijden". It also gave the
+    // page its only h2: everything above it is the page header and a form.
+    bezoek: {
+      label: "Bezoek",
+      title: "Route en parkeren",
+      paragraphs: [
+        "De showroom staat aan de St. Willibrordusstraat 2b in Berghem, in de gemeente Oss. Er is parkeergelegenheid bij de showroom, dus u hoeft niet in de straat te zoeken.",
+        "Op dinsdagmiddag tussen 15:00 en 19:00 loopt u zonder afspraak binnen. De rest van de week zijn wij zes dagen per week open op afspraak. Even bellen of mailen is genoeg, en dan weet u zeker dat er iemand is die de tijd voor u neemt.",
+        "Neem gerust de maten van de ruimte mee, en foto's van de situatie als u die heeft. Dat scheelt een hoop heen en weer, en wij kunnen dan meteen meedenken over formaat, legpatroon en hoeveel u nodig heeft.",
+      ],
+      regioLabel: "Ook uit de omgeving komen klanten naar Berghem:",
+    },
   },
 
   // Page-level metadata for /over-ons. The sections themselves keep their own
