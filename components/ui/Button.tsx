@@ -2,15 +2,20 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNo
 import { BRAND, FONT } from "@/content/site";
 
 /**
- * The site has exactly two button looks — the yellow primary and the outlined
- * one on dark — and they appeared inline in the hero, the nav, the cookie
- * banner, the map placeholder and the contact form. They live here instead.
+ * The site's button looks, which used to sit inline in the hero, the nav, the
+ * cookie banner, the map placeholder and the contact form. They live here
+ * instead.
+ *
+ * `outline` is white on transparent and only works on a dark background.
+ * `outlineDark` is the same shape with the colours flipped, for the light
+ * sections: the assortiment block is `bg-secondary`, where the white outline is
+ * very nearly invisible.
  *
  * No "use client": nothing in here holds state, so it renders inside the server
  * components (Hero) as happily as the client ones (Nav, CookieBanner), which
  * pass their own handlers through.
  */
-export type ButtonVariant = "primary" | "outline";
+export type ButtonVariant = "primary" | "outline" | "outlineDark";
 export type ButtonSize = "md" | "sm" | "xs";
 
 // Padding is a prop rather than a className override: two padding utilities in
@@ -34,6 +39,13 @@ const VARIANT_STYLE: Record<ButtonVariant, CSSProperties> = {
     background: "transparent",
     color: "#fff",
     border: "1.5px solid rgba(255,255,255,0.35)",
+    borderRadius: 2,
+  },
+  outlineDark: {
+    fontFamily: FONT.body,
+    background: "transparent",
+    color: BRAND.anthracite,
+    border: "1.5px solid rgba(44,48,56,0.35)",
     borderRadius: 2,
   },
 };

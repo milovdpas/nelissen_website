@@ -71,22 +71,28 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
           ))}
         </div>
 
+        {/* Cards → carousel → hub link → showroom line reads as a funnel: what
+            we sell, a taste of the range, the full list, come and see it. mt-5
+            matches the grid's gap-5, so the step from the last row of cards into
+            the carousel is the same as the gap between card rows. */}
+        <div className="mt-5">
+          <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
+        </div>
+
         {/* Back as of 5 October 2026. It was pulled when the hub listed only
             styles the six cards above already covered, so it promised more than
             it delivered. The hub now also carries betonlook and natuursteenlook,
-            which are not on this page, so it leads somewhere new again. */}
+            which are not on this page, so it leads somewhere new again.
+            Below the carousel: it is the step after browsing the photos, not an
+            interruption between the cards and them. `outlineDark` because this
+            section is bg-secondary, where the white outline is barely visible
+            and a filled dark block is too heavy for a secondary link.
+            mt-5 again, so cards → carousel → button all step by the same gap as
+            the grid's own gap-5. */}
         <div className="mt-5 flex justify-end">
-          <ButtonLink href="/assortiment" variant="outline">
+          <ButtonLink href="/assortiment" variant="outlineDark">
             {dict.hubLink} <ArrowRight size={15} />
           </ButtonLink>
-        </div>
-
-        {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
-            taste of the range, come and see it. mt-5 matches the grid's gap-5,
-            so the step from the last row of cards into the carousel is the same
-            as the gap between card rows. */}
-        <div className="mt-5">
-          <TegelCarousel items={dict.carouselItems} dict={dict.carousel} />
         </div>
 
         <p className="mt-10 text-sm text-center" style={{ fontFamily: FONT.body, color: "#5f5e58" }}>
