@@ -6,7 +6,7 @@ import { BRAND, FONT, site } from "@/content/site";
 import { stijlen, getStijl } from "@/content/nl/stijlen";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, ogImages } from "@/lib/seo";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { SectionLabel } from "@/components/brand/SectionLabel";
@@ -42,6 +42,9 @@ export async function generateMetadata({
       description: stijl.metaDescription,
       url: `${site.url}/assortiment/${stijl.slug}`,
       type: "article",
+      // The style's own card photo rather than the generic showroom shot: a
+      // link to the betonlook page shared in a chat should preview betonlook.
+      images: ogImages(stijl.metaTitle, { url: stijl.cardUrl, alt: stijl.cardAlt }),
     },
   };
 }

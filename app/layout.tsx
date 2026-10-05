@@ -3,7 +3,7 @@ import { barlow, dmSans } from "@/lib/fonts";
 import { site } from "@/content/site";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { localBusinessJsonLd, websiteJsonLd } from "@/lib/seo";
+import { localBusinessJsonLd, websiteJsonLd, ogImages, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { isProduction } from "@/lib/env";
 import { ConsentProvider } from "@/components/cookies/ConsentProvider";
 import { CookieBanner } from "@/components/cookies/CookieBanner";
@@ -33,20 +33,13 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: dict.meta.title,
     description: dict.meta.description,
-    images: [
-      {
-        url: "/images/showroom.jpeg",
-        width: 1200,
-        height: 630,
-        alt: dict.meta.ogAlt,
-      },
-    ],
+    images: ogImages(dict.meta.ogAlt),
   },
   twitter: {
     card: "summary_large_image",
     title: dict.meta.title,
     description: dict.meta.description,
-    images: ["/images/showroom.jpeg"],
+    images: [DEFAULT_OG_IMAGE.url],
   },
   // Only the production deployment may be indexed; acceptance is blocked here,
   // in robots.txt and by an X-Robots-Tag header (next.config.ts). See lib/env.ts.

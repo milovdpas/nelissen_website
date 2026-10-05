@@ -19,7 +19,11 @@ export type NavLink = {
  */
 export const nl = {
   meta: {
-    title: "Tegelhandel Nelissen | Tegelzettersbedrijf & showroom in Berghem",
+    // 51 characters. The old one ran to 64 and Google cut it mid-word around
+    // 60. "Tegelzettersbedrijf" came out rather than the showroom: the site is
+    // here to sell tiles, and zetwerk is still in the h1, the body and the
+    // schema.org name.
+    title: "Tegelhandel Nelissen | Tegels & showroom in Berghem",
     description:
       "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 40+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Maak vrijblijvend een afspraak.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
@@ -147,7 +151,7 @@ export const nl = {
   contactPage: {
     metaTitle: "Contact & route",
     metaDescription:
-      "Contact met Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem: showroom aan de St. Willibrordusstraat 2b, telefoon, e-mail en een offerteaanvraag zonder verplichting.",
+      "Contact met Tegelhandel Nelissen in Berghem: showroom aan de St. Willibrordusstraat 2b, telefoon, e-mail en een vrijblijvende offerteaanvraag.",
     label: "Contact",
     title: "Kom langs of neem contact op.",
     intro:

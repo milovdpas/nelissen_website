@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { BRAND, FONT, site } from "@/content/site";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, ogImages } from "@/lib/seo";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { SectionLabel } from "@/components/brand/SectionLabel";
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     title: dict.contactPage.metaTitle,
     description: dict.contactPage.metaDescription,
     url: `${site.url}/contact`,
+    images: ogImages(dict.contactPage.metaTitle),
   },
 };
 
