@@ -14,6 +14,18 @@ export type StijlPhoto = {
 };
 
 export type Stijl = {
+  /**
+   * Whether this style is live.
+   *
+   * `false` keeps a finished page in the repo without publishing it: it is left
+   * out of the route, the sitemap, the nav dropdown, the hub and the sibling
+   * links, and the URL returns 404. Used for a style whose copy is written but
+   * whose photos have not arrived.
+   *
+   * Do not flip this to `true` until `photos` and `cardUrl` are filled, or the
+   * hub renders a card with a broken image.
+   */
+  active: boolean;
   /** Route segment: /assortiment/<slug>. Must not change once published. */
   slug: string;
   /** Short label for cards, breadcrumbs and sibling links. */
@@ -56,13 +68,20 @@ export type Stijl = {
  * ("Handvorm") and room ("Badkamers"). These follow search demand. Where the two
  * overlap, the homepage card links straight here.
  *
- * ⚠️ Only one style is written so far, as a template to agree the shape before
- * writing the rest. Still to add: betonlook, natuursteenlook, marmerlook,
- * decor & handvorm, slabs & 120×120, terras- & buitentegels, badkamertegels.
- * Photos are placeholders until Mark's arrive.
+ * Mark confirmed on 2 October 2026 that they sell betonlook, natuursteenlook and
+ * terrastegels, so those are the next three. Marmerlook and decor are still
+ * unconfirmed.
+ *
+ * Terrastegels is written but inactive: there is not a single outdoor photo in
+ * public/images. Mark also asked that outdoor work not be pushed too hard, so
+ * this page sells the tiles and never the laying.
+ *
+ * Export `stijlen` for anything user-facing. `alleStijlen` includes the
+ * unpublished ones and is only for tooling that genuinely wants the drafts.
  */
-export const stijlen: Stijl[] = [
+export const alleStijlen: Stijl[] = [
   {
+    active: true,
     slug: "houtlook-tegels",
     name: "Houtlook & visgraat",
     metaTitle: "Houtlook tegels & visgraat vloeren",
@@ -126,6 +145,7 @@ export const stijlen: Stijl[] = [
     cardAlt: "Houtlook vloertegels in visgraatverband bij een openslaande deur",
   },
   {
+    active: true,
     slug: "handvorm-tegels",
     name: "Handvorm tegels",
     metaTitle: "Handvorm tegels",
@@ -185,6 +205,7 @@ export const stijlen: Stijl[] = [
     cardAlt: "Gebogen kookeiland bekleed met lichtblauwe handvormtegels",
   },
   {
+    active: true,
     slug: "slabs-grootformaat",
     name: "Slabs & grootformaat",
     metaTitle: "Slabs en grootformaat tegels",
@@ -246,6 +267,7 @@ export const stijlen: Stijl[] = [
     cardAlt: "Wand bekleed met een slab met uitgesproken marmertekening",
   },
   {
+    active: true,
     slug: "badkamertegels",
     name: "Badkamertegels",
     metaTitle: "Badkamertegels",
@@ -304,7 +326,77 @@ export const stijlen: Stijl[] = [
     cardUrl: "/images/120x120/0e6566b9-7a11-48bd-ae2d-80ca61b5e27e.jpg",
     cardAlt: "Inloopdouche met grootformaat tegels, twee nissen en een lijnafvoer",
   },
+  {
+    // NOT LIVE. To publish: fill `photos` with three outdoor shots, set
+    // `cardUrl`/`cardAlt` to one of them, then set `active: true`. Nothing else
+    // needs changing: the route, sitemap, nav dropdown, hub and sibling links
+    // all read the filtered list.
+    //
+    // The copy deliberately never offers to lay a terrace. Mark: "make er
+    // liever nie teveel reclame over zeker in het tegelwerk maken, leveren kan
+    // altijd." So this sells the tile and points at the showroom.
+    active: false,
+    slug: "terrastegels",
+    name: "Terras & buiten",
+    metaTitle: "Terrastegels & buitentegels",
+    metaDescription:
+      "Keramische terrastegels en buitentegels in onze showroom in Berghem. Vorstbestendig, kleurvast en onderhoudsarm, in formaten tot 120x120. Kom ze in het echt bekijken.",
+    title: "Terrastegels",
+    intro:
+      "Keramische terrastegels geven een terras dezelfde rust en uitstraling als een tegelvloer binnen, maar dan bestand tegen vorst, regen en fel zonlicht. Wij leveren ze in uiteenlopende formaten, kleuren en structuren.",
+    blocks: [
+      {
+        heading: "Wat zijn keramische terrastegels?",
+        paragraphs: [
+          "Keramische terrastegels zijn geperste en op hoge temperatuur gebakken tegels, meestal 2 centimeter dik. Die dikte is wat ze geschikt maakt voor buiten: hij geeft de tegel de sterkte om los op split, op tegeldragers of in een zandbed te liggen.",
+          "Omdat de tegel vrijwel geen water opneemt, heeft vorst er weinig vat op en trekken mos, bladeren en groene aanslag er niet in. Een terras van keramiek hoeft dan ook niet geïmpregneerd of in de was gezet te worden, zoals natuursteen of beton wel vraagt.",
+        ],
+      },
+      {
+        heading: "Formaten, kleuren en structuur",
+        paragraphs: [
+          "De meest gevraagde maten zijn 60x60, 80x80 en 100x100, maar ook grotere formaten zijn er. Hoe groter de tegel, hoe minder voegen en hoe rustiger een terras oogt. Op een klein terras werkt een kleiner formaat vaak juist prettiger, omdat er minder gezaagd hoeft te worden.",
+          "In uitstraling kan vrijwel alles: betonlook, natuursteenlook, houtlook en gezoet of verouderd marmer. Buitentegels hebben een ruwere toplaag dan hun tegenhangers voor binnen, zodat ze stroef blijven als ze nat zijn.",
+        ],
+      },
+      {
+        heading: "Dezelfde tegel binnen en buiten",
+        paragraphs: [
+          "Veel series bestaan in twee diktes: een dunne variant voor binnen en een van 2 centimeter voor buiten, in precies dezelfde kleur en structuur. Daarmee kunt u de vloer van de woonkamer visueel laten doorlopen tot op het terras.",
+          "Dat werkt het sterkst bij een brede pui of schuifdeur, waar binnen en buiten in één oogopslag te zien zijn. Wilt u dit, zeg het dan voordat u kiest: niet van elke serie bestaat een buitenvariant, en het is zonde om daar achteraf achter te komen.",
+        ],
+      },
+      {
+        heading: "Kleur verandert buiten",
+        paragraphs: [
+          "Een terrastegel beoordeelt u lastig op een foto of binnen onder kunstlicht. Daglicht is koeler en veel feller, en een natte tegel ziet er bovendien anders uit dan een droge. Grijstinten die binnen warm ogen, kunnen buiten zomaar blauw uitvallen.",
+          "In onze showroom in Berghem liggen de buitenseries op ware grootte, zodat u ze naast elkaar kunt vergelijken. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Terrassen en zitgedeeltes die jarenlang kleurvast moeten blijven",
+      "Tuinen waar dezelfde tegel binnen en buiten doorloopt",
+      "Tuinpaden en opstapjes rond de woning",
+      "Balkons en dakterrassen, waar het lage gewicht per vierkante meter telt",
+    ],
+    showroomLine:
+      "Buiten is het licht koeler en feller dan binnen, en een natte tegel oogt anders dan een droge. In onze showroom in Berghem liggen de buitenseries op ware grootte naast elkaar, zodat u ze rustig kunt vergelijken.",
+    // Pending: not one outdoor photo exists in public/images yet.
+    photos: [],
+    cardUrl: "",
+    cardAlt: "",
+  },
 ];
+
+/**
+ * The styles that are actually published.
+ *
+ * Everything user-facing imports this rather than `alleStijlen`, so a style
+ * cannot leak into the site by someone forgetting to filter. Adding a draft is
+ * therefore safe by default, which is the same fail-closed habit as lib/env.ts.
+ */
+export const stijlen: Stijl[] = alleStijlen.filter((s) => s.active);
 
 /** Lookup used by the dynamic route and by the homepage cards that link here. */
 export function getStijl(slug: string): Stijl | undefined {
