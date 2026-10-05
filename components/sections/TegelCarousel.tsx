@@ -12,6 +12,17 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 const PER_VIEW_DESKTOP = 4;
 
 /**
+ * Above this many photos the dots are dropped and the arrows carry the whole
+ * carousel.
+ *
+ * A dot per slide stops being an affordance once there are twenty-odd of them:
+ * nobody aims for dot seventeen, and at 8px plus an 8px gap the row needs about
+ * 400px, which does not fit the ~327px a phone actually leaves between the page
+ * gutters. It wrapped onto a second line and read as a bug.
+ */
+const MAX_DOTS = 10;
+
+/**
  * How wide one slide is from `lg` up, per photo count.
  *
  * Spelled out as literal class names rather than built from `count`: Tailwind
@@ -311,7 +322,7 @@ export function TegelCarousel({ items, dict }: Props) {
         ) : null}
       </div>
 
-      {canScroll ? (
+      {canScroll && count <= MAX_DOTS ? (
         <div className={`mt-4 flex justify-center gap-2${controlsOnlyBelowDesktop}`}>
           {items.map((item, i) => (
             <button
