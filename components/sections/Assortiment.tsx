@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { BRAND, FONT } from "@/content/site";
 import { SectionLabel } from "@/components/brand/SectionLabel";
+import { ButtonLink } from "@/components/ui/Button";
 import { focusPosition } from "@/content/nl/image-focus";
 import { TegelCarousel } from "@/components/sections/TegelCarousel";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -69,9 +71,15 @@ export function Assortiment({ dict }: { dict: Dictionary["assortiment"] }) {
           ))}
         </div>
 
-        {/* A "Toon hele assortiment" button used to sit here, bottom-right.
-            Removed until the hub carries categories this page does not already
-            show; see ROADMAP.md. */}
+        {/* Back as of 5 October 2026. It was pulled when the hub listed only
+            styles the six cards above already covered, so it promised more than
+            it delivered. The hub now also carries betonlook and natuursteenlook,
+            which are not on this page, so it leads somewhere new again. */}
+        <div className="mt-5 flex justify-end">
+          <ButtonLink href="/assortiment" variant="outline">
+            {dict.hubLink} <ArrowRight size={15} />
+          </ButtonLink>
+        </div>
 
         {/* Cards → carousel → showroom line reads as a funnel: what we sell, a
             taste of the range, come and see it. mt-5 matches the grid's gap-5,

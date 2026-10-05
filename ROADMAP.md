@@ -36,38 +36,50 @@ leave a Google review.
 - **Seam in place:** reuse `sendMail()` and `baseLayout()` for a new builder.
 - Needs a trigger (a small admin endpoint, or manual) and the Google review link.
 
-## Bring back the "Toon hele assortiment" button
+## Terrastegels: waiting on photos
 
-Mark's mockup had a button bottom-right of the homepage assortiment section,
-linking to `/assortiment`. It was built and then removed, because the hub lists
-four style pages against the six cards directly above it: the button promised
-more than it delivered.
+`content/nl/stijlen.ts` has a finished `terrastegels` entry with `active: false`,
+so it is in the repo but not on the site. There is not one outdoor photo in
+`public/images`.
 
-Put it back once the hub carries categories that are not already on the
-homepage. The markup is a few lines in `components/sections/Assortiment.tsx` and
-the label is still in the dictionary as `assortiment.hubLink`.
+To publish: add three photos, set `cardUrl`/`cardAlt`, flip `active` to `true`.
+Nothing else needs touching, since the route, sitemap, nav, hub and sibling
+links all read the filtered list.
 
-The hub is not orphaned in the meantime: it is in the nav, and the Voorraad
-tegels card points at it.
+The copy sells the tiles and never offers to lay a terrace, because Mark asked
+for that (2 Oct 2026): outdoor tiling is *"altijd gezeik me de klant"* given the
+Dutch climate, but *"leveren kan altijd"*. The same reasoning took "terrassen"
+out of the Diensten bullets and `llms.txt`. Keep it that way.
 
 ## Remaining style pages
 
-One of eight is written (`houtlook-tegels`) as a template to agree the shape.
-Still to write: betonlook, natuursteenlook, marmerlook, decor & handvorm,
-slabs & 120×120, terras- & buitentegels, badkamertegels. Roughly 350–500 words
-each — the cost here is Dutch copy, not code: adding a style is one entry in
-`content/nl/stijlen.ts` and the route, sitemap and hub follow automatically.
+Six are live: houtlook, betonlook, natuursteenlook, handvorm, slabs &
+grootformaat, badkamertegels. Terrastegels is written but inactive, see above.
 
-**Nav dropdown** under Assortiment once there are enough pages to warrant one.
+Candidates not yet confirmed with Mark: **marmerlook**, **decortegels** and
+**mozaïek**. Ask before writing. Each is roughly 350–500 words of Dutch, and the
+cost is the copy rather than the code: a style is one entry in
+`content/nl/stijlen.ts` and the route, sitemap, nav, hub and sibling links all
+follow on their own.
+
+A style also needs three photos it can actually carry. That, not the writing, is
+what held terrastegels back.
 
 ## Real photography
 
-Everything outside `public/images/showroom.jpeg` and `bedrijfsbus.jpeg` is
-Unsplash stock, flagged in the content files.
+Done. Every photo on the site is Nelissen's own work, supplied by Tom in October
+2026; the Unsplash stock is gone from the content, the CSP and
+`images.remotePatterns`.
 
-The Portfolio section is the urgent one: it is headed *"Ons werk, voor u."* and
-labels stock photos as the company's own completed jobs. The assortiment
-placeholders are merely generic; that one is a claim that is not true.
+What is left is a wish list rather than a gap:
+- **Voorraad in the showroom.** The Voorraad tegels card still shows pallets in
+  the warehouse. Mark offered to shoot the showroom stock instead.
+- **The showroom itself.** `components/sections/Showroom.tsx` uses a photo from
+  before the rebuild. Replace it once the new showroom is finished.
+- **Anything outdoors.** There is not one terrace photo, which is the only thing
+  keeping the terrastegels page unpublished.
+- Two handvorm photos are phone screenshots and one is 372x679, so all three are
+  held out of the carousel until the originals arrive.
 
 ## Location pages
 
