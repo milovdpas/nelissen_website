@@ -5,7 +5,7 @@ import { BRAND, FONT, site } from "@/content/site";
 import { stijlen } from "@/content/nl/stijlen";
 import { defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, ogImages } from "@/lib/seo";
 import { focusPosition } from "@/content/nl/image-focus";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     title: dict.assortimentPage.metaTitle,
     description: dict.assortimentPage.metaDescription,
     url: `${site.url}/assortiment`,
+    images: ogImages(dict.assortimentPage.metaTitle),
   },
 };
 

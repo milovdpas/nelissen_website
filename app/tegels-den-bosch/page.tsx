@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getLocatie } from "@/content/nl/locaties";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, ogImages } from "@/lib/seo";
 import { LocatieContent } from "@/components/sections/LocatieContent";
 import { site } from "@/content/site";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     title: locatie.metaTitle,
     description: locatie.metaDescription,
     url: `${site.url}/tegels-den-bosch`,
+    images: ogImages(locatie.metaTitle),
   },
 };
 

@@ -86,7 +86,7 @@ export const alleStijlen: Stijl[] = [
     name: "Houtlook & visgraat",
     metaTitle: "Houtlook tegels & visgraat vloeren",
     metaDescription:
-      "Houtlook tegels en visgraat vloeren in onze showroom in Berghem. De warme uitstraling van hout, met het onderhoudsgemak van keramiek. Kom ze in het echt bekijken.",
+      "Houtlook tegels en visgraat vloeren in onze showroom in Berghem. De warme uitstraling van hout, met het gemak van keramiek. Kom ze in het echt bekijken.",
     title: "Houtlook tegels",
     intro:
       "De warme uitstraling van hout, met het gemak van een tegel. Houtlook tegels geven een vloer de sfeer van planken, maar zijn ongevoelig voor vocht, krassen en slijtage. Ook in de badkamer, de keuken of de hal.",
@@ -150,7 +150,7 @@ export const alleStijlen: Stijl[] = [
     name: "Betonlook",
     metaTitle: "Betonlook tegels",
     metaDescription:
-      "Betonlook tegels in onze showroom in Berghem. De strakke uitstraling van beton, zonder het stof en het onderhoud, in formaten tot slabs. Kom ze in het echt bekijken.",
+      "Betonlook tegels in onze showroom in Berghem. De strakke uitstraling van beton, zonder het onderhoud, in formaten tot slabs. Kom ze in het echt bekijken.",
     title: "Betonlook tegels",
     intro:
       "De strakke, rustige uitstraling van beton, zonder het stof, de scheuren en het onderhoud. Betonlook geeft een ruimte een neutrale basis die niet gaat overheersen, en laat de rest van het interieur het werk doen.",

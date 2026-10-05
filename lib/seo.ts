@@ -1,6 +1,37 @@
 import { site } from "@/content/site";
 
 /**
+ * The default social card.
+ *
+ * Measured, not assumed. This used to point at /images/showroom.jpeg declaring
+ * 1200x630, while that file is actually 1080x1920: a portrait phone photo sold
+ * to every scraper as a landscape card. Most of them crop to the declared box,
+ * so shares of this site were showing a slice of the middle of it. These are
+ * the real dimensions of a real landscape photo of the showroom.
+ */
+export const DEFAULT_OG_IMAGE = {
+  url: "/images/showroom/thumbnail.jpg",
+  width: 1600,
+  height: 1200,
+} as const;
+
+/**
+ * Open Graph images for a page.
+ *
+ * Next merges metadata one field at a time, and `openGraph` is a single field:
+ * a page declaring its own replaces the root layout's outright, images
+ * included. Fifteen pages were sharing with no preview image at all because of
+ * that, which matters when the links get sent round on WhatsApp. So every page
+ * that sets `openGraph` passes its images back through here.
+ *
+ * A per-page override carries no width or height on purpose: the photos are all
+ * different shapes, and a wrong pair is worse than none at all.
+ */
+export function ogImages(alt: string, override?: { url: string; alt: string }) {
+  return override ? [{ url: override.url, alt: override.alt }] : [{ ...DEFAULT_OG_IMAGE, alt }];
+}
+
+/**
  * schema.org JSON-LD for the business. Helps both Google rich results and
  * AI crawlers understand who/what/where. Rendered in app/layout.tsx.
  */

@@ -19,7 +19,11 @@ export type NavLink = {
  */
 export const nl = {
   meta: {
-    title: "Tegelhandel Nelissen | Tegelzettersbedrijf & showroom in Berghem",
+    // 51 characters. The old one ran to 64 and Google cut it mid-word around
+    // 60. "Tegelzettersbedrijf" came out rather than the showroom: the site is
+    // here to sell tiles, and zetwerk is still in the h1, the body and the
+    // schema.org name.
+    title: "Tegelhandel Nelissen | Tegels & showroom in Berghem",
     description:
       "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 40+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Maak vrijblijvend een afspraak.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
@@ -147,11 +151,25 @@ export const nl = {
   contactPage: {
     metaTitle: "Contact & route",
     metaDescription:
-      "Contact met Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem: showroom aan de St. Willibrordusstraat 2b, telefoon, e-mail en een offerteaanvraag zonder verplichting.",
+      "Contact met Tegelhandel Nelissen in Berghem: showroom aan de St. Willibrordusstraat 2b, telefoon, e-mail en een vrijblijvende offerteaanvraag.",
     label: "Contact",
     title: "Kom langs of neem contact op.",
     intro:
       "Vragen over tegels, een offerte nodig, of wilt u de showroom bezoeken? Bel of mail ons, of laat hieronder uw gegevens achter. U vindt ons aan de St. Willibrordusstraat 2b in Berghem.",
+    // Closing block, below the form and the map. The page was the thinnest real
+    // one on the site at 235 words, which is light for something meant to rank
+    // on "tegelhandel Berghem adres" and "openingstijden". It also gave the
+    // page its only h2: everything above it is the page header and a form.
+    bezoek: {
+      label: "Bezoek",
+      title: "Route en parkeren",
+      paragraphs: [
+        "De showroom staat aan de St. Willibrordusstraat 2b in Berghem, in de gemeente Oss. Er is parkeergelegenheid bij de showroom, dus u hoeft niet in de straat te zoeken.",
+        "Op dinsdagmiddag tussen 15:00 en 19:00 loopt u zonder afspraak binnen. De rest van de week zijn wij zes dagen per week open op afspraak. Even bellen of mailen is genoeg, en dan weet u zeker dat er iemand is die de tijd voor u neemt.",
+        "Neem gerust de maten van de ruimte mee, en foto's van de situatie als u die heeft. Dat scheelt een hoop heen en weer, en wij kunnen dan meteen meedenken over formaat, legpatroon en hoeveel u nodig heeft.",
+      ],
+      regioLabel: "Ook uit de omgeving komen klanten naar Berghem:",
+    },
   },
 
   // Page-level metadata for /over-ons. The sections themselves keep their own

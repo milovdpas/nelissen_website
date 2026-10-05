@@ -11,7 +11,7 @@ const LAST_MODIFIED = {
   home: "2026-10-05",
   assortiment: "2026-10-05",
   overOns: "2026-10-05",
-  contact: "2026-10-04",
+  contact: "2026-10-05",
   locaties: "2026-09-30",
   privacybeleid: "2026-06-17",
   cookiebeleid: "2026-06-17",
