@@ -12,6 +12,27 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 const PER_VIEW_DESKTOP = 4;
 
 /**
+ * Above this many photos the dots are dropped and the arrows carry the whole
+ * carousel.
+ *
+ * A dot per slide stops being an affordance once there are twenty-odd of them:
+ * nobody aims for dot seventeen, and at 8px plus an 8px gap the row needs about
+ * 400px, which does not fit the ~327px a phone actually leaves between the page
+ * gutters. It wrapped onto a second line and read as a bug.
+ */
+const MAX_DOTS = 10;
+
+/**
+ * How far a drag has to travel before it counts as a swipe, in pixels.
+ *
+ * Deliberately a fixed number rather than a share of the slide. A slide is
+ * about 330px on a phone at one across and about 300px on a desktop at four
+ * across, so the two work out close enough that a proportional threshold would
+ * only add a measurement for no gain.
+ */
+const SWIPE_THRESHOLD_PX = 45;
+
+/**
  * How wide one slide is from `lg` up, per photo count.
  *
  * Spelled out as literal class names rather than built from `count`: Tailwind
@@ -112,6 +133,17 @@ export function TegelCarousel({ items, dict }: Props) {
   const [index, setIndex] = useState(0);
   const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
+  /**
+   * The in-progress drag, or null.
+   *
+   * `dx` lives in state rather than in a ref written straight to the DOM. The
+   * ref version avoids a render per pointermove, but React then skips restoring
+   * the transform on release whenever the committed value has not changed,
+   * because it diffs against its own last value and never sees what we wrote.
+   * The strip stays where it was dropped. Twenty-nine small divs re-render
+   * cheaply, so state is the honest trade.
+   */
+  const [drag, setDrag] = useState<{ pointerId: number; startX: number; dx: number } | null>(null);
 
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
@@ -195,10 +227,45 @@ export function TegelCarousel({ items, dict }: Props) {
   // updates several pieces of state, and doing that inside an interval's updater
   // would be a side effect in a reducer.
   useEffect(() => {
-    if (paused || tabHidden || reducedMotion || !canScroll) return;
+    if (paused || drag || tabHidden || reducedMotion || !canScroll) return;
     const id = window.setTimeout(() => go(index + 1), INTERVAL_MS);
     return () => window.clearTimeout(id);
-  }, [index, paused, tabHidden, reducedMotion, canScroll, go]);
+  }, [index, paused, drag, tabHidden, reducedMotion, canScroll, go]);
+
+  // Drag with a mouse, swipe with a finger. One set of pointer handlers covers
+  // both, plus pen. `drag` also pauses auto-play, which `paused` cannot do here:
+  // that one is driven by hover, and clearing it on release would restart the
+  // carousel under a mouse that is still sitting on it.
+  const startDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    // e.button is 0 for touch and pen too, so this only rejects middle and
+    // right mouse buttons.
+    if (!canScroll || e.button !== 0) return;
+    setDrag({ pointerId: e.pointerId, startX: e.clientX, dx: 0 });
+  };
+
+  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const dx = e.clientX - drag.startX;
+    // Capture once the gesture is clearly horizontal, so it survives the pointer
+    // leaving the strip. Taking it on pointerdown instead would swallow taps.
+    if (Math.abs(dx) > 8 && !e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    setDrag({ ...drag, dx });
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const { dx } = drag;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    // Clearing the drag restores the committed transform and turns the
+    // transition back on, so a swipe that falls short animates home by itself.
+    setDrag(null);
+    if (dx <= -SWIPE_THRESHOLD_PX) go(index + 1);
+    else if (dx >= SWIPE_THRESHOLD_PX) go(index - 1);
+  };
 
   if (count === 0) return null;
 
@@ -236,14 +303,24 @@ export function TegelCarousel({ items, dict }: Props) {
       <div className="relative">
         <div className="overflow-hidden -mx-1.5">
           <div
-            className="flex"
+            className="flex select-none"
+            onPointerDown={startDrag}
+            onPointerMove={moveDrag}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
             style={{
               // Offset only applies while the strip actually scrolls. Every
               // slide fits at once otherwise, and a stale offset would shunt
               // them sideways and leave a blank gap — which is what a tablet
               // rotated from portrait to landscape used to do.
-              transform: `translateX(-${canScroll ? index * slideWidth : 0}%)`,
-              transition: animate && !reducedMotion ? "transform 600ms ease-in-out" : "none",
+              transform: `translateX(calc(-${canScroll ? index * slideWidth : 0}% + ${drag?.dx ?? 0}px))`,
+              // No transition while a finger is on it, or the strip lags behind
+              // the drag instead of tracking it.
+              transition: !drag && animate && !reducedMotion ? "transform 600ms ease-in-out" : "none",
+              // Let the browser keep vertical panning: without this the strip
+              // swallows the gesture and the page stops scrolling on a phone.
+              touchAction: canScroll ? "pan-y" : undefined,
+              cursor: canScroll ? (drag ? "grabbing" : "grab") : undefined,
             }}
             onTransitionEnd={(e) => {
               // Once the strip has animated onto the clones, drop back to the
@@ -271,6 +348,9 @@ export function TegelCarousel({ items, dict }: Props) {
                       // Clones are decorative duplicates: an empty alt keeps a
                       // screen reader from reading the same photo twice.
                       aria-hidden={i >= count}
+                      // Browsers natively drag an image out as a ghost, which
+                      // hijacks the swipe.
+                      draggable={false}
                       fill
                       // Never eager: next/image emits a preload link for eager
                       // images, which would compete with the hero, the page's
@@ -311,7 +391,7 @@ export function TegelCarousel({ items, dict }: Props) {
         ) : null}
       </div>
 
-      {canScroll ? (
+      {canScroll && count <= MAX_DOTS ? (
         <div className={`mt-4 flex justify-center gap-2${controlsOnlyBelowDesktop}`}>
           {items.map((item, i) => (
             <button

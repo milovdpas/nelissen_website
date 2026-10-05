@@ -266,7 +266,10 @@ export const nl = {
       message: { label: "Bericht", placeholder: "Beschrijf uw project of vraag..." },
       messageAppointment: {
         label: "Toelichting (optioneel)",
-        placeholder: "Waar bent u naar op zoek? Bijvoorbeeld badkamer, vloer of terras...",
+        // "tegels" on every example on purpose: this is the showroom-visit
+        // form, so the prompt should read as something to buy. "terras" on its
+        // own invited a request to lay one.
+        placeholder: "Waar bent u naar op zoek? Bijvoorbeeld badkamertegels, vloertegels of terrastegels...",
       },
     },
     // Sets the expectation that this is a request, not a confirmed booking.

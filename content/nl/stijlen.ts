@@ -14,6 +14,18 @@ export type StijlPhoto = {
 };
 
 export type Stijl = {
+  /**
+   * Whether this style is live.
+   *
+   * `false` keeps a finished page in the repo without publishing it: it is left
+   * out of the route, the sitemap, the nav dropdown, the hub and the sibling
+   * links, and the URL returns 404. Used for a style whose copy is written but
+   * whose photos have not arrived.
+   *
+   * Do not flip this to `true` until `photos` and `cardUrl` are filled, or the
+   * hub renders a card with a broken image.
+   */
+  active: boolean;
   /** Route segment: /assortiment/<slug>. Must not change once published. */
   slug: string;
   /** Short label for cards, breadcrumbs and sibling links. */
@@ -56,13 +68,20 @@ export type Stijl = {
  * ("Handvorm") and room ("Badkamers"). These follow search demand. Where the two
  * overlap, the homepage card links straight here.
  *
- * ⚠️ Only one style is written so far, as a template to agree the shape before
- * writing the rest. Still to add: betonlook, natuursteenlook, marmerlook,
- * decor & handvorm, slabs & 120×120, terras- & buitentegels, badkamertegels.
- * Photos are placeholders until Mark's arrive.
+ * Mark confirmed on 2 October 2026 that they sell betonlook, natuursteenlook and
+ * terrastegels. Betonlook and natuursteenlook are live; terrastegels is written
+ * but not. Marmerlook, decor and mozaïek are unconfirmed, so they are not here.
+ *
+ * Terrastegels is written but inactive: there is not a single outdoor photo in
+ * public/images. Mark also asked that outdoor work not be pushed too hard, so
+ * this page sells the tiles and never the laying.
+ *
+ * Export `stijlen` for anything user-facing. `alleStijlen` includes the
+ * unpublished ones and is only for tooling that genuinely wants the drafts.
  */
-export const stijlen: Stijl[] = [
+export const alleStijlen: Stijl[] = [
   {
+    active: true,
     slug: "houtlook-tegels",
     name: "Houtlook & visgraat",
     metaTitle: "Houtlook tegels & visgraat vloeren",
@@ -126,6 +145,144 @@ export const stijlen: Stijl[] = [
     cardAlt: "Houtlook vloertegels in visgraatverband bij een openslaande deur",
   },
   {
+    active: true,
+    slug: "betonlook-tegels",
+    name: "Betonlook",
+    metaTitle: "Betonlook tegels",
+    metaDescription:
+      "Betonlook tegels in onze showroom in Berghem. De strakke uitstraling van beton, zonder het stof en het onderhoud, in formaten tot slabs. Kom ze in het echt bekijken.",
+    title: "Betonlook tegels",
+    intro:
+      "De strakke, rustige uitstraling van beton, zonder het stof, de scheuren en het onderhoud. Betonlook geeft een ruimte een neutrale basis die niet gaat overheersen, en laat de rest van het interieur het werk doen.",
+    blocks: [
+      {
+        heading: "Wat zijn betonlook tegels?",
+        paragraphs: [
+          "Betonlook tegels zijn keramische tegels waarvan de toplaag de kleur en de wolkige structuur van gladgestreken beton nabootst. Op een paar meter afstand is het verschil met een gietvloer nauwelijks te zien.",
+          "Het verschil zit in wat erna komt. Een betonvloer moet uitharden, kan krimpscheuren krijgen en wil geïmpregneerd worden om vlekken buiten te houden. Een keramische tegel neemt vrijwel geen vocht op, dus een gemorste fles olie of wijn trekt er niet in.",
+        ],
+      },
+      {
+        heading: "Rustig, en daarom veelzijdig",
+        paragraphs: [
+          "Omdat betonlook weinig tekening heeft, botst hij met vrijwel niets. Hij werkt onder een eiken keuken net zo goed als bij zwart staal of diepgroene kasten, en hij blijft neutraal als u over tien jaar iets anders in de ruimte zet.",
+          "De kleuren lopen van bijna wit en zandbeige tot middengrijs en antraciet. Lichte tinten maken een ruimte groter en vergevingsgezinder voor stof, donkere tinten geven juist rust en diepte, maar laten kalkaanslag en voetafdrukken sneller zien.",
+        ],
+      },
+      {
+        heading: "Groot formaat, weinig voegen",
+        paragraphs: [
+          "Betonlook komt het sterkst tot zijn recht in grote formaten, omdat het beeld dan het dichtst bij een doorlopende betonnen wand of vloer komt. Met 120x120 tegels of slabs houdt u op een doucheruimte maar een paar voegen over.",
+          "Minder voegen is ook praktisch: voegen zijn het eerste wat vies wordt en het lastigst schoon te houden. In een badkamer of een toilet scheelt dat echt in het onderhoud.",
+        ],
+      },
+      {
+        heading: "Beoordeel het in het licht",
+        paragraphs: [
+          "Betonlook is subtiel. De structuur zit in lichte kleurverschillen en een fijne reliëfwerking, en die ziet u pas goed als het licht er schuin overheen valt. Op een foto of op een klein staal valt dat weg, en dan lijken alle betonlooktegels op elkaar.",
+          "In onze showroom in Berghem liggen ze op ware grootte naast elkaar, zodat u de tinten en structuren in hetzelfde licht kunt vergelijken. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Badkamers en doucheruimtes waar u zo min mogelijk voegen wilt",
+      "Woonkamers en keukens die een neutrale basis vragen",
+      "Bedrijfspanden en praktijkruimtes, dankzij de slijtvastheid",
+      "Vloeren met vloerverwarming, omdat keramiek de warmte goed doorgeeft",
+    ],
+    showroomLine:
+      "Betonlook leeft van subtiel kleurverschil en een fijne structuur, en die ziet u pas als het licht er schuin overheen valt. In onze showroom in Berghem liggen de tinten naast elkaar, van zandbeige tot antraciet.",
+    photos: [
+      {
+        slug: "betonlook-wellness-afgewerkt",
+        url: "/images/badkamers/thumbnail.jpg",
+        alt: "Wellnessruimte met betonlook tegels op wanden, traptreden en verzonken baden",
+      },
+      {
+        slug: "betonlook-inloopdouche-nis",
+        url: "/images/badkamers/IMG-20240706-WA0005.jpg",
+        alt: "Inloopdouche met betonlook wandtegels en een betegelde nis achter een tussenwand",
+      },
+      {
+        slug: "betonlook-bedieningsplaat",
+        url: "/images/carousel/6d2736b7-18da-45ff-8956-4a81fa4c4d0a.jpg",
+        alt: "Bedieningsplaat strak weggewerkt in een betonlook wandtegel",
+      },
+    ],
+    cardUrl: "/images/badkamers/IMG-20240706-WA0005.jpg",
+    cardAlt: "Inloopdouche met betonlook wandtegels en een betegelde nis",
+  },
+  {
+    active: true,
+    slug: "natuursteenlook-tegels",
+    name: "Natuursteenlook",
+    metaTitle: "Natuursteenlook tegels",
+    metaDescription:
+      "Natuursteenlook tegels in onze showroom in Berghem. De tekening van leisteen, travertijn en kalksteen, met het gemak van keramiek. Kom ze in het echt bekijken.",
+    title: "Natuursteenlook tegels",
+    intro:
+      "De tekening en het kleurverloop van natuursteen, zonder het impregneren en de vlekgevoeligheid. Natuursteenlook brengt diepte en warmte in een ruimte, maar blijft gewoon een keramische tegel.",
+    blocks: [
+      {
+        heading: "Wat is natuursteenlook?",
+        paragraphs: [
+          "Natuursteenlook tegels bootsen de tekening van echte steensoorten na: leisteen, travertijn, kalksteen en zandsteen. Moderne druktechnieken leggen daarbij niet alleen de kleur vast, maar ook de aders, de spikkels en de kleine oneffenheden die steen zijn karakter geven.",
+          "Echte natuursteen is poreus. Hij moet geïmpregneerd worden, is gevoelig voor zuur uit citroen of schoonmaakmiddel, en kan verkleuren waar hij vaak nat wordt. Keramiek heeft daar geen last van, en dat scheelt vooral in een badkamer of een keuken.",
+        ],
+      },
+      {
+        heading: "Welke steensoort past waar?",
+        paragraphs: [
+          "Leisteen is donker en heeft een duidelijke structuur, en geeft een ruimte meteen gewicht. Travertijn is warm en beige met typische horizontale lijnen, en werkt goed als u het rustig maar niet koud wilt. Kalksteen zit daartussenin: licht, egaal en terughoudend.",
+          "In een kleine ruimte werkt een lichte, rustige steenlook vrijwel altijd beter, omdat een sterke tekening de ruimte optisch voller maakt. Op een grote vloer kunt u juist meer tekening hebben, omdat het patroon dan de ruimte krijgt.",
+        ],
+      },
+      {
+        heading: "Let op de herhaling",
+        paragraphs: [
+          "Het verschil tussen een goedkope en een goede natuursteenlook zit vooral in het aantal verschillende tegelgezichten dat een serie heeft. Bij een eenvoudige serie zijn dat er een stuk of vier, en dan ziet u op een vloer van twintig vierkante meter hetzelfde patroon steeds terugkomen.",
+          "Betere series hebben er tientallen, waardoor het toeval van echte steen veel beter benaderd wordt. Dat is iets waar u in de showroom op kunt letten, en waar wij u graag op wijzen voordat u kiest.",
+        ],
+      },
+      {
+        heading: "Tekening beoordeelt u niet op één tegel",
+        paragraphs: [
+          "Eén tegel zegt bij natuursteenlook weinig. Het gaat er juist om hoe de tegels zich tot elkaar verhouden, en dat ziet u pas over een paar vierkante meter. Ook kleurverloop tussen tegels valt op een foto weg.",
+          "Daarom liggen er in onze showroom in Berghem meerdere steenlooks naast elkaar, op ware grootte. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Badkamers en doucheruimtes, waar echte natuursteen te veel onderhoud vraagt",
+      "Hallen en woonkamers die warmte en tekening nodig hebben",
+      "Wanden waar u diepte wilt zonder dat het druk wordt",
+      "Vloeren met vloerverwarming, waar steen anders koud zou aanvoelen",
+    ],
+    showroomLine:
+      "Natuursteenlook beoordeelt u niet op één tegel: het gaat om hoe de tekening zich over een vloer verdeelt. In onze showroom in Berghem ziet u de series op ware grootte naast elkaar liggen.",
+    photos: [
+      {
+        slug: "natuursteenlook-hal",
+        url: "/images/carousel/f01b497a-9a78-490d-b196-7b265c6f2465.jpg",
+        focus: "bottom",
+        alt: "Hal met natuursteenlook vloertegels met fijne adering en bijpassende plinten",
+      },
+      {
+        slug: "natuursteenlook-inloopdouche",
+        url: "/images/badkamers/44f57662-adb3-4662-b0cc-5ebabed4cea9.jpg",
+        alt: "Inloopdouche met lichte natuursteenlook wanden, een donkere vloer, een betegelde zitbank en een nis",
+      },
+      {
+        slug: "natuursteenlook-schuin-dak",
+        url: "/images/badkamers/ddb58f27-89ff-42bb-958c-3df02d127469.jpg",
+        alt: "Doucheruimte onder een schuin dak met lichtgrijze natuursteenlook tegels en een lijnafvoer",
+      },
+    ],
+    cardUrl: "/images/badkamers/44f57662-adb3-4662-b0cc-5ebabed4cea9.jpg",
+    cardAlt: "Inloopdouche met lichte natuursteenlook wanden, een zitbank en een nis",
+  },
+  {
+    active: true,
     slug: "handvorm-tegels",
     name: "Handvorm tegels",
     metaTitle: "Handvorm tegels",
@@ -185,6 +342,7 @@ export const stijlen: Stijl[] = [
     cardAlt: "Gebogen kookeiland bekleed met lichtblauwe handvormtegels",
   },
   {
+    active: true,
     slug: "slabs-grootformaat",
     name: "Slabs & grootformaat",
     metaTitle: "Slabs en grootformaat tegels",
@@ -246,6 +404,7 @@ export const stijlen: Stijl[] = [
     cardAlt: "Wand bekleed met een slab met uitgesproken marmertekening",
   },
   {
+    active: true,
     slug: "badkamertegels",
     name: "Badkamertegels",
     metaTitle: "Badkamertegels",
@@ -304,7 +463,77 @@ export const stijlen: Stijl[] = [
     cardUrl: "/images/120x120/0e6566b9-7a11-48bd-ae2d-80ca61b5e27e.jpg",
     cardAlt: "Inloopdouche met grootformaat tegels, twee nissen en een lijnafvoer",
   },
+  {
+    // NOT LIVE. To publish: fill `photos` with three outdoor shots, set
+    // `cardUrl`/`cardAlt` to one of them, then set `active: true`. Nothing else
+    // needs changing: the route, sitemap, nav dropdown, hub and sibling links
+    // all read the filtered list.
+    //
+    // The copy deliberately never offers to lay a terrace. Mark: "make er
+    // liever nie teveel reclame over zeker in het tegelwerk maken, leveren kan
+    // altijd." So this sells the tile and points at the showroom.
+    active: false,
+    slug: "terrastegels",
+    name: "Terras & buiten",
+    metaTitle: "Terrastegels & buitentegels",
+    metaDescription:
+      "Keramische terrastegels en buitentegels in onze showroom in Berghem. Vorstbestendig, kleurvast en onderhoudsarm, in formaten tot 120x120. Kom ze in het echt bekijken.",
+    title: "Terrastegels",
+    intro:
+      "Keramische terrastegels geven een terras dezelfde rust en uitstraling als een tegelvloer binnen, maar dan bestand tegen vorst, regen en fel zonlicht. Wij leveren ze in uiteenlopende formaten, kleuren en structuren.",
+    blocks: [
+      {
+        heading: "Wat zijn keramische terrastegels?",
+        paragraphs: [
+          "Keramische terrastegels zijn geperste en op hoge temperatuur gebakken tegels, meestal 2 centimeter dik. Die dikte is wat ze geschikt maakt voor buiten: hij geeft de tegel de sterkte om los op split, op tegeldragers of in een zandbed te liggen.",
+          "Omdat de tegel vrijwel geen water opneemt, heeft vorst er weinig vat op en trekken mos, bladeren en groene aanslag er niet in. Een terras van keramiek hoeft dan ook niet geïmpregneerd of in de was gezet te worden, zoals natuursteen of beton wel vraagt.",
+        ],
+      },
+      {
+        heading: "Formaten, kleuren en structuur",
+        paragraphs: [
+          "De meest gevraagde maten zijn 60x60, 80x80 en 100x100, maar ook grotere formaten zijn er. Hoe groter de tegel, hoe minder voegen en hoe rustiger een terras oogt. Op een klein terras werkt een kleiner formaat vaak juist prettiger, omdat er minder gezaagd hoeft te worden.",
+          "In uitstraling kan vrijwel alles: betonlook, natuursteenlook, houtlook en gezoet of verouderd marmer. Buitentegels hebben een ruwere toplaag dan hun tegenhangers voor binnen, zodat ze stroef blijven als ze nat zijn.",
+        ],
+      },
+      {
+        heading: "Dezelfde tegel binnen en buiten",
+        paragraphs: [
+          "Veel series bestaan in twee diktes: een dunne variant voor binnen en een van 2 centimeter voor buiten, in precies dezelfde kleur en structuur. Daarmee kunt u de vloer van de woonkamer visueel laten doorlopen tot op het terras.",
+          "Dat werkt het sterkst bij een brede pui of schuifdeur, waar binnen en buiten in één oogopslag te zien zijn. Wilt u dit, zeg het dan voordat u kiest: niet van elke serie bestaat een buitenvariant, en het is zonde om daar achteraf achter te komen.",
+        ],
+      },
+      {
+        heading: "Kleur verandert buiten",
+        paragraphs: [
+          "Een terrastegel beoordeelt u lastig op een foto of binnen onder kunstlicht. Daglicht is koeler en veel feller, en een natte tegel ziet er bovendien anders uit dan een droge. Grijstinten die binnen warm ogen, kunnen buiten zomaar blauw uitvallen.",
+          "In onze showroom in Berghem liggen de buitenseries op ware grootte, zodat u ze naast elkaar kunt vergelijken. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Terrassen en zitgedeeltes die jarenlang kleurvast moeten blijven",
+      "Tuinen waar dezelfde tegel binnen en buiten doorloopt",
+      "Tuinpaden en opstapjes rond de woning",
+      "Balkons en dakterrassen, waar het lage gewicht per vierkante meter telt",
+    ],
+    showroomLine:
+      "Buiten is het licht koeler en feller dan binnen, en een natte tegel oogt anders dan een droge. In onze showroom in Berghem liggen de buitenseries op ware grootte naast elkaar, zodat u ze rustig kunt vergelijken.",
+    // Pending: not one outdoor photo exists in public/images yet.
+    photos: [],
+    cardUrl: "",
+    cardAlt: "",
+  },
 ];
+
+/**
+ * The styles that are actually published.
+ *
+ * Everything user-facing imports this rather than `alleStijlen`, so a style
+ * cannot leak into the site by someone forgetting to filter. Adding a draft is
+ * therefore safe by default, which is the same fail-closed habit as lib/env.ts.
+ */
+export const stijlen: Stijl[] = alleStijlen.filter((s) => s.active);
 
 /** Lookup used by the dynamic route and by the homepage cards that link here. */
 export function getStijl(slug: string): Stijl | undefined {

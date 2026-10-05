@@ -85,4 +85,94 @@ export const tegels: TegelPhoto[] = [
     url: "/images/badkamers/ddb58f27-89ff-42bb-958c-3df02d127469.jpg",
     alt: "Doucheruimte onder een schuin dak, betegeld met lichtgrijze natuursteenlook tegels en een lijnafvoer",
   },
+
+  // Added 5 October 2026 at Mark's request: "die 19 fotos dachte we voor dat
+  // foto ding onder al die kopjes", and "miss wel leuk zon bietje tegelwerk wa
+  // gemaakt word laten zien". Three of the nineteen are not here: two are phone
+  // screenshots and one is 372x679, so all three would render soft. They go in
+  // as soon as the originals arrive.
+  {
+    slug: "showroom-rekken-grootformaat",
+    url: "/images/showroom/6ffbebc1-6004-4227-ba03-b586cc11058b.jpg",
+    alt: "Showroomrekken met grootformaat tegels in beton- en natuursteenlook, met sfeerfoto's ertussen",
+  },
+  {
+    slug: "showroom-display-mytime",
+    url: "/images/showroom/aad940d2-1c16-4d47-a918-01b9480a3d9d.jpg",
+    alt: "Draaibare showroomdisplay met tegelseries in zachte beigetinten en bijpassende mozaïeken",
+  },
+  {
+    slug: "inloopdouche-zitbank-nis",
+    url: "/images/badkamers/44f57662-adb3-4662-b0cc-5ebabed4cea9.jpg",
+    alt: "Inloopdouche met lichte natuursteenlook wanden, een donkere vloer, een betegelde zitbank en een nis",
+  },
+  {
+    slug: "douche-groene-marmerlook",
+    url: "/images/badkamers/c23ba215-9223-45bf-8212-8f77f0b2ad20.jpg",
+    alt: "Doucheruimte volledig betegeld met groene marmerlook tegels en een betegelde zitbank",
+  },
+  {
+    slug: "douchevloer-verstek-lijnafvoer",
+    url: "/images/badkamers/c72b5649-b286-4032-9068-b688e9fb11aa.jpg",
+    // The floor is the subject; the upper third is plain wall.
+    focus: "bottom",
+    alt: "Douchevloer waarvan de tegels in verstek naar de lijnafvoer zijn gezaagd",
+  },
+  {
+    slug: "marmerlook-wand-houtlook-vloer",
+    url: "/images/badkamers/IMG-20230718-WA0008.jpg",
+    alt: "Donkere marmerlook wandtegels boven een houtlook vloer in een badkamer",
+  },
+  {
+    slug: "inloopdouche-nis-tussenwand",
+    url: "/images/badkamers/IMG-20240706-WA0005.jpg",
+    alt: "Inloopdouche met een betegelde nis achter een tussenwand en een lijnafvoer in de vloer",
+  },
+  {
+    slug: "badkamer-bad-twee-waskommen",
+    url: "/images/badkamers/IMG-20241010-WA0000.jpg",
+    alt: "Afgewerkte badkamer met vrijstaand bad, twee waskommen op een houten meubel en een houtlook vloer",
+  },
+  {
+    slug: "badkamer-schuin-dak-in-aanbouw",
+    url: "/images/badkamers/7a85c6a2-1641-441f-a52e-fa797485d1eb.jpg",
+    // Open rafters fill the top of the frame; the tiling is below.
+    focus: "bottom",
+    alt: "Badkamer in aanbouw onder een schuin dak, met donkere marmerlook tegels al gezet",
+  },
+  {
+    slug: "gang-grootformaat-grijs",
+    url: "/images/120x120/7158a245-6ece-4d62-8c35-61e0252915f2.jpg",
+    alt: "Gang met grote grijze vloertegels tussen ingebouwde kasten",
+  },
+  {
+    slug: "badkamer-grootformaat-raam",
+    url: "/images/120x120/IMG-20241011-WA0001.jpg",
+    alt: "Langwerpige badkamer met lichte grootformaat tegels op vloer en wanden en een hoog smal raam",
+  },
+  {
+    slug: "slabs-travertijnlook-wand",
+    url: "/images/slabs/db30ace3-98ca-4f00-aaa2-4d818a2533a4.jpg",
+    alt: "Travertijnlook slabs over een hele wand gezet, nog met stelclips op de bouwplaats",
+  },
+  {
+    slug: "toiletruimte-grootformaat-aansluitingen",
+    url: "/images/voorraad-tegels/6870c468-9516-4aba-9117-8072d5e58796.jpg",
+    alt: "Toiletruimte betegeld met lichte grootformaat tegels, met de aansluitingen nog afgedopt",
+  },
+  {
+    slug: "handvorm-visgraat-bruin-toilet",
+    url: "/images/handvorm-tegels/de614a42-add1-45d5-a183-bf1e316cf392.jpg",
+    alt: "Bruine handvormtegels in visgraatverband op de wand achter een hangend toilet",
+  },
+  {
+    slug: "handvorm-mintgroen-douche",
+    url: "/images/handvorm-tegels/fcf253f5-28e4-4ef4-8c04-117c83401aca.jpg",
+    alt: "Mintgroene vierkante handvormtegels in een douche, met de groene laserlijnen nog zichtbaar",
+  },
+  {
+    slug: "houtlook-visgraat-stalen-kozijn",
+    url: "/images/houtlook/7dbec0e4-363c-42e7-ab48-3c22c9a46815.jpg",
+    alt: "Lichte houtlook visgraatvloer die doorloopt tot aan een stalen deurkozijn",
+  },
 ];
