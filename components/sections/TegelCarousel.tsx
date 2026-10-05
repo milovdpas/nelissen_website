@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BRAND } from "@/content/site";
 import type { TegelPhoto } from "@/content/nl/tegels";
 import { focusPosition } from "@/content/nl/image-focus";
+import { TegelLightbox } from "@/components/sections/TegelLightbox";
 
 const INTERVAL_MS = 4000;
 const DESKTOP_QUERY = "(min-width: 1024px)";
@@ -55,6 +56,9 @@ type Props = {
     prev: string;
     next: string;
     goTo: string;
+    view: string;
+    close: string;
+    counterOf: string;
   };
 };
 
@@ -144,6 +148,17 @@ export function TegelCarousel({ items, dict }: Props) {
    * cheaply, so state is the honest trade.
    */
   const [drag, setDrag] = useState<{ pointerId: number; startX: number; dx: number } | null>(null);
+  /** Which photo the lightbox is showing, as an index into `items`, or null. */
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  /**
+   * Set as soon as a gesture travels far enough to be a drag rather than a tap.
+   *
+   * A pointerup after a drag still fires a click, so without this every swipe
+   * ended by opening whichever photo the finger happened to lift over. A ref,
+   * not state: it is read in the click that follows and must not cause a render
+   * of its own mid-gesture.
+   */
+  const dragged = useRef(false);
 
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
@@ -227,10 +242,10 @@ export function TegelCarousel({ items, dict }: Props) {
   // updates several pieces of state, and doing that inside an interval's updater
   // would be a side effect in a reducer.
   useEffect(() => {
-    if (paused || drag || tabHidden || reducedMotion || !canScroll) return;
+    if (paused || drag || lightbox !== null || tabHidden || reducedMotion || !canScroll) return;
     const id = window.setTimeout(() => go(index + 1), INTERVAL_MS);
     return () => window.clearTimeout(id);
-  }, [index, paused, drag, tabHidden, reducedMotion, canScroll, go]);
+  }, [index, paused, drag, lightbox, tabHidden, reducedMotion, canScroll, go]);
 
   // Drag with a mouse, swipe with a finger. One set of pointer handlers covers
   // both, plus pen. `drag` also pauses auto-play, which `paused` cannot do here:
@@ -240,6 +255,7 @@ export function TegelCarousel({ items, dict }: Props) {
     // e.button is 0 for touch and pen too, so this only rejects middle and
     // right mouse buttons.
     if (!canScroll || e.button !== 0) return;
+    dragged.current = false;
     setDrag({ pointerId: e.pointerId, startX: e.clientX, dx: 0 });
   };
 
@@ -249,6 +265,7 @@ export function TegelCarousel({ items, dict }: Props) {
     // Capture once the gesture is clearly horizontal, so it survives the pointer
     // leaving the strip. Taking it on pointerdown instead would swallow taps.
     if (Math.abs(dx) > 8 && !e.currentTarget.hasPointerCapture(e.pointerId)) {
+      dragged.current = true;
       e.currentTarget.setPointerCapture(e.pointerId);
     }
     setDrag({ ...drag, dx });
@@ -337,8 +354,18 @@ export function TegelCarousel({ items, dict }: Props) {
           >
             {rendered.map((item, i) => (
               <div key={`${item.slug}-${i}`} className={`shrink-0 px-1.5 w-full ${layout.width}`}>
-                <div
-                  className="relative w-full overflow-hidden"
+                <button
+                  type="button"
+                  // Clones are duplicates of real slides, so they stay out of
+                  // the tab order and out of the accessibility tree.
+                  tabIndex={i < count ? undefined : -1}
+                  aria-hidden={i >= count}
+                  aria-label={`${dict.view} ${item.alt}`}
+                  onClick={() => {
+                    if (dragged.current) return;
+                    setLightbox(i % count);
+                  }}
+                  className="relative w-full overflow-hidden block focus:outline-none focus-visible:ring-2"
                   style={{ aspectRatio: "3 / 2", borderRadius: 2, background: "rgba(44,48,56,0.06)" }}
                 >
                   {mounted.has(i) ? (
@@ -361,7 +388,7 @@ export function TegelCarousel({ items, dict }: Props) {
                       style={{ objectPosition: focusPosition(item.focus) }}
                     />
                   ) : null}
-                </div>
+                </button>
               </div>
             ))}
           </div>
@@ -409,6 +436,18 @@ export function TegelCarousel({ items, dict }: Props) {
             />
           ))}
         </div>
+      ) : null}
+
+      {/* Mounted only while open, so its focus trap, scroll lock and key
+          handlers exist exactly as long as they are wanted. */}
+      {lightbox !== null ? (
+        <TegelLightbox
+          items={items}
+          index={lightbox}
+          onIndexChange={setLightbox}
+          onClose={() => setLightbox(null)}
+          dict={dict}
+        />
       ) : null}
     </div>
   );
