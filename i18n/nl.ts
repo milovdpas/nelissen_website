@@ -194,6 +194,11 @@ export const nl = {
       prev: "Vorige foto",
       next: "Volgende foto",
       goTo: "Ga naar foto",
+      // Lightbox. `view` is the accessible name of each slide's button, so it
+      // gets the alt text appended and has to read well in front of one.
+      view: "Bekijk foto op volledig formaat:",
+      close: "Sluiten",
+      counterOf: "van",
     },
     footnotePrefix: "Bezoek onze showroom voor het volledige assortiment: ",
     footnoteStrong: "zes dagen per week op afspraak, dinsdag 15:00–19:00 vrije inloop.",
