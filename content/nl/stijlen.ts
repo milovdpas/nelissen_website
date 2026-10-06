@@ -68,9 +68,12 @@ export type Stijl = {
  * ("Handvorm") and room ("Badkamers"). These follow search demand. Where the two
  * overlap, the homepage card links straight here.
  *
- * Mark confirmed on 2 October 2026 that they sell betonlook, natuursteenlook and
- * terrastegels. Betonlook and natuursteenlook are live; terrastegels is written
- * but not. Marmerlook, decor and mozaïek are unconfirmed, so they are not here.
+ * Mark confirmed betonlook, natuursteenlook and terrastegels on 2 October 2026,
+ * then marmerlook and decortegels on 6 October. Mozaïek is a no: "Mozaik nie.
+ * Is ook wel beetje uit de tijd." Do not add one.
+ *
+ * Marmerlook has no page of its own. Tom put it on the natuursteenlook page,
+ * which is where a buyer looking for stone tekening will be anyway.
  *
  * Terrastegels is written but inactive: there is not a single outdoor photo in
  * public/images. Mark also asked that outdoor work not be pushed too hard, so
@@ -362,6 +365,69 @@ export const alleStijlen: Stijl[] = [
     ],
     cardUrl: "/images/handvorm-tegels/4a07ed29-ddb2-441b-89e9-ba82df936f55.jpg",
     cardAlt: "Gebogen kookeiland bekleed met lichtblauwe handvormtegels",
+  },
+  {
+    active: true,
+    slug: "decortegels",
+    name: "Decortegels",
+    metaTitle: "Decortegels & patroontegels",
+    metaDescription:
+      "Decortegels in onze showroom in Berghem. Patchwork, geometrische motieven en klassieke patroonvloeren, als accent of over een heel vlak.",
+    title: "Decortegels",
+    intro:
+      "Een tegel met een motief verandert een ruimte sneller dan welke andere ingreep ook. Decortegels geven een toilet, een achterwand of een hal karakter, zonder dat u aan de rest van het interieur hoeft te komen.",
+    blocks: [
+      {
+        heading: "Wat zijn decortegels?",
+        paragraphs: [
+          "Decortegels zijn tegels met een motief in plaats van een egale kleur of een steentekening. Dat loopt van patchwork, waarbij elke tegel een ander dessin heeft, tot geometrische patronen en klassieke zwart-witte motieven.",
+          "Een serie wordt meestal geleverd als een mix van verschillende dessins, die willekeurig door elkaar gelegd worden. Hoe meer verschillende tegels in zo'n mix zitten, hoe minder snel u het patroon ziet terugkomen, en dat is precies waar het verschil tussen series in zit.",
+        ],
+      },
+      {
+        heading: "Een accent, geen hele ruimte",
+        paragraphs: [
+          "Decor werkt het sterkst op één vlak. Een achterwand in de keuken, de wand achter een hangend toilet, of de nis in een doucheruimte: een klein oppervlak met een uitgesproken motief doet meer dan een hele badkamer vol.",
+          "Daarom combineren de meeste series een decor met een effen tegel in dezelfde kleurstelling en hetzelfde formaat. Zo kunt u het motief precies daar leggen waar u het wilt hebben, en loopt de rest rustig door.",
+        ],
+      },
+      {
+        heading: "Klassieke patroonvloeren",
+        paragraphs: [
+          "Naast moderne decors zetten wij ook de klassiekers: een zwart-witte octagonvloer met sierrand in een hal of entree bijvoorbeeld. Dat soort vloeren zijn tijdloos en passen net zo goed in een jaren-dertig woning als in nieuwbouw.",
+          "Ze vragen wel precisie. Bij een patroon ziet u iedere millimeter die niet klopt, en een sierrand moet in de hoeken precies uitkomen. Dat is vakwerk, en het is een van de redenen dat wij zelf zetten wat wij verkopen.",
+        ],
+      },
+      {
+        heading: "Beoordeel het op een paar vierkante meter",
+        paragraphs: [
+          "Eén decortegel in de hand zegt weinig. Het gaat erom hoe de dessins zich tot elkaar verhouden zodra er twintig naast elkaar liggen, en of het geheel rustig blijft of juist gaat dansen. Dat ziet u pas op oppervlak.",
+          "In onze showroom in Berghem liggen de decors uitgelegd, zodat u ze op ware grootte kunt beoordelen. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Toiletten, waar een klein vlak meteen veel effect heeft",
+      "Achterwanden in de keuken",
+      "Hallen en entrees, met een klassieke patroonvloer",
+      "Accentwanden in de badkamer, naast een effen tegel uit dezelfde serie",
+    ],
+    showroomLine:
+      "Een decor beoordeelt u niet op één tegel: het gaat erom hoe de dessins samen uitpakken over een paar vierkante meter. In onze showroom in Berghem liggen ze uitgelegd.",
+    photos: [
+      {
+        slug: "decor-patchwork-douche",
+        url: "/images/carousel/96ec67fb-8558-493c-a607-81ce63bed482.jpg",
+        alt: "Doucheruimte betegeld met een patchwork van decortegels in grijs en bruin",
+      },
+      {
+        slug: "decor-octagon-entree",
+        url: "/images/carousel/e29e529a-2e8c-4be5-8797-e7ef4e6c1437.jpg",
+        alt: "Klassieke zwart-witte octagonvloer met sierrand in een entree",
+      },
+    ],
+    cardUrl: "/images/carousel/96ec67fb-8558-493c-a607-81ce63bed482.jpg",
+    cardAlt: "Doucheruimte betegeld met een patchwork van decortegels in grijs en bruin",
   },
   {
     active: true,
