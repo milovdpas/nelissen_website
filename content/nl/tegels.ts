@@ -151,9 +151,9 @@ export const tegels: TegelPhoto[] = [
     alt: "Langwerpige badkamer met lichte grootformaat tegels op vloer en wanden en een hoog smal raam",
   },
   {
-    slug: "slabs-travertijnlook-wand",
+    slug: "slabs-travertinlook-wand",
     url: "/images/slabs/db30ace3-98ca-4f00-aaa2-4d818a2533a4.jpg",
-    alt: "Travertijnlook slabs over een hele wand gezet, nog met stelclips op de bouwplaats",
+    alt: "Travertinlook slabs over een hele wand gezet, nog met stelclips op de bouwplaats",
   },
   {
     slug: "toiletruimte-grootformaat-aansluitingen",

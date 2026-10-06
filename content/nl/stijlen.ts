@@ -68,9 +68,12 @@ export type Stijl = {
  * ("Handvorm") and room ("Badkamers"). These follow search demand. Where the two
  * overlap, the homepage card links straight here.
  *
- * Mark confirmed on 2 October 2026 that they sell betonlook, natuursteenlook and
- * terrastegels. Betonlook and natuursteenlook are live; terrastegels is written
- * but not. Marmerlook, decor and mozaïek are unconfirmed, so they are not here.
+ * Mark confirmed betonlook, natuursteenlook and terrastegels on 2 October 2026,
+ * then marmerlook and decortegels on 6 October. Mozaïek is a no: "Mozaik nie.
+ * Is ook wel beetje uit de tijd." Do not add one.
+ *
+ * Marmerlook has no page of its own. Tom put it on the natuursteenlook page,
+ * which is where a buyer looking for stone tekening will be anyway.
  *
  * Terrastegels is written but inactive: there is not a single outdoor photo in
  * public/images. Mark also asked that outdoor work not be pushed too hard, so
@@ -215,25 +218,31 @@ export const alleStijlen: Stijl[] = [
   {
     active: true,
     slug: "natuursteenlook-tegels",
-    name: "Natuursteenlook",
-    metaTitle: "Natuursteenlook tegels",
+    // Marmerlook lives here rather than on a page of its own. Tom, 6 October
+    // 2026: "hier hoort eigenlijk de marmerlook bij te staan." It is in the
+    // name, the h1 and the meta title as well as the body, because "marmerlook
+    // tegels" is a search term in its own right and a mention buried in a
+    // paragraph would never rank for it.
+    name: "Natuursteen & marmerlook",
+    metaTitle: "Natuursteenlook & marmerlook tegels",
     metaDescription:
-      "Natuursteenlook tegels in onze showroom in Berghem. De tekening van leisteen, travertijn en kalksteen, met het gemak van keramiek. Kom ze in het echt bekijken.",
-    title: "Natuursteenlook tegels",
+      "Natuursteenlook en marmerlook tegels in onze showroom in Berghem. De tekening van leisteen, travertin, marmer en kalksteen, met het gemak van keramiek.",
+    title: "Natuursteenlook en marmerlook tegels",
     intro:
-      "De tekening en het kleurverloop van natuursteen, zonder het impregneren en de vlekgevoeligheid. Natuursteenlook brengt diepte en warmte in een ruimte, maar blijft gewoon een keramische tegel.",
+      "De tekening en het kleurverloop van natuursteen en marmer, zonder het impregneren en de vlekgevoeligheid. Natuursteenlook brengt diepte en warmte in een ruimte, maar blijft gewoon een keramische tegel.",
     blocks: [
       {
         heading: "Wat is natuursteenlook?",
         paragraphs: [
-          "Natuursteenlook tegels bootsen de tekening van echte steensoorten na: leisteen, travertijn, kalksteen en zandsteen. Moderne druktechnieken leggen daarbij niet alleen de kleur vast, maar ook de aders, de spikkels en de kleine oneffenheden die steen zijn karakter geven.",
+          "Natuursteenlook tegels bootsen de tekening van echte steensoorten na: leisteen, travertin, kalksteen, zandsteen en marmer. Moderne druktechnieken leggen daarbij niet alleen de kleur vast, maar ook de aders, de spikkels en de kleine oneffenheden die steen zijn karakter geven.",
           "Echte natuursteen is poreus. Hij moet geïmpregneerd worden, is gevoelig voor zuur uit citroen of schoonmaakmiddel, en kan verkleuren waar hij vaak nat wordt. Keramiek heeft daar geen last van, en dat scheelt vooral in een badkamer of een keuken.",
         ],
       },
       {
         heading: "Welke steensoort past waar?",
         paragraphs: [
-          "Leisteen is donker en heeft een duidelijke structuur, en geeft een ruimte meteen gewicht. Travertijn is warm en beige met typische horizontale lijnen, en werkt goed als u het rustig maar niet koud wilt. Kalksteen zit daartussenin: licht, egaal en terughoudend.",
+          "Leisteen is donker en heeft een duidelijke structuur, en geeft een ruimte meteen gewicht. Travertin is warm en beige met typische horizontale lijnen, en werkt goed als u het rustig maar niet koud wilt. Kalksteen zit daartussenin: licht, egaal en terughoudend.",
+          "Marmerlook is de meest uitgesproken van het gezelschap. Een enkele doorlopende ader over een wand achter een bad trekt meteen de aandacht, en dat is precies de bedoeling. Juist omdat het zo opvalt, werkt marmerlook vaak het best op één vlak in plaats van door de hele ruimte.",
           "In een kleine ruimte werkt een lichte, rustige steenlook vrijwel altijd beter, omdat een sterke tekening de ruimte optisch voller maakt. Op een grote vloer kunt u juist meer tekening hebben, omdat het patroon dan de ruimte krijgt.",
         ],
       },
@@ -301,9 +310,12 @@ export const alleStijlen: Stijl[] = [
       },
       {
         heading: "Het verband bepaalt het karakter",
+        // Tom's wording, 6 October 2026. One edit to it: he wrote "Verticaal
+        // gelegd ... kan juist een lage wand of kookeiland extra hoogte en
+        // karakter krijgen", where the participle and the subject disagree.
         paragraphs: [
-          "Visgraat is de klassieker en maakt van een achterwand meteen het middelpunt van de keuken. Halfsteensverband is rustiger en werkt beter als de tegel zelf al veel kleurverschil heeft. Verticaal gelegd, in smalle stroken, doet het goed op een lage wand of een kookeiland.",
-          "Wij hebben handvorm onder andere verwerkt op een gebogen kookeiland, waarbij iedere rij apart op maat is gesneden. Dat soort werk valt of staat bij het zetten, niet bij de tegel.",
+          "Visgraat is een echte klassieker en maakt van een achterwand meteen een opvallend onderdeel van de keuken. Halfsteensverband is wat rustiger en komt mooi tot zijn recht wanneer de tegel zelf al veel kleur- of structuurverschil heeft. Verticaal gelegd, bijvoorbeeld met smalle tegels, geeft een lage wand of kookeiland juist extra hoogte en karakter.",
+          "Ook met handvorm tegels zijn verschillende patronen en toepassingen mogelijk. Door de onregelmatige randen en subtiele verschillen in vorm en kleur krijgt iedere wand een levendige en ambachtelijke uitstraling. Juist bij dit soort tegels is vakkundig zetten belangrijk om het patroon mooi tot zijn recht te laten komen.",
         ],
       },
       {
@@ -337,9 +349,85 @@ export const alleStijlen: Stijl[] = [
         url: "/images/handvorm-tegels/thumbnail.jpg",
         alt: "Terracotta handvormtegels in visgraatverband boven een bad",
       },
+      {
+        // Added 6 October 2026, Tom: "is dit nog iets voor op de handvorm
+        // pagina". It is: the other three are all visgraat or the curved
+        // island, so none of them showed square handvorm laid straight, which
+        // is what the copy above about verbanden is partly describing.
+        //
+        // He mailed the file again at 368 KB; this is the same frame from the
+        // October batch, already compressed to 271 KB in public/images. Same
+        // photo, so the smaller one is used.
+        slug: "handvorm-mintgroen-douche",
+        url: "/images/handvorm-tegels/fcf253f5-28e4-4ef4-8c04-117c83401aca.jpg",
+        alt: "Mintgroene vierkante handvormtegels in een doucheruimte, met de laserlijnen nog zichtbaar",
+      },
     ],
     cardUrl: "/images/handvorm-tegels/4a07ed29-ddb2-441b-89e9-ba82df936f55.jpg",
     cardAlt: "Gebogen kookeiland bekleed met lichtblauwe handvormtegels",
+  },
+  {
+    active: true,
+    slug: "decortegels",
+    name: "Decortegels",
+    metaTitle: "Decortegels & patroontegels",
+    metaDescription:
+      "Decortegels in onze showroom in Berghem. Patchwork, geometrische motieven en klassieke patroonvloeren, als accent of over een heel vlak.",
+    title: "Decortegels",
+    intro:
+      "Een tegel met een motief verandert een ruimte sneller dan welke andere ingreep ook. Decortegels geven een toilet, een achterwand of een hal karakter, zonder dat u aan de rest van het interieur hoeft te komen.",
+    blocks: [
+      {
+        heading: "Wat zijn decortegels?",
+        paragraphs: [
+          "Decortegels zijn tegels met een motief in plaats van een egale kleur of een steentekening. Dat loopt van patchwork, waarbij elke tegel een ander dessin heeft, tot geometrische patronen en klassieke zwart-witte motieven.",
+          "Een serie wordt meestal geleverd als een mix van verschillende dessins, die willekeurig door elkaar gelegd worden. Hoe meer verschillende tegels in zo'n mix zitten, hoe minder snel u het patroon ziet terugkomen, en dat is precies waar het verschil tussen series in zit.",
+        ],
+      },
+      {
+        heading: "Een accent, geen hele ruimte",
+        paragraphs: [
+          "Decor werkt het sterkst op één vlak. Een achterwand in de keuken, de wand achter een hangend toilet, of de nis in een doucheruimte: een klein oppervlak met een uitgesproken motief doet meer dan een hele badkamer vol.",
+          "Daarom combineren de meeste series een decor met een effen tegel in dezelfde kleurstelling en hetzelfde formaat. Zo kunt u het motief precies daar leggen waar u het wilt hebben, en loopt de rest rustig door.",
+        ],
+      },
+      {
+        heading: "Klassieke patroonvloeren",
+        paragraphs: [
+          "Naast moderne decors zetten wij ook de klassiekers: een zwart-witte octagonvloer met sierrand in een hal of entree bijvoorbeeld. Dat soort vloeren zijn tijdloos en passen net zo goed in een jaren-dertig woning als in nieuwbouw.",
+          "Ze vragen wel precisie. Bij een patroon ziet u iedere millimeter die niet klopt, en een sierrand moet in de hoeken precies uitkomen. Dat is vakwerk, en het is een van de redenen dat wij zelf zetten wat wij verkopen.",
+        ],
+      },
+      {
+        heading: "Beoordeel het op een paar vierkante meter",
+        paragraphs: [
+          "Eén decortegel in de hand zegt weinig. Het gaat erom hoe de dessins zich tot elkaar verhouden zodra er twintig naast elkaar liggen, en of het geheel rustig blijft of juist gaat dansen. Dat ziet u pas op oppervlak.",
+          "In onze showroom in Berghem liggen de decors uitgelegd, zodat u ze op ware grootte kunt beoordelen. Kom vrijblijvend langs. Wij zijn zes dagen per week geopend op afspraak, en op dinsdagmiddag van 15:00 tot 19:00 loopt u zonder afspraak binnen.",
+        ],
+      },
+    ],
+    geschiktVoor: [
+      "Toiletten, waar een klein vlak meteen veel effect heeft",
+      "Achterwanden in de keuken",
+      "Hallen en entrees, met een klassieke patroonvloer",
+      "Accentwanden in de badkamer, naast een effen tegel uit dezelfde serie",
+    ],
+    showroomLine:
+      "Een decor beoordeelt u niet op één tegel: het gaat erom hoe de dessins samen uitpakken over een paar vierkante meter. In onze showroom in Berghem liggen ze uitgelegd.",
+    photos: [
+      {
+        slug: "decor-patchwork-douche",
+        url: "/images/carousel/96ec67fb-8558-493c-a607-81ce63bed482.jpg",
+        alt: "Doucheruimte betegeld met een patchwork van decortegels in grijs en bruin",
+      },
+      {
+        slug: "decor-octagon-entree",
+        url: "/images/carousel/e29e529a-2e8c-4be5-8797-e7ef4e6c1437.jpg",
+        alt: "Klassieke zwart-witte octagonvloer met sierrand in een entree",
+      },
+    ],
+    cardUrl: "/images/carousel/96ec67fb-8558-493c-a607-81ce63bed482.jpg",
+    cardAlt: "Doucheruimte betegeld met een patchwork van decortegels in grijs en bruin",
   },
   {
     active: true,
@@ -347,10 +435,14 @@ export const alleStijlen: Stijl[] = [
     name: "Slabs & grootformaat",
     metaTitle: "Slabs en grootformaat tegels",
     metaDescription:
-      "Slabs en tegels vanaf 120x120 in onze showroom in Berghem. Minimale voegen, doorlopende tekening en advies over wat de ondergrond aankan.",
+      "Slabs tot 150x320 cm en tegels vanaf 120x120 in onze showroom in Berghem. Minimale voegen, doorlopende tekening en advies over wat de ondergrond aankan.",
     title: "Slabs en grootformaat tegels",
+    // Tom's wording, 6 October 2026. He wanted the largest format named, which
+    // the old lead never did. His version came with a heading above it; that is
+    // not used, because it would sit directly under an h1 that already says
+    // "Slabs en grootformaat tegels" and repeat it.
     intro:
-      "Hoe groter de tegel, hoe minder voegen. Bij slabs en formaten vanaf 120 bij 120 verdwijnt het raster bijna helemaal en wordt een vloer of wand één doorlopend vlak.",
+      "Hoe groter de tegel, hoe minder voegen zichtbaar zijn. Met grote tegels vanaf 120 × 120 cm en slabs tot wel 150 × 320 cm ontstaat een rustig en ruimtelijk geheel. De minimale hoeveelheid voegen zorgt ervoor dat de vloer of wand bijna als één doorlopend oppervlak oogt.",
     blocks: [
       {
         heading: "Wat een slab anders maakt",
@@ -389,9 +481,9 @@ export const alleStijlen: Stijl[] = [
         alt: "Wand bekleed met een slab met uitgesproken marmertekening",
       },
       {
-        slug: "slab-travertijn-douche",
+        slug: "slab-travertin-douche",
         url: "/images/slabs/8b83b609-35db-41b8-9227-b40465b741af.jpg",
-        alt: "Doucheruimte onder een schuin dak bekleed met travertijnlook slabs",
+        alt: "Doucheruimte onder een schuin dak bekleed met travertinlook slabs",
       },
       {
         slug: "slab-plaatsen",

@@ -32,7 +32,7 @@ export const portfolio: PortfolioItem[] = [
   {
     slug: "slab-plaatsen",
     url: "/images/carousel/bd5be949-3b25-4b23-821f-5aeb9261dff9.jpg",
-    alt: "Grote travertijnlook slab wordt met zuignappen en laser op de wand gezet",
+    alt: "Grote travertinlook slab wordt met zuignappen en laser op de wand gezet",
     label: "Slab plaatsen",
   },
   {
