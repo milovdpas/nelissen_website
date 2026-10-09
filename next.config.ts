@@ -95,7 +95,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/index.php/nl-nl/service/contact",
-        destination: "/#contact",
+        // /contact, not /#contact. This pointed at the homepage anchor from
+        // before there was a contact page. A crawler strips the fragment, so
+        // "/#contact" is simply "/" to Google, and the old contact URL was
+        // handing whatever it had built up to the homepage instead of to the
+        // page meant to rank for "tegelhandel Berghem adres".
+        destination: "/contact",
         permanent: true,
       },
       { source: "/index.php/:path*", destination: "/", permanent: true },
