@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
+import { isProduction } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
-  // On staging (NEXT_PUBLIC_NOINDEX=true) block all crawlers entirely.
-  if (process.env.NEXT_PUBLIC_NOINDEX === "true") {
+  // Anything that is not production — acceptance, preview, a local build — is
+  // blocked outright. It must never compete with the real domain in search.
+  if (!isProduction) {
     return { rules: [{ userAgent: "*", disallow: "/" }] };
   }
 

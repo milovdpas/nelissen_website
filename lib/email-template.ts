@@ -1,4 +1,5 @@
 import { site, BRAND } from "@/content/site";
+import { appEnv, isProduction } from "@/lib/env";
 
 /**
  * Branded HTML e-mail in the Nelissen house style.
@@ -12,6 +13,22 @@ import { site, BRAND } from "@/content/site";
 
 const HEADING_STACK = "Arial, Helvetica, sans-serif";
 const BODY_STACK = "Arial, Helvetica, sans-serif";
+
+/**
+ * Red strip at the top of every non-production mail. The subject prefix alone is
+ * easy to miss in a notification; this makes a test send unmistakable once the
+ * message is open.
+ */
+function testBanner(): string {
+  if (isProduction) return "";
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#b3261e;">
+    <tr>
+      <td align="center" style="padding:12px 16px;font-family:${HEADING_STACK};font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#ffffff;">
+        Testbericht uit de ${esc(appEnv)}-omgeving. Dit is geen echte aanvraag.
+      </td>
+    </tr>
+  </table>`;
+}
 
 function esc(value: string): string {
   return value
@@ -56,6 +73,7 @@ export function baseLayout({ title, preheader, contentHtml }: BaseLayout): strin
       ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f7f6f4;font-size:1px;line-height:1px;">${esc(preheader)}</div>`
       : ""
   }
+  ${testBanner()}
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f7f6f4;">
     <tr>
       <td align="center" style="padding:32px 16px;">
@@ -153,7 +171,7 @@ function slotLine(input: ContactSubmission): string | null {
     parts.push(labels.join(", "));
   }
 
-  return parts.length ? parts.join(" — ") : null;
+  return parts.length ? parts.join(", ") : null;
 }
 
 /** Notification e-mail sent to the company when the contact form is submitted. */
@@ -252,8 +270,8 @@ ${messageBlock}
 export function contactConfirmationEmail(input: ContactSubmission) {
   const isAppointment = input.type === "appointment";
   const subject = isAppointment
-    ? `Wij hebben uw afspraakverzoek ontvangen — ${site.shortName}`
-    : `Wij hebben uw bericht ontvangen — ${site.shortName}`;
+    ? `Wij hebben uw afspraakverzoek ontvangen | ${site.shortName}`
+    : `Wij hebben uw bericht ontvangen | ${site.shortName}`;
 
   const slot = slotLine(input);
 

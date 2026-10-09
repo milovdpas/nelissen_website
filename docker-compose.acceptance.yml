@@ -1,0 +1,45 @@
+# Deployed to /opt/apps/nelissen-website-acceptance/docker-compose.yml by
+# .github/workflows/deploy-acceptance.yml.
+#
+# Identical to docker-compose.prod.yml except for the three things that must
+# differ so the two stacks can coexist on the same box: the image tag, the
+# container name (the proxy routes by it, and Docker forbids duplicates) and the
+# directory it is deployed into.
+#
+# The acceptance site is additionally behind HTTP basic auth in the nginx conf —
+# noindex keeps honest crawlers out, auth keeps everyone out.
+services:
+  app:
+    image: ${DOCKERHUB_USERNAME}/nelissen-website:acceptance
+    container_name: nelissen-website-acceptance
+    restart: unless-stopped
+    # APP_ENV / SMTP_* / CONTACT_* are runtime config, written by the deploy
+    # workflow. APP_ENV is also baked into the image at build time — both are
+    # needed, because robots.txt is generated during the build and the mailer
+    # reads it per request.
+    env_file:
+      - .env
+    expose:
+      - "80"
+    # The image runs as an unprivileged user (uid 1001). This namespaced sysctl
+    # lets that user bind :80 inside the container, so the port stays the same
+    # for the proxy while the server no longer runs as root.
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    # A Node server that only listens on a socket needs no Linux capabilities and
+    # must never gain privileges through setuid binaries.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  web:
+    external: true

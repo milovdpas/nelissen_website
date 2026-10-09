@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tegelhandel Nelissen
 
-## Getting Started
+Website for Nelissen Tegelhandel & Tegelzettersbedrijf, a tile shop and
+tile-setting business in Berghem (gemeente Oss).
 
-First, run the development server:
+The site's job is **getting people into the showroom**. There is no webshop and
+no per-tile catalogue, deliberately — see [ROADMAP.md](ROADMAP.md) for why both
+were ruled out.
+
+Next.js 16 (App Router, standalone output), React 19, Tailwind 4, TypeScript.
+Deployed as a Docker image to a VPS behind a shared nginx proxy.
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # then fill in SMTP if you want the contact form to send
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts: `npm run build`, `npm run start`, `npm run lint`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Almost all copy and data is centralised, so most content changes touch no
+components at all.
 
-## Learn More
+| Path | What |
+| ---- | ---- |
+| `content/site.ts` | **Single source of truth for NAP** — name, address, phone, geo, opening hours, brand colours |
+| `i18n/nl.ts` | Every translatable string, plus page-level metadata |
+| `content/nl/assortiment.ts` | The six homepage category cards |
+| `content/nl/stijlen.ts` | Style pages (`/assortiment/<slug>`) |
+| `content/nl/locaties.ts` | Regional pages (`/tegels-<plaats>`) |
+| `content/nl/tegels.ts` | Carousel photos |
+| `lib/seo.ts` | JSON-LD: LocalBusiness, WebSite, BreadcrumbList |
+| `lib/env.ts` | `APP_ENV` — indexing and email safety |
 
-To learn more about Next.js, take a look at the following resources:
+Adding a tile style or a region is a content-only change: the route, sitemap and
+hub pages all derive from these files.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Things that will bite you
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**`APP_ENV` is read at build *and* run time.** `robots.txt` and the robots
+metadata are baked during `next build`; the mailer reads it per request. It is a
+Docker build ARG *and* a runtime env. Unset means **non-production** on purpose,
+so a forgotten value costs a noindexed site rather than an indexed acceptance
+environment or a customer enquiry sent to a test inbox.
 
-## Deploy on Vercel
+**`package-lock.json` must be regenerated on Linux**, not Windows, or `npm ci`
+fails inside the image build. See the note in [DEPLOYMENT.md](DEPLOYMENT.md).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Images are mostly placeholders.** Everything except `public/images/showroom.jpeg`
+and `bedrijfsbus.jpeg` is Unsplash stock, flagged in the content files. The
+Portfolio section is the one to fix first — it presents stock photos as the
+company's own completed work.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Location pages are a doorway-page risk.** They are only safe while each says
+something genuinely different; near-identical pages differing by place name get
+demoted. Measure the overlap before adding another.
+
+## Deployment
+
+Two environments, same box, same image recipe:
+
+| Branch | URL |
+| ------ | --- |
+| `acceptance` | `acceptance.tegelhandelnelissen.nl` (basic auth, noindex, test email) |
+| `main` | `www.tegelhandelnelissen.nl` |
+
+Full detail, including the one-time proxy and certificate setup, is in
+[DEPLOYMENT.md](DEPLOYMENT.md). Work in progress is tracked in [plans/](plans/).
+
+## A note on this repo's Next.js version
+
+See [AGENTS.md](AGENTS.md): this is a newer Next.js than most documentation and
+training data assumes. Check `node_modules/next/dist/docs/` before relying on
+remembered APIs.

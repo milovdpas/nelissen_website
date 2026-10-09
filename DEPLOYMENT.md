@@ -2,31 +2,14 @@
 
 Two branches, two environments:
 
-| Branch       | Target            | How                                                        |
-| ------------ | ----------------- | ---------------------------------------------------------- |
-| `acceptance` | Vercel (staging)  | Vercel Git integration (no workflow in this repo)          |
-| `main`       | VPS (production)  | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml) |
+| Branch       | Target             | How                                                                            |
+| ------------ | ------------------ | ------------------------------------------------------------------------------ |
+| `acceptance` | VPS (acceptance)   | GitHub Actions — [`deploy-acceptance.yml`](.github/workflows/deploy-acceptance.yml) |
+| `main`       | VPS (production)   | GitHub Actions — [`deploy.yml`](.github/workflows/deploy.yml)                   |
 
----
-
-# Acceptance (Vercel)
-
-Handled by **Vercel's native Git integration** — no GitHub Actions workflow.
-The Vercel project is configured with Branch Tracking on `acceptance`, so every
-push to `acceptance` creates a Production Deployment (currently
-<https://nelissen-website.vercel.app>).
-
-Setup lives in the Vercel dashboard, not this repo:
-
-1. Project → Settings → Git → **Production Branch = `acceptance`**.
-2. Project → Settings → **Environment Variables** — set the runtime config
-   (these are *not* in this repo): `NEXT_PUBLIC_SITE_URL` (the acceptance URL),
-   `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`,
-   `CONTACT_TO`, `CONTACT_FROM`.
-
-> Do **not** add a Vercel deploy workflow on top of this — it would double-deploy.
-> `output: "standalone"` in `next.config.ts` is compatible with Vercel; Vercel
-> uses its own build adapter and ignores it.
+Both environments run on the same box, behind the same proxy, from the same
+`Dockerfile`. They differ only in the build args the workflow passes and the
+container they deploy to — see [The acceptance environment](#the-acceptance-environment).
 
 ---
 
@@ -68,7 +51,8 @@ Settings → Secrets and variables → Actions.
 | `SMTP_SECURE`          | `true`                                                 |
 | `SMTP_USER`            | `website@tegelhandelnelissen.nl`                       |
 | `SMTP_PASS`            | mailbox password — a literal `$` must be written `$$`  |
-| `CONTACT_TO`           | `info@tegelhandelnelissen.nl`                          |
+| `CONTACT_TO`           | `info@tegelhandelnelissen.nl` — production deploy only |
+| `CONTACT_TO_TEST`      | inbox that acceptance mail is diverted to              |
 | `CONTACT_FROM`         | `website@tegelhandelnelissen.nl`                       |
 
 **Variables** (optional)
@@ -76,13 +60,25 @@ Settings → Secrets and variables → Actions.
 | Name                   | Default                               | Notes                          |
 | ---------------------- | ------------------------------------- | ------------------------------ |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.tegelhandelnelissen.nl`  | Inlined at build.              |
-| `NEXT_PUBLIC_GA_ID`    | unset (analytics disabled)            | Inlined at build.              |
+| `NEXT_PUBLIC_GA_ID`    | unset (analytics disabled)            | Inlined at build. Left unset on acceptance so test traffic stays out of the live property. |
+| `APP_ENV`              | unset → treated as non-production     | Set per workflow, not per repo. Build arg **and** runtime env. |
 
 ⚠️ **`NEXT_PUBLIC_*` are compile-time constants.** They are baked into the image
 as build args — canonical URLs, `sitemap.xml`, `robots.txt`, OG tags and JSON-LD
 are prerendered. Changing one means a rebuild, not an `.env` edit. `SMTP_*` and
 `CONTACT_*` are the opposite: read at runtime from the `.env` on the server, so
 changing them is a redeploy (or `docker compose up -d`) with no rebuild.
+
+⚠️ **`APP_ENV` is the one variable that belongs in *both* columns.** `robots.txt`
+and the layout's robots metadata are generated during `next build`, while the
+mailer reads it per request — so it is passed as a Docker build ARG *and* written
+into the runtime `.env`. The Dockerfile also carries the build value into the
+runtime stage, so an `.env` that forgets it cannot silently divert production mail
+to the test inbox.
+
+Unset means **non-production** (`lib/env.ts`), deliberately: forgetting it costs a
+noindexed site or a test email — visible and recoverable — rather than an indexed
+acceptance environment or a customer enquiry sent to a mailbox nobody reads.
 
 `SMTP_PASS` needs the `$$` escape because Compose reads the same `.env` for
 `${DOCKERHUB_USERNAME}` substitution in `docker-compose.yml`.
@@ -121,6 +117,110 @@ Full detail lives in the VPS docs repo (`02-reverse-proxy-and-tls.md`).
    and store it as the `VPS_KNOWN_HOSTS` secret. Until that secret exists the
    workflow still deploys, but it falls back to trust-on-first-use and logs a
    warning.
+
+## The acceptance environment
+
+`acceptance` branch → `https://acceptance.tegelhandelnelissen.nl/`, same box, same
+proxy, same image recipe. Built by `.github/workflows/deploy-acceptance.yml` into
+`/opt/apps/nelissen-website-acceptance`, container `nelissen-website-acceptance`,
+image tag `:acceptance`.
+
+**DNS needs nothing.** `*.tegelhandelnelissen.nl` is a wildcard A record pointing
+at the VPS, so the hostname already resolves. Any future subdomain here likewise
+needs only an nginx conf and a certificate.
+
+It differs from production in exactly three places, all in the workflow:
+`NEXT_PUBLIC_SITE_URL` (self-referencing canonicals), `NEXT_PUBLIC_GA_ID` (omitted,
+so test clicks stay out of the live Analytics property) and `APP_ENV=acceptance`
+(blocks indexing, diverts all mail to `CONTACT_TO_TEST`). `CONTACT_TO` is never
+written to that machine at all.
+
+### One-time proxy setup
+
+Two orderings matter, and both are easy to get wrong:
+
+- **The container must exist before the conf is enabled.** nginx resolves
+  `proxy_pass` upstream names at startup and refuses to start if
+  `nelissen-website-acceptance` is not running. Push `acceptance` first.
+- **Per-domain confs here contain only `listen 443` blocks.** `00-http.conf`
+  handles port 80 for every host — serving the ACME webroot and redirecting the
+  rest to HTTPS. So the certificate can be issued before this conf exists at all,
+  and the conf needs no `listen 80` block of its own. Renewals go over port 80
+  too, which is why the basic auth below cannot break them.
+
+**1. Password file** (no `htpasswd` binary needed on the host):
+
+```bash
+printf 'nelissen:%s\n' "$(openssl passwd -apr1)" \
+  > /opt/apps/proxy/conf.d/.htpasswd-nelissen
+```
+
+**2. Certificate:**
+
+```bash
+cd /opt/apps/proxy
+docker compose run --rm --entrypoint certbot certbot certonly --webroot -w /var/www/certbot \
+  -d acceptance.tegelhandelnelissen.nl \
+  --email vanderpasmilo@gmail.com --agree-tos --no-eff-email
+```
+
+**3. `/opt/apps/proxy/conf.d/nelissen-website-acceptance.conf`.** noindex asks
+crawlers politely; the auth is what actually keeps people out.
+
+```nginx
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name acceptance.tegelhandelnelissen.nl;
+
+    ssl_certificate     /etc/letsencrypt/live/acceptance.tegelhandelnelissen.nl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/acceptance.tegelhandelnelissen.nl/privkey.pem;
+
+    auth_basic "Acceptance";
+    # Beside the confs on purpose: that directory is already mounted into the
+    # proxy container. A path elsewhere under /etc/nginx exists on the host but
+    # not in the container, and nginx then fails to start.
+    auth_basic_user_file /etc/nginx/conf.d/.htpasswd-nelissen;
+
+    # Renewal runs over port 80 via 00-http.conf, so this is belt-and-braces —
+    # it keeps renewals working if this vhost ever gains its own :80 block.
+    location ^~ /.well-known/acme-challenge/ {
+        auth_basic off;
+        root /var/www/certbot;
+    }
+
+    # For external uptime checks. The container healthcheck probes 127.0.0.1
+    # directly and never passes through nginx, so it is unaffected either way.
+    location = /health {
+        auth_basic off;
+        proxy_pass http://nelissen-website-acceptance:80;
+        proxy_set_header Host $host;
+    }
+
+    location / {
+        proxy_pass http://nelissen-website-acceptance:80;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+**4. Reload and verify:**
+
+```bash
+docker exec proxy nginx -t && docker exec proxy nginx -s reload
+
+curl -I https://acceptance.tegelhandelnelissen.nl/                    # 401
+curl -I -u nelissen:PASS https://acceptance.tegelhandelnelissen.nl/   # 200 + X-Robots-Tag
+curl -u nelissen:PASS https://acceptance.tegelhandelnelissen.nl/robots.txt  # Disallow: /
+curl -I https://acceptance.tegelhandelnelissen.nl/health              # 200, no auth
+```
+
+Then submit the contact form once and confirm the mail is prefixed
+`[TEST — acceptance]`, carries the red banner, and arrived at `CONTACT_TO_TEST`
+rather than `info@`. That is the one path a misconfiguration breaks silently.
 
 ## Container privileges
 

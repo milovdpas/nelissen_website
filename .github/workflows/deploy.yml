@@ -48,6 +48,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.tegelhandelnelissen.nl' }}
             NEXT_PUBLIC_GA_ID=${{ vars.NEXT_PUBLIC_GA_ID }}
+            APP_ENV=production
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/nelissen-website:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/nelissen-website:${{ github.sha }}
@@ -107,6 +108,7 @@ jobs:
           # in docker-compose.yml, so a literal $ in a value must be written $$.
           {
             printf 'DOCKERHUB_USERNAME=%s\n' "$DOCKERHUB_USERNAME"
+            printf 'APP_ENV=production\n'
             printf 'SMTP_HOST=%s\n'    "$SMTP_HOST"
             printf 'SMTP_PORT=%s\n'    "$SMTP_PORT"
             printf 'SMTP_SECURE=%s\n'  "$SMTP_SECURE"
