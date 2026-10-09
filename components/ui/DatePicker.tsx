@@ -126,12 +126,22 @@ export function DatePicker({
         onClick={toggle}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label={value ? FULL_FMT.format(selected!) : labels.open}
+        // The accessible name has to start with whatever the button visibly
+        // says, then add the context. With a date chosen the two already
+        // matched, but while it showed the placeholder the name was "Kies een
+        // voorkeursdatum" over visible text saying something else, so someone
+        // driving the page by voice could read the control aloud and not
+        // activate it (WCAG 2.5.3, Label in Name).
+        aria-label={`${value && selected ? FULL_FMT.format(selected) : labels.placeholder}, ${labels.open}`}
         aria-describedby={describedBy}
         className={triggerClassName}
         style={triggerStyle}
       >
-        <span style={{ color: value ? "#fff" : "rgba(255,255,255,0.45)" }}>
+        {/* 0.62, not 0.45: white at 0.45 on this control is 3.56:1, under the
+            4.5:1 AA needs for 14px text. 0.55 is exactly on the line, which is
+            too tight to trust, so this sits at 5.25:1 and still reads as muted
+            against the plain white of a chosen date. */}
+        <span style={{ color: value ? "#fff" : "rgba(255,255,255,0.62)" }}>
           {value && selected ? FULL_FMT.format(selected) : labels.placeholder}
         </span>
         <Calendar size={16} style={{ color: "rgba(255,255,255,0.55)", flexShrink: 0 }} />
@@ -182,7 +192,7 @@ export function DatePicker({
               <span
                 key={d}
                 className="text-center text-[10px] font-semibold uppercase py-1"
-                style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.45)" }}
+                style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.62)" }}
               >
                 {d}
               </span>
@@ -226,7 +236,7 @@ export function DatePicker({
           </div>
 
           <div className="flex items-center justify-between mt-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-            <span className="text-[11px]" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.45)" }}>
+            <span className="text-[11px]" style={{ fontFamily: FONT.body, color: "rgba(255,255,255,0.62)" }}>
               {labels.closedNote}
             </span>
             <button
