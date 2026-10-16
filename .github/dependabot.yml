@@ -3,6 +3,8 @@
 version: 2
 updates:
   - package-ecosystem: npm
+    assignees:
+      - milovdpas
     directory: "/"
     schedule:
       interval: weekly
@@ -32,6 +34,8 @@ updates:
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker
+    assignees:
+      - milovdpas
     directory: "/"
     schedule:
       interval: weekly
@@ -47,6 +51,8 @@ updates:
 
   # Keeps actions/checkout, setup-node etc. patched.
   - package-ecosystem: github-actions
+    assignees:
+      - milovdpas
     directory: "/"
     schedule:
       interval: weekly

@@ -8,7 +8,7 @@ import { locaties } from "@/content/nl/locaties";
 // on each rebuild, and Google discounts a lastmod it learns to distrust.
 // Seeded from the last commit that touched each page's content.
 const LAST_MODIFIED = {
-  home: "2026-10-05",
+  home: "2026-10-16",
   assortiment: "2026-10-06",
   overOns: "2026-10-05",
   contact: "2026-10-05",
