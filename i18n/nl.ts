@@ -24,8 +24,14 @@ export const nl = {
     // here to sell tiles, and zetwerk is still in the h1, the body and the
     // schema.org name.
     title: "Tegelhandel Nelissen | Tegels & showroom in Berghem",
+    // Leads with the showroom and the range, not with zetwerk. The homepage is
+    // the page that actually ranks for "tegels kopen" queries, and this is the
+    // snippet Google shows under it, so opening on "tegels zetten bij woningen
+    // en bedrijven" pitched the service to someone shopping for tiles. It also
+    // disagreed with its own title, which says "Tegels & showroom". Same facts,
+    // reordered: no new claim about the business.
     description:
-      "Tegelhandel Nelissen in Berghem (Noord-Brabant): al 40+ jaar tegels zetten bij woningen en bedrijven, met eigen showroom. Maak vrijblijvend een afspraak.",
+      "Tegelhandel Nelissen in Berghem (Noord-Brabant): showroom met honderden tegels, van houtlook tot slabs. Al 40+ jaar ervaring. Maak vrijblijvend een afspraak.",
     ogAlt: "Showroom van Nelissen Tegelhandel & Tegelzettersbedrijf in Berghem",
   },
 
