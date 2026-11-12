@@ -125,7 +125,11 @@ export function Openingstijden({ dict }: { dict: Dictionary["openingstijden"] })
                   {dict.showroom.highlightDay}
                 </span>
                 <span
-                  className="text-sm font-bold px-2.5 py-0.5"
+                  // font-semibold, not font-bold: this is DM Sans, which ships
+                  // 400/500/600, so asking for 700 made the browser synthesise
+                  // a faux bold. 600 matches the day label beside it, and the
+                  // blue badge is what makes this stand out anyway.
+                  className="text-sm font-semibold px-2.5 py-0.5"
                   style={{ fontFamily: FONT.body, color: "#fff", background: BRAND.blue, borderRadius: 2 }}
                 >
                   {dict.showroom.highlightHours}
